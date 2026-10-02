@@ -1516,14 +1516,42 @@ if (installButton) {
 
 
             // =========================
-            // FALLBACK
-            // =========================
+// FALLBACK
+// =========================
 
-            alert(
-                "StudentHub cannot open the installation prompt yet. Please refresh the page and try again."
-            );
+let isIOS =
+    /iPad|iPhone|iPod/.test(
+        navigator.userAgent
+    ) ||
+    (
+        navigator.platform === "MacIntel" &&
+        navigator.maxTouchPoints > 1
+    );
 
-        }
+
+if (isIOS) {
+
+    alert(
+        "📱 Install StudentHub on iPhone\n\n" +
+
+        "1. Open StudentHub in Safari.\n\n" +
+
+        "2. Tap the Share button ⬆️.\n\n" +
+
+        "3. Tap \"Add to Home Screen\".\n\n" +
+
+        "4. Turn on \"Open as Web App\".\n\n" +
+
+        "5. Tap \"Add\".\n\n" +
+
+        "🎓 StudentHub will now appear on your Home Screen like an app."
+    );
+
+} else {
+
+    alert(
+        "StudentHub cannot open the installation prompt yet. " +
+        "Please refresh the page and try again."
     );
 
 
