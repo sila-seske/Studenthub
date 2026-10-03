@@ -1597,15 +1597,7 @@ window.addEventListener(
     // COURSE MATERIALS
     // =========================
 
-    const findMaterialsButton =
-        document.getElementById(
-            "findMaterialsBtn"
-        );
-
-    const uploadMaterialsButton =
-        document.getElementById(
-            "uploadMaterialsBtn"
-        );
+    
 
     const materialsResults =
         document.getElementById(
@@ -2055,40 +2047,7 @@ window.addEventListener(
         };
 
 
-    // =========================
-    // SERVICE WORKER
-    // =========================
-
-    if ("serviceWorker" in navigator) {
-
-        navigator.serviceWorker
-            .register(
-                "./service-worker.js"
-            )
-            .then(
-                function () {
-
-                    console.log(
-                        "StudentHub service worker registered!"
-                    );
-
-                }
-            )
-            .catch(
-                function (error) {
-
-                    console.log(
-                        "Service worker registration failed:",
-                        error
-                    );
-
-                }
-            );
-console.log(
-    "SW controller:",
-    navigator.serviceWorker.controller
-);
-    }
+    
 // =========================
     // EXPENSE TRACKER
     // =========================
@@ -2413,18 +2372,7 @@ console.log(
     }
 
 
-    // =========================
-    // CHECK NOTIFICATION SUPPORT
-    // =========================
-
-    function notificationsSupported() {
-
-        return (
-            "Notification" in window &&
-            "serviceWorker" in navigator
-        );
-
-    }
+    
 
     
     // =========================
