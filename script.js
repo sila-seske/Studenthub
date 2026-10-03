@@ -1413,17 +1413,7 @@ console.log(
 
     displayTomorrowClasses();
 
-// =========================
-// PWA INSTALL BUTTON
-// =========================
 
-let installButton =
-    document.getElementById(
-        "installBtn"
-    );
-
-let deferredInstallPrompt =
-    null;
 // =========================
 // PWA INSTALL BUTTON
 // =========================
