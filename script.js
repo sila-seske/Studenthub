@@ -1424,44 +1424,71 @@ let installButton =
 
 let deferredInstallPrompt =
     null;
+// =========================
+// PWA INSTALL BUTTON
+// =========================
+
+let installButton =
+    document.getElementById("installBtn");
+
+let deferredInstallPrompt = null;
 
 
+// Only run if the install button exists
 if (installButton) {
-
-    // Show the button
-    installButton.style.display =
-        "block";
-
 
     // =========================
     // CHECK IF ALREADY INSTALLED
     // =========================
 
-    if (
+    const isStandalone =
         window.matchMedia(
             "(display-mode: standalone)"
         ).matches ||
-        window.navigator.standalone === true
-    ) {
+        window.navigator.standalone === true;
 
-        installButton.style.display =
-            "none";
+    if (isStandalone) {
+
+        // App is already installed
+        installButton.style.display = "none";
+
+    } else {
+
+        // Show install button
+        installButton.style.display = "block";
 
     }
 
 
     // =========================
-    // CAPTURE INSTALL PROMPT
+    // DETECT iOS
+    // =========================
+
+    const isIOS =
+        /iPad|iPhone|iPod/.test(
+            navigator.userAgent
+        ) ||
+        (
+            navigator.platform === "MacIntel" &&
+            navigator.maxTouchPoints > 1
+        );
+
+
+    // =========================
+    // CAPTURE ANDROID / CHROME
+    // INSTALL PROMPT
     // =========================
 
     window.addEventListener(
         "beforeinstallprompt",
         function (event) {
 
+            // Prevent Chrome from showing
+            // its automatic prompt
             event.preventDefault();
 
-            deferredInstallPrompt =
-                event;
+            // Save the event for our button
+            deferredInstallPrompt = event;
 
             console.log(
                 "StudentHub install prompt is ready."
@@ -1479,30 +1506,27 @@ if (installButton) {
         "click",
         async function () {
 
-            // If Chrome provided the real
-            // installation prompt
+            // =========================
+            // ANDROID / CHROME INSTALL
+            // =========================
+
             if (deferredInstallPrompt) {
 
                 deferredInstallPrompt.prompt();
 
-
                 const choice =
                     await deferredInstallPrompt.userChoice;
-
 
                 console.log(
                     "Install result:",
                     choice.outcome
                 );
 
-
-                deferredInstallPrompt =
-                    null;
-
+                // The prompt can only be used once
+                deferredInstallPrompt = null;
 
                 if (
-                    choice.outcome ===
-                    "accepted"
+                    choice.outcome === "accepted"
                 ) {
 
                     installButton.style.display =
@@ -1511,75 +1535,74 @@ if (installButton) {
                 }
 
                 return;
-
             }
 
 
             // =========================
-// FALLBACK
-// =========================
+            // iPHONE / iPAD
+            // =========================
 
-let isIOS =
-    /iPad|iPhone|iPod/.test(
-        navigator.userAgent
-    ) ||
-    (
-        navigator.platform === "MacIntel" &&
-        navigator.maxTouchPoints > 1
-    );
+            if (isIOS) {
 
+                alert(
+                    "📱 Install StudentHub on iPhone\n\n" +
 
-if (isIOS) {
+                    "1. Open StudentHub in Safari.\n\n" +
 
-    alert(
-        "📱 Install StudentHub on iPhone\n\n" +
+                    "2. Tap the Share button ⬆️.\n\n" +
 
-        "1. Open StudentHub in Safari.\n\n" +
+                    "3. Tap \"Add to Home Screen\".\n\n" +
 
-        "2. Tap the Share button ⬆️.\n\n" +
+                    "4. Turn on \"Open as Web App\".\n\n" +
 
-        "3. Tap \"Add to Home Screen\".\n\n" +
+                    "5. Tap \"Add\".\n\n" +
 
-        "4. Turn on \"Open as Web App\".\n\n" +
+                    "🎓 StudentHub will now appear on your Home Screen like an app."
+                );
 
-        "5. Tap \"Add\".\n\n" +
-
-        "🎓 StudentHub will now appear on your Home Screen like an app."
-    );
-
-} else {
-
-    alert(
-        "StudentHub cannot open the installation prompt yet. " +
-        "Please refresh the page and try again."
-    );
+                return;
+            }
 
 
-    // =========================
-    // APP INSTALLED
-    // =========================
+            // =========================
+            // NO INSTALL PROMPT
+            // =========================
 
-    window.addEventListener(
-        "appinstalled",
-        function () {
-
-            console.log(
-                "StudentHub was installed."
+            alert(
+                "StudentHub cannot open the installation prompt yet.\n\n" +
+                "Please make sure you are using a supported browser, " +
+                "then refresh the page and try again."
             );
-
-
-            installButton.style.display =
-                "none";
-
-
-            deferredInstallPrompt =
-                null;
 
         }
     );
 
 }
 
+
+// =========================
+// APP INSTALLED
+// =========================
+
+window.addEventListener(
+    "appinstalled",
+    function () {
+
+        console.log(
+            "StudentHub was installed."
+        );
+
+        if (installButton) {
+
+            installButton.style.display =
+                "none";
+
+        }
+
+        deferredInstallPrompt = null;
+
+    }
+);
     // =========================
     // COURSE MATERIALS
     // =========================
