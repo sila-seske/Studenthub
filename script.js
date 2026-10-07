@@ -1413,7 +1413,7 @@ console.log(
 
     displayTomorrowClasses();
 
-// =========================
+    // =========================
 // PWA INSTALL BUTTON
 // =========================
 
@@ -1426,131 +1426,140 @@ let deferredInstallPrompt =
     null;
 
 
-if (installButton) {
+// =========================
+// CAPTURE INSTALL PROMPT
+// =========================
 
-    // Show the button
-    installButton.style.display =
-        "block";
+window.addEventListener(
+    "beforeinstallprompt",
+    function (event) {
+
+        event.preventDefault();
+
+        deferredInstallPrompt =
+            event;
+
+        console.log(
+            "StudentHub install prompt is ready."
+        );
 
 
-    // =========================
-    // CHECK IF ALREADY INSTALLED
-    // =========================
+        // Now that Chrome says
+        // installation is available,
+        // show the button.
 
-    if (
-        window.matchMedia(
-            "(display-mode: standalone)"
-        ).matches ||
-        window.navigator.standalone === true
-    ) {
+        if (installButton) {
+
+            installButton.style.display =
+                "block";
+
+        }
+
+    }
+);
+
+
+// =========================
+// CHECK IF ALREADY INSTALLED
+// =========================
+
+if (
+    window.matchMedia(
+        "(display-mode: standalone)"
+    ).matches ||
+    window.navigator.standalone === true
+) {
+
+    if (installButton) {
 
         installButton.style.display =
             "none";
 
     }
 
-
-    // =========================
-    // CAPTURE INSTALL PROMPT
-    // =========================
-
-    window.addEventListener(
-        "beforeinstallprompt",
-        function (event) {
-
-            event.preventDefault();
-
-            deferredInstallPrompt =
-                event;
-
-            console.log(
-                "StudentHub install prompt is ready."
-            );
-
-        }
-    );
+}
 
 
-    // =========================
-    // INSTALL BUTTON
-    // =========================
+// =========================
+// INSTALL BUTTON
+// =========================
+
+if (installButton) {
 
     installButton.addEventListener(
         "click",
         async function () {
 
-            // If Chrome provided the real
-            // installation prompt
-            if (deferredInstallPrompt) {
+            if (!deferredInstallPrompt) {
 
-                deferredInstallPrompt.prompt();
-
-
-                const choice =
-                    await deferredInstallPrompt.userChoice;
-
-
-                console.log(
-                    "Install result:",
-                    choice.outcome
+                alert(
+                    "The install option is not ready yet. Please refresh the page and try again."
                 );
-
-
-                deferredInstallPrompt =
-                    null;
-
-
-                if (
-                    choice.outcome ===
-                    "accepted"
-                ) {
-
-                    installButton.style.display =
-                        "none";
-
-                }
 
                 return;
 
             }
 
 
-            // =========================
-            // FALLBACK
-            // =========================
-
-            alert(
-                "StudentHub cannot open the installation prompt yet. Please refresh the page and try again."
-            );
-
-        }
-    );
+            deferredInstallPrompt.prompt();
 
 
-    // =========================
-    // APP INSTALLED
-    // =========================
+            const choice =
+                await deferredInstallPrompt.userChoice;
 
-    window.addEventListener(
-        "appinstalled",
-        function () {
 
             console.log(
-                "StudentHub was installed."
+                "Install result:",
+                choice.outcome
             );
-
-
-            installButton.style.display =
-                "none";
 
 
             deferredInstallPrompt =
                 null;
 
+
+            if (
+                choice.outcome ===
+                "accepted"
+            ) {
+
+                installButton.style.display =
+                    "none";
+
+            }
+
         }
     );
 
 }
+
+
+// =========================
+// APP INSTALLED
+// =========================
+
+window.addEventListener(
+    "appinstalled",
+    function () {
+
+        console.log(
+            "StudentHub was installed."
+        );
+
+
+        if (installButton) {
+
+            installButton.style.display =
+                "none";
+
+        }
+
+
+        deferredInstallPrompt =
+            null;
+
+    }
+);
 
     // =========================
     // COURSE MATERIALS
