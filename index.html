@@ -801,7 +801,161 @@
 
             </section>
 
+<!-- =========================
+     EXAM SCHEDULE
+========================== -->
 
+<section class="exam-schedule" id="examSchedule">
+
+    <div class="exam-header">
+        <p class="section-label">PREPARE FOR SUCCESS</p>
+
+        <h2>Exam Schedule</h2>
+
+        <p class="exam-subtitle">
+            Keep track of your upcoming examinations.
+        </p>
+    </div>
+
+
+    <!-- ADD EXAM BUTTON -->
+
+    <button
+        type="button"
+        id="showExamFormBtn"
+        class="exam-add-button"
+    >
+        + Add an exam
+    </button>
+
+
+    <!-- ADD EXAM FORM -->
+
+    <form id="examForm" hidden>
+
+        <h3 id="examFormTitle">Add a new exam</h3>
+
+        <div class="exam-form-group">
+            <label for="examCourseCode">
+                Course code
+            </label>
+
+            <input
+                type="text"
+                id="examCourseCode"
+                placeholder="e.g. CSC 201"
+                required
+            >
+        </div>
+
+
+        <div class="exam-form-group">
+            <label for="examCourseTitle">
+                Course title
+            </label>
+
+            <input
+                type="text"
+                id="examCourseTitle"
+                placeholder="e.g. Introduction to Programming"
+                required
+            >
+        </div>
+
+
+        <div class="exam-form-group">
+            <label for="examDate">
+                Exam date
+            </label>
+
+            <input
+                type="date"
+                id="examDate"
+                required
+            >
+        </div>
+
+
+        <div class="exam-form-group">
+            <label for="examTime">
+                Exam time
+            </label>
+
+            <input
+                type="time"
+                id="examTime"
+                required
+            >
+        </div>
+
+
+        <div class="exam-form-group">
+            <label for="examVenue">
+                Exam venue
+            </label>
+
+            <input
+                type="text"
+                id="examVenue"
+                placeholder="e.g. Lecture Hall A"
+            >
+        </div>
+
+
+        <div class="exam-form-group">
+            <label for="examNotes">
+                Additional notes (optional)
+            </label>
+
+            <textarea
+                id="examNotes"
+                rows="3"
+                placeholder="e.g. Bring your calculator"
+            ></textarea>
+        </div>
+
+
+        <div class="exam-form-actions">
+
+            <button
+                type="submit"
+                id="saveExamBtn"
+                class="exam-save-button"
+            >
+                Save exam
+            </button>
+
+            <button
+                type="button"
+                id="cancelExamBtn"
+                class="exam-cancel-button"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- UPCOMING EXAMS -->
+
+    <div class="exam-list-header">
+        <h3>Your exams</h3>
+    </div>
+
+    <div id="examList" aria-live="polite">
+
+        <p id="examEmptyState">
+            You haven't added any exams yet.
+            Add your exam dates to keep them organised.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- END EXAM SCHEDULE -->
 
             <!-- =========================
                  STUDY PLANNER
