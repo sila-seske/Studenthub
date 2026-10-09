@@ -3663,3 +3663,454 @@ document.addEventListener("DOMContentLoaded", function () {
     renderExams();
 
 });
+// ========================================
+// STUDENTHUB — EXAM INTEGRATION
+// STUDY PLANNER + COURSE MATERIALS
+// ========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ========================================
+    // LOAD SAVED EXAMS
+    // ========================================
+
+    function getSavedExams() {
+
+        try {
+
+            const saved =
+                localStorage.getItem("studentExams");
+
+            const exams = saved ? JSON.parse(saved) : [];
+
+            return Array.isArray(exams) ? exams : [];
+
+        } catch (error) {
+
+            console.error("Could not load saved exams:", error);
+
+            return [];
+        }
+    }
+
+
+    // ========================================
+    // FORMAT EXAM DATE
+    // ========================================
+
+    function formatIntegrationDate(dateString) {
+
+        const parts = dateString.split("-").map(Number);
+
+        const date = new Date(
+            parts[0],
+            parts[1] - 1,
+            parts[2]
+        );
+
+        return date.toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+    }
+
+
+    // ========================================
+    // DAYS UNTIL EXAM
+    // ========================================
+
+    function daysUntilExam(dateString) {
+
+        const parts = dateString.split("-").map(Number);
+
+        const examDay = Date.UTC(
+            parts[0],
+            parts[1] - 1,
+            parts[2]
+        );
+
+        const now = new Date();
+
+        const today = Date.UTC(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate()
+        );
+
+        return Math.round(
+            (examDay - today) / 86400000
+        );
+    }
+
+
+    // ========================================
+    // STUDY PLANNER INTEGRATION
+    // ========================================
+
+    const studyPlanButton =
+        document.getElementById("studyPlanBtn");
+
+    const studyResults =
+        document.getElementById("studyResults");
+
+
+    if (studyPlanButton && studyResults) {
+
+        studyPlanButton.addEventListener("click", function () {
+
+            // Remove the previous exam section.
+            const oldSection =
+                studyResults.querySelector(".exam-study-planner");
+
+            if (oldSection) {
+                oldSection.remove();
+            }
+
+
+            // Only upcoming exams belong in revision priorities.
+            const upcomingExams = getSavedExams()
+                .filter(function (exam) {
+
+                    return (
+                        exam.date &&
+                        daysUntilExam(exam.date) >= 0
+                    );
+
+                })
+                .sort(function (a, b) {
+
+                    if (a.date !== b.date) {
+                        return a.date.localeCompare(b.date);
+                    }
+
+                    return (a.time || "").localeCompare(
+                        b.time || ""
+                    );
+
+                });
+
+
+            // Create the exam revision section.
+            const section = document.createElement("section");
+
+            section.className = "exam-study-planner";
+
+
+            const heading = document.createElement("h3");
+
+            heading.textContent = "🎯 Upcoming Exam Revision";
+
+
+            const intro = document.createElement("p");
+
+            intro.className = "exam-study-intro";
+
+            intro.textContent =
+                "Use your upcoming exam dates to prioritise revision.";
+
+
+            section.append(heading, intro);
+
+
+            // Show a message if no exams are scheduled.
+            if (upcomingExams.length === 0) {
+
+                const message = document.createElement("p");
+
+                message.textContent =
+                    "No upcoming exams yet. Add your exam dates in Exam Schedule.";
+
+                section.appendChild(message);
+
+            } else {
+
+                upcomingExams.forEach(function (exam) {
+
+                    const item = document.createElement("div");
+
+                    item.className = "exam-study-item";
+
+
+                    const title = document.createElement("strong");
+
+                    title.textContent =
+                        (exam.code || "Exam") +
+                        " — " +
+                        (exam.title || "Untitled course");
+
+
+                    const date = document.createElement("p");
+
+                    date.textContent =
+                        "📅 " + formatIntegrationDate(exam.date);
+
+
+                    const countdown = document.createElement("p");
+
+                    const days = daysUntilExam(exam.date);
+
+                    if (days === 0) {
+
+                        countdown.textContent = "🔥 Your exam is today!";
+
+                    } else if (days === 1) {
+
+                        countdown.textContent = "⏳ 1 day remaining";
+
+                    } else {
+
+                        countdown.textContent =
+                            "⏳ " + days + " days remaining";
+                    }
+
+
+                    item.append(title, date, countdown);
+
+
+                    if (exam.time) {
+
+                        const time = document.createElement("p");
+
+                        time.textContent = "🕒 " + exam.time;
+
+                        item.appendChild(time);
+                    }
+
+
+                    if (exam.venue) {
+
+                        const venue = document.createElement("p");
+
+                        venue.textContent = "📍 " + exam.venue;
+
+                        item.appendChild(venue);
+                    }
+
+
+                    section.appendChild(item);
+
+                });
+
+            }
+
+
+            // The existing Study Planner has already rendered
+            // by the time this click listener runs.
+            studyResults.appendChild(section);
+
+        });
+
+    }
+
+
+    // ========================================
+    // COURSE MATERIALS INTEGRATION
+    // ========================================
+
+    const findMaterialsButton =
+        document.getElementById("findMaterialsBtn");
+
+    const materialsResults =
+        document.getElementById("materialsResults");
+
+
+    if (findMaterialsButton && materialsResults) {
+
+        findMaterialsButton.addEventListener("click", function () {
+
+            // Remove the previous exam-material section.
+            const oldSection =
+                materialsResults.querySelector(
+                    ".exam-course-materials"
+                );
+
+            if (oldSection) {
+                oldSection.remove();
+            }
+
+
+            const exams = getSavedExams();
+
+
+            // Keep one entry per unique course.
+            const uniqueCourses = new Map();
+
+            exams.forEach(function (exam) {
+
+                if (!exam.code && !exam.title) {
+                    return;
+                }
+
+                const courseKey = (
+                    exam.code || ""
+                ).trim().toLowerCase() + "|" + (
+                    exam.title || ""
+                ).trim().toLowerCase();
+
+
+                if (!uniqueCourses.has(courseKey)) {
+                    uniqueCourses.set(courseKey, exam);
+                }
+
+            });
+
+
+            const examCourses = Array.from(
+                uniqueCourses.values()
+            );
+
+
+            const section = document.createElement("section");
+
+            section.className = "exam-course-materials";
+
+
+            const heading = document.createElement("h3");
+
+            heading.textContent = "📝 Materials for Exam Courses";
+
+
+            const description = document.createElement("p");
+
+            description.textContent =
+                "Choose a course from your exam schedule to find revision resources.";
+
+
+            section.append(heading, description);
+
+
+            if (examCourses.length === 0) {
+
+                const message = document.createElement("p");
+
+                message.textContent =
+                    "No exam courses yet. Add an exam to make its course available here.";
+
+                section.appendChild(message);
+
+            } else {
+
+                examCourses.forEach(function (exam) {
+
+                    const courseName = [
+                        exam.code,
+                        exam.title
+                    ].filter(Boolean).join(" — ");
+
+
+                    const button = document.createElement("button");
+
+                    button.type = "button";
+
+                    button.className = "exam-material-button";
+
+                    button.textContent =
+                        "📚 " + courseName;
+
+
+                    const resources =
+                        document.createElement("div");
+
+                    resources.className = "exam-resource-links";
+
+                    resources.hidden = true;
+
+
+                    button.addEventListener("click", function () {
+
+                        // Toggle this course's resources.
+                        resources.hidden = !resources.hidden;
+
+                        if (resources.hidden) {
+                            return;
+                        }
+
+
+                        // Build resources only once.
+                        if (resources.childElementCount > 0) {
+                            return;
+                        }
+
+
+                        const resourceHeading =
+                            document.createElement("h4");
+
+                        resourceHeading.textContent =
+                            courseName + " — Revision Resources";
+
+                        resources.appendChild(resourceHeading);
+
+
+                        const searchTerm = encodeURIComponent(
+                            courseName
+                        );
+
+
+                        const links = [
+                            {
+                                label: "▶ YouTube tutorials",
+                                url:
+                                    "https://www.youtube.com/results?search_query=" +
+                                    searchTerm +
+                                    "+tutorial"
+                            },
+                            {
+                                label: "🤖 Study and quiz with ChatGPT",
+                                url:
+                                    "https://chatgpt.com/?q=" +
+                                    encodeURIComponent(
+                                        "Help me prepare for my exam in " +
+                                        courseName +
+                                        ". Explain the key concepts, give examples, " +
+                                        "and quiz me with 5 questions."
+                                    )
+                            },
+                            {
+                                label: "📖 ABS Tech Connect Library",
+                                url:
+                                    "https://www.abstechconnect.com/library"
+                            },
+                            {
+                                label: "📚 Rugga Library",
+                                url:
+                                    "http://ruggalibrary.blogspot.com/?m=1"
+                            }
+                        ];
+
+
+                        links.forEach(function (resource) {
+
+                            const link = document.createElement("a");
+
+                            link.href = resource.url;
+
+                            link.textContent = resource.label;
+
+                            link.target = "_blank";
+
+                            link.rel = "noopener noreferrer";
+
+                            resources.appendChild(link);
+
+                        });
+
+                    });
+
+
+                    section.append(button, resources);
+
+                });
+
+            }
+
+
+            // Add the exam course list after the existing
+            // class-based materials list.
+            materialsResults.appendChild(section);
+
+        });
+
+    }
+
+});
