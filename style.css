@@ -2287,3 +2287,392 @@ textarea:focus-visible {
 .study-guide-tip strong {
     color: #5367f5;
 }
+/* ========================================
+   STUDENTHUB — EXAM SCHEDULE
+======================================== */
+
+.exam-schedule {
+    margin: 24px 0;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e7e9f0;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(23, 24, 28, 0.04);
+}
+
+.exam-header {
+    margin-bottom: 22px;
+}
+
+.exam-header .section-label {
+    color: #5367f5;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.exam-header h2 {
+    color: #17181c;
+    font-size: 25px;
+    margin: 0 0 8px;
+}
+
+.exam-subtitle {
+    color: #747887;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+
+/* ========================================
+   EXAM BUTTONS
+======================================== */
+
+.exam-add-button,
+.exam-save-button {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 16px;
+    background: #5367f5;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.exam-add-button:hover,
+.exam-save-button:hover {
+    background: #4054df;
+}
+
+.exam-cancel-button {
+    min-height: 44px;
+    padding: 10px 16px;
+    background: #f1f2f7;
+    color: #333642;
+    border: 1px solid #e2e4ed;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+/* ========================================
+   EXAM FORM
+======================================== */
+
+#examForm {
+    margin-top: 20px;
+    padding: 18px;
+    background: #f8f9fc;
+    border: 1px solid #e7e9f0;
+    border-radius: 14px;
+}
+
+#examForm[hidden] {
+    display: none !important;
+}
+
+#examForm h3 {
+    color: #17181c;
+    font-size: 18px;
+    margin: 0 0 18px;
+}
+
+.exam-form-group {
+    margin-bottom: 16px;
+}
+
+.exam-form-group label {
+    display: block;
+    color: #30323b;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.exam-form-group input,
+.exam-form-group textarea {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #dfe2eb;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #17181c;
+    font: inherit;
+    font-size: 16px;
+}
+
+.exam-form-group input:focus,
+.exam-form-group textarea:focus {
+    outline: 2px solid rgba(83, 103, 245, 0.2);
+    border-color: #5367f5;
+}
+
+.exam-form-group textarea {
+    resize: vertical;
+}
+
+.exam-form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+
+/* ========================================
+   EXAM LIST
+======================================== */
+
+.exam-list-header {
+    margin: 25px 0 14px;
+}
+
+.exam-list-header h3 {
+    color: #17181c;
+    font-size: 18px;
+    margin: 0;
+}
+
+#examEmptyState {
+    color: #747887;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 16px 0;
+}
+
+.exam-card {
+    margin-bottom: 14px;
+    padding: 17px;
+    background: #ffffff;
+    border: 1px solid #e5e7ef;
+    border-left: 4px solid #5367f5;
+    border-radius: 13px;
+    overflow-wrap: anywhere;
+}
+
+.exam-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.exam-course-code {
+    color: #5367f5;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.exam-countdown {
+    color: #7656cf;
+    background: #f1edff;
+    padding: 6px 9px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.exam-course-title {
+    color: #17181c;
+    font-size: 17px;
+    line-height: 1.4;
+    margin: 0 0 12px;
+}
+
+.exam-date-time,
+.exam-venue,
+.exam-notes {
+    color: #626675;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 6px 0;
+}
+
+.exam-notes {
+    padding: 10px;
+    background: #f8f9fc;
+    border-radius: 8px;
+}
+
+.exam-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.exam-edit-button,
+.exam-delete-button {
+    flex: 1;
+    min-height: 42px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.exam-edit-button {
+    color: #5367f5;
+    background: #eef0ff;
+    border: 1px solid #dce0ff;
+}
+
+.exam-delete-button {
+    color: #c53d4b;
+    background: #fff0f1;
+    border: 1px solid #f4d5d9;
+}
+
+
+/* ========================================
+   STUDY PLANNER — EXAM REVISION
+======================================== */
+
+.exam-study-planner {
+    margin-top: 20px;
+    padding: 17px;
+    background: #f7f7ff;
+    border: 1px solid #e2e3ff;
+    border-radius: 14px;
+}
+
+.exam-study-planner h3 {
+    color: #24254b;
+    font-size: 17px;
+    margin: 0 0 8px;
+}
+
+.exam-study-intro {
+    color: #686b83;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.exam-study-item {
+    padding: 13px;
+    margin-top: 10px;
+    background: #ffffff;
+    border: 1px solid #e6e6f5;
+    border-radius: 10px;
+}
+
+.exam-study-item strong {
+    display: block;
+    color: #25263b;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.exam-study-item p {
+    color: #686b7b;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 4px 0;
+}
+
+
+/* ========================================
+   COURSE MATERIALS — EXAM COURSES
+======================================== */
+
+.exam-course-materials {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #e7e9f0;
+}
+
+.exam-course-materials h3 {
+    color: #17181c;
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.exam-course-materials > p {
+    color: #747887;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.exam-material-button {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px;
+    margin-top: 10px;
+    text-align: left;
+    background: #f8f9fc;
+    color: #30334a;
+    border: 1px solid #e2e5ef;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.exam-material-button:hover {
+    border-color: #5367f5;
+    background: #f0f2ff;
+}
+
+.exam-resource-links {
+    margin-top: 14px;
+    padding: 14px;
+    background: #f8f9fc;
+    border-radius: 12px;
+}
+
+.exam-resource-links h4 {
+    color: #17181c;
+    font-size: 15px;
+    margin: 0 0 10px;
+}
+
+.exam-resource-links a {
+    display: block;
+    padding: 11px 0;
+    color: #5367f5;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.exam-resource-links a + a {
+    border-top: 1px solid #e5e7ef;
+}
+
+.exam-resource-links a:hover {
+    text-decoration: underline;
+}
+
+
+/* ========================================
+   SMALL SCREEN ADJUSTMENTS
+======================================== */
+
+@media (max-width: 380px) {
+
+    .exam-schedule {
+        padding: 15px;
+    }
+
+    .exam-card {
+        padding: 13px;
+    }
+
+    .exam-header h2 {
+        font-size: 22px;
+    }
+
+}
