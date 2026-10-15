@@ -2676,3 +2676,414 @@ textarea:focus-visible {
     }
 
 }
+
+/* =====================================================
+   STUDENTHUB DESIGN SYSTEM — LIGHT + SOFT DARK THEMES
+   Dark mode is activated with: <html data-theme="dark">
+   Keep the existing light theme as the default.
+===================================================== */
+:root {
+    color-scheme: light;
+    --sh-bg: #F5F7FB;
+    --sh-surface: #FFFFFF;
+    --sh-surface-soft: #F8FAFC;
+    --sh-surface-raised: #FFFFFF;
+    --sh-text: #172033;
+    --sh-text-muted: #64748B;
+    --sh-border: #E2E8F0;
+    --sh-primary: #0891B2;
+    --sh-primary-hover: #0E7490;
+    --sh-navy: #1E293B;
+    --sh-orange: #F59E0B;
+    --sh-danger: #DC2626;
+    --sh-input: #FFFFFF;
+    --sh-focus: rgba(8, 145, 178, 0.24);
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+    --sh-bg: #202B3B;
+    --sh-surface: #293648;
+    --sh-surface-soft: #303E52;
+    --sh-surface-raised: #36465B;
+    --sh-text: #F1F5F9;
+    --sh-text-muted: #B6C2D1;
+    --sh-border: #43536A;
+    --sh-primary: #22B8D3;
+    --sh-primary-hover: #0891B2;
+    --sh-navy: #E2E8F0;
+    --sh-orange: #FBBF24;
+    --sh-danger: #F87171;
+    --sh-input: #243144;
+    --sh-focus: rgba(34, 184, 211, 0.30);
+}
+
+html { background: var(--sh-bg); }
+body {
+    background: var(--sh-bg);
+    color: var(--sh-text);
+    transition: background-color .2s ease, color .2s ease;
+}
+
+/* Surfaces and cards */
+section, .app-screen, .glass-card, .class-item, .expense-card,
+.exam-card, .study-plan, .empty-state, .lecturer-material-card,
+#expenseSection, #materialsResults > div, #examForm,
+.exam-study-planner, #notificationsSection, .screen-header,
+.setup-card, .dashboard-card, .stat-card, .course-card {
+    color: var(--sh-text);
+}
+
+html[data-theme="dark"] section,
+html[data-theme="dark"] .app-screen,
+html[data-theme="dark"] .glass-card,
+html[data-theme="dark"] .class-item,
+html[data-theme="dark"] .expense-card,
+html[data-theme="dark"] .exam-card,
+html[data-theme="dark"] .study-plan,
+html[data-theme="dark"] .empty-state,
+html[data-theme="dark"] .lecturer-material-card,
+html[data-theme="dark"] #expenseSection,
+html[data-theme="dark"] #materialsResults > div,
+html[data-theme="dark"] #examForm,
+html[data-theme="dark"] .exam-study-planner,
+html[data-theme="dark"] #notificationsSection,
+html[data-theme="dark"] .screen-header,
+html[data-theme="dark"] .setup-card,
+html[data-theme="dark"] .dashboard-card,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .course-card {
+    background-color: var(--sh-surface);
+    border-color: var(--sh-border);
+    box-shadow: 0 8px 24px rgba(5, 12, 24, .12);
+}
+
+/* Setup screen and common text */
+html[data-theme="dark"] #setupSection { background: var(--sh-bg); }
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] label,
+html[data-theme="dark"] strong,
+html[data-theme="dark"] .exam-course-title,
+html[data-theme="dark"] .exam-list-header h3,
+html[data-theme="dark"] #roleSelection h3 { color: var(--sh-text); }
+html[data-theme="dark"] p,
+html[data-theme="dark"] small,
+html[data-theme="dark"] .exam-date-time,
+html[data-theme="dark"] .exam-venue,
+html[data-theme="dark"] .exam-notes,
+html[data-theme="dark"] #reminderStatus,
+html[data-theme="dark"] #examEmptyState { color: var(--sh-text-muted); }
+
+/* Form controls */
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+    background: var(--sh-input);
+    color: var(--sh-text);
+    border-color: var(--sh-border);
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder { color: #94A3B8; }
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus,
+html[data-theme="dark"] button:focus-visible,
+html[data-theme="dark"] a:focus-visible {
+    outline-color: var(--sh-focus);
+    border-color: var(--sh-primary);
+}
+
+/* Buttons and interactive elements */
+button, .exam-add-button, .exam-save-button { transition: background-color .18s ease, border-color .18s ease, color .18s ease, transform .18s ease; }
+html[data-theme="dark"] .role-option,
+html[data-theme="dark"] .course-material-btn,
+html[data-theme="dark"] .lecturer-material-card a,
+html[data-theme="dark"] .exam-material-button,
+html[data-theme="dark"] .exam-cancel-button,
+html[data-theme="dark"] .exam-edit-button {
+    background: var(--sh-surface-soft);
+    color: var(--sh-text);
+    border-color: var(--sh-border);
+}
+html[data-theme="dark"] .role-option.active,
+html[data-theme="dark"] .course-material-btn:hover,
+html[data-theme="dark"] .exam-material-button:hover {
+    background: rgba(34, 184, 211, .12);
+    border-color: var(--sh-primary);
+}
+html[data-theme="dark"] .exam-delete-button,
+html[data-theme="dark"] #classList button,
+html[data-theme="dark"] .expense-card button,
+html[data-theme="dark"] .delete-material-btn {
+    background: rgba(248, 113, 113, .12);
+    color: #FCA5A5;
+    border-color: rgba(248, 113, 113, .35);
+}
+
+/* Existing pastel panels that otherwise stay too bright in dark mode */
+html[data-theme="dark"] #expenseSummary { background: #3B3A34; border-color: #62543A; }
+html[data-theme="dark"] #expenseSummary h3 { color: #FCDFA5; }
+html[data-theme="dark"] #expenseSummary p { color: #FBBF24; }
+html[data-theme="dark"] .exam-countdown { background: #3A3548; color: #D6C5FF; }
+html[data-theme="dark"] .exam-notes { background: var(--sh-surface-soft); }
+html[data-theme="dark"] .exam-study-planner { background: var(--sh-surface-soft); }
+html[data-theme="dark"] .exam-course-code { color: var(--sh-primary); }
+html[data-theme="dark"] #notificationsSection { background: var(--sh-surface); }
+
+/* Theme control: can be used for a small segmented setting in the header/settings */
+.theme-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--sh-border);
+    border-radius: 12px;
+    background: var(--sh-surface);
+}
+.theme-control button {
+    min-height: 36px;
+    padding: 7px 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--sh-text-muted);
+    box-shadow: none;
+    font: inherit;
+    font-size: 13px;
+}
+.theme-control button[aria-pressed="true"] {
+    background: rgba(8, 145, 178, .12);
+    color: var(--sh-primary);
+    font-weight: 700;
+}
+html[data-theme="dark"] .theme-control button[aria-pressed="true"] {
+    background: rgba(34, 184, 211, .15);
+    color: #67E8F9;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+
+/* ==========================================
+   STUDENTHUB APPEARANCE: SOFT DARK THEME
+   Light remains the default. Theme selection
+   is stored locally and works offline.
+========================================== */
+:root {
+  color-scheme: light;
+  --sh-primary: #0891B2;
+  --sh-primary-hover: #0E7490;
+  --sh-bg: #F5F7FB;
+  --sh-surface: #FFFFFF;
+  --sh-surface-raised: #FFFFFF;
+  --sh-text: #172033;
+  --sh-muted: #64748B;
+  --sh-border: #E2E8F0;
+  --sh-input: #FFFFFF;
+  --sh-orange: #F59E0B;
+}
+body[data-theme="dark"] {
+  color-scheme: dark;
+  --sh-bg: #202B3C;
+  --sh-surface: #293649;
+  --sh-surface-raised: #334155;
+  --sh-text: #F1F5F9;
+  --sh-muted: #B6C2D1;
+  --sh-border: #435268;
+  --sh-input: #243145;
+  background: var(--sh-bg) !important;
+  color: var(--sh-text) !important;
+}
+body[data-theme="dark"] #setupSection,
+body[data-theme="dark"] #dashboard,
+body[data-theme="dark"] #mainContent,
+body[data-theme="dark"] footer,
+body[data-theme="dark"] header,
+body[data-theme="dark"] section {
+  color: var(--sh-text);
+}
+body[data-theme="dark"] #setupSection,
+body[data-theme="dark"] #mainContent,
+body[data-theme="dark"] header,
+body[data-theme="dark"] #studentHubFooter {
+  background-color: var(--sh-bg);
+}
+body[data-theme="dark"] #sidebar,
+body[data-theme="dark"] .quick-card,
+body[data-theme="dark"] #classForm,
+body[data-theme="dark"] #expenseForm,
+body[data-theme="dark"] #expenseSummary,
+body[data-theme="dark"] .about-intro,
+body[data-theme="dark"] .about-feature,
+body[data-theme="dark"] .about-mission,
+body[data-theme="dark"] .privacy-content,
+body[data-theme="dark"] .terms-content,
+body[data-theme="dark"] .contact-content,
+body[data-theme="dark"] .disclaimer-content,
+body[data-theme="dark"] .faq-item,
+body[data-theme="dark"] .study-guide-card,
+body[data-theme="dark"] .study-guide-content,
+body[data-theme="dark"] .exam-schedule,
+body[data-theme="dark"] #notificationsSection,
+body[data-theme="dark"] #tomorrowSection,
+body[data-theme="dark"] #classesSection,
+body[data-theme="dark"] #studySection,
+body[data-theme="dark"] #materialsSection,
+body[data-theme="dark"] #expenseSection,
+body[data-theme="dark"] #aboutSection,
+body[data-theme="dark"] #privacySection,
+body[data-theme="dark"] #termsSection,
+body[data-theme="dark"] #contactSection,
+body[data-theme="dark"] #disclaimerSection,
+body[data-theme="dark"] #faqSection,
+body[data-theme="dark"] #studyGuidesSection,
+body[data-theme="dark"] .class-item,
+body[data-theme="dark"] .expense-card,
+body[data-theme="dark"] .exam-card,
+body[data-theme="dark"] .lecturer-material-card,
+body[data-theme="dark"] .material-card,
+body[data-theme="dark"] .study-result-card {
+  background-color: var(--sh-surface) !important;
+  color: var(--sh-text) !important;
+  border-color: var(--sh-border) !important;
+}
+body[data-theme="dark"] h1,
+body[data-theme="dark"] h2,
+body[data-theme="dark"] h3,
+body[data-theme="dark"] h4,
+body[data-theme="dark"] strong,
+body[data-theme="dark"] label,
+body[data-theme="dark"] summary,
+body[data-theme="dark"] p,
+body[data-theme="dark"] li,
+body[data-theme="dark"] small,
+body[data-theme="dark"] span {
+  color: inherit;
+}
+body[data-theme="dark"] p,
+body[data-theme="dark"] small,
+body[data-theme="dark"] .section-heading p,
+body[data-theme="dark"] .exam-subtitle,
+body[data-theme="dark"] .sidebar-message p {
+  color: var(--sh-muted);
+}
+body[data-theme="dark"] input,
+body[data-theme="dark"] select,
+body[data-theme="dark"] textarea {
+  background: var(--sh-input) !important;
+  color: var(--sh-text) !important;
+  border-color: var(--sh-border) !important;
+}
+body[data-theme="dark"] input::placeholder,
+body[data-theme="dark"] textarea::placeholder {
+  color: #94A3B8;
+}
+body[data-theme="dark"] a:not(.contact-email-btn):not(.contact-instagram-btn) {
+  color: #67D7E8;
+}
+body[data-theme="dark"] .exam-cancel-button {
+  background: var(--sh-surface-raised) !important;
+  color: var(--sh-text) !important;
+  border-color: var(--sh-border) !important;
+}
+body[data-theme="dark"] .course-material-btn,
+body[data-theme="dark"] .exam-material-button,
+body[data-theme="dark"] .lecturer-material-card a {
+  background: var(--sh-surface-raised) !important;
+  color: var(--sh-text) !important;
+  border-color: var(--sh-border) !important;
+}
+body[data-theme="dark"] #classList button,
+body[data-theme="dark"] .expense-card button,
+body[data-theme="dark"] .delete-material-btn {
+  background: #492F39 !important;
+  color: #FDA4AF !important;
+  border-color: #75404D !important;
+}
+body[data-theme="dark"] .quick-blue,
+body[data-theme="dark"] .quick-green,
+body[data-theme="dark"] .quick-purple,
+body[data-theme="dark"] .quick-orange {
+  background: var(--sh-surface) !important;
+  border-color: var(--sh-border) !important;
+}
+body[data-theme="dark"] .quick-icon {
+  background: #334155;
+}
+body[data-theme="dark"] .study-guide-tip {
+  background: #344154;
+  color: var(--sh-text);
+  border-color: var(--sh-border);
+}
+body[data-theme="dark"] #digitalClock {
+  color: #67D7E8;
+}
+#appearanceControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--sh-border);
+  border-radius: 12px;
+  background: var(--sh-surface);
+  color: var(--sh-text);
+  font-size: 14px;
+}
+#appearanceControl label {
+  margin: 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+#themeSelect {
+  min-width: 86px;
+  width: auto;
+  margin: 0;
+  padding: 7px 8px;
+  border: 1px solid var(--sh-border);
+  border-radius: 8px;
+  background: var(--sh-input);
+  color: var(--sh-text);
+}
+@media (max-width: 480px) {
+  #appearanceControl { gap: 5px; padding: 5px 7px; font-size: 12px; }
+  #themeSelect { min-width: 75px; padding: 6px 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+
+
+/* Consistent offline SVG icon system */
+.sh-icon {
+  display: inline-block;
+  width: 1.35em;
+  height: 1.35em;
+  flex: 0 0 auto;
+  vertical-align: -0.28em;
+  stroke: currentColor;
+}
+#sidebar nav a .sh-icon { width: 23px; height: 23px; vertical-align: middle; }
+.brand-icon .sh-icon { width: 30px; height: 30px; }
+.quick-icon .sh-icon { width: 27px; height: 27px; }
+.quick-card > a .sh-icon { width: 20px; height: 20px; }
+button .sh-icon, a .sh-icon { vertical-align: middle; }
+#sidebar nav a { display: flex; align-items: center; gap: 12px; }
+#sidebar nav a .sh-icon { color: var(--sh-primary, #0891B2); }
+.quick-icon { display: flex; align-items: center; justify-content: center; color: var(--sh-primary, #0891B2); }
+body[data-theme="dark"] #sidebar nav a .sh-icon,
+body[data-theme="dark"] .quick-icon .sh-icon { color: #67D7E8; }
+body[data-theme="dark"] .brand-icon { color: #67D7E8; background: #334155; }
+#appearanceControl { box-shadow: none; }
+#themeSelect { outline-color: var(--sh-primary, #0891B2); }
