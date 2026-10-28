@@ -3088,25 +3088,58 @@ body[data-theme="dark"] .brand-icon { color: #67D7E8; background: #334155; }
 #appearanceControl { box-shadow: none; }
 #themeSelect { outline-color: var(--sh-primary, #0891B2); }
 .gpa-calculator-link {
-display: flex;
-flex-direction: column;
-gap: 4px;
-padding: 16px;
-margin: 12px 0;
-border: 1px solid #e3e8f2;
-border-radius: 12px;
-background: #ffffff;
-color: #172033;
-text-decoration: none;
-font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  padding: 20px;
+  margin: 16px 0;
+  border: 1px solid #dfe4ff;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f0f2ff, #ffffff);
+  color: #202a5a;
+  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 750;
+  box-shadow: 0 4px 14px rgba(60, 76, 180, 0.07);
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.gpa-calculator-link::after {
+  content: "→";
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: #5367f5;
 }
 
 .gpa-calculator-link span {
-color: #657087;
-font-size: 0.9rem;
-font-weight: 400;
+  color: #68718b;
+  font-size: 0.88rem;
+  font-weight: 450;
+  padding-right: 28px;
 }
 
 .gpa-calculator-link:hover {
-border-color: #5367f5;
+  border-color: #aab5ff;
+  box-shadow: 0 8px 22px rgba(60, 76, 180, 0.13);
+  transform: translateY(-2px);
+}
+
+.gpa-calculator-link:active {
+  transform: scale(0.99);
+}
+
+.gpa-calculator-link:focus-visible {
+  outline: 3px solid #5367f5;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gpa-calculator-link {
+    transition: none;
+  }
 }
