@@ -3087,3 +3087,26 @@ body[data-theme="dark"] .quick-icon .sh-icon { color: #67D7E8; }
 body[data-theme="dark"] .brand-icon { color: #67D7E8; background: #334155; }
 #appearanceControl { box-shadow: none; }
 #themeSelect { outline-color: var(--sh-primary, #0891B2); }
+.gpa-calculator-link {
+display: flex;
+flex-direction: column;
+gap: 4px;
+padding: 16px;
+margin: 12px 0;
+border: 1px solid #e3e8f2;
+border-radius: 12px;
+background: #ffffff;
+color: #172033;
+text-decoration: none;
+font-weight: 700;
+}
+
+.gpa-calculator-link span {
+color: #657087;
+font-size: 0.9rem;
+font-weight: 400;
+}
+
+.gpa-calculator-link:hover {
+border-color: #5367f5;
+}
