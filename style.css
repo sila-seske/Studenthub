@@ -3188,3 +3188,138 @@ body[data-theme="dark"] .brand-icon { color: #67D7E8; background: #334155; }
     cursor: pointer;
     font-weight: 700;
 }
+/* =========================
+   STUDENTHUB FEATURE BUTTONS
+========================= */
+
+#findMaterialsBtn,
+#courseMaterialsBtn,
+#gpaBtn,
+#preferencesBtn,
+#settingsBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 12px 18px;
+    margin: 6px 4px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+
+/* Course Materials */
+
+#findMaterialsBtn,
+#courseMaterialsBtn {
+    background: #eaf2ff;
+    color: #2457c5;
+    border-color: #d5e4ff;
+}
+
+#findMaterialsBtn:hover,
+#courseMaterialsBtn:hover {
+    background: #dce9ff;
+    transform: translateY(-2px);
+}
+
+/* GPA */
+
+#gpaBtn {
+    background: #e6f8ef;
+    color: #16794b;
+    border-color: #c7eed9;
+}
+
+#gpaBtn:hover {
+    background: #d2f3e1;
+    transform: translateY(-2px);
+}
+
+/* Preferences */
+
+#preferencesBtn,
+#settingsBtn {
+    background: #f2eaff;
+    color: #7542b8;
+    border-color: #e5d5ff;
+}
+
+#preferencesBtn:hover,
+#settingsBtn:hover {
+    background: #e8dcff;
+    transform: translateY(-2px);
+}
+
+/* Keyboard accessibility */
+
+#findMaterialsBtn:focus-visible,
+#courseMaterialsBtn:focus-visible,
+#gpaBtn:focus-visible,
+#preferencesBtn:focus-visible,
+#settingsBtn:focus-visible {
+    outline: 3px solid #8ba9ff;
+    outline-offset: 3px;
+}
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+    #findMaterialsBtn,
+    #courseMaterialsBtn,
+    #gpaBtn,
+    #preferencesBtn,
+    #settingsBtn {
+        padding: 11px 14px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+}
+
+/* Sidebar Install button */
+
+.sidebar-install-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    width: calc(100% - 24px);
+    margin: 16px 12px;
+    padding: 12px;
+
+    background: #5367f5;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-install-btn:hover {
+    background: #4053dc;
+}
+
+.sidebar-install-btn:focus-visible {
+    outline: 3px solid #8ba9ff;
+    outline-offset: 3px;
+}
