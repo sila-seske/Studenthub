@@ -3143,3 +3143,48 @@ body[data-theme="dark"] .brand-icon { color: #67D7E8; background: #334155; }
     transition: none;
   }
 }
+/* CLASS AND EXAM REMINDERS */
+.reminder-panel {
+    background: #ffffff;
+    border: 1px solid #e6eaf2;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.reminder-panel h2 {
+    margin-top: 0;
+}
+
+.reminder-panel p {
+    line-height: 1.6;
+    color: #6f7890;
+}
+
+.reminder-panel label {
+    display: block;
+    margin: 14px 0 8px;
+    font-weight: 600;
+}
+
+.reminder-panel select,
+.reminder-panel button {
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font: inherit;
+}
+
+.reminder-panel select {
+    border: 1px solid #d9deea;
+    margin-right: 8px;
+    background: #fff;
+}
+
+.reminder-panel button {
+    border: 0;
+    background: #5367f5;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
