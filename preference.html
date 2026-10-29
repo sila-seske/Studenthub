@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#5367f5">
+  <meta name="description" content="Manage your StudentHub personal information and study preferences.">
+
+  <title>Your Preferences — StudentHub</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --accent: #5367f5;
+      --accent-light: #eef0ff;
+      --ink: #172033;
+      --muted: #6f7890;
+      --border: #e6eaf2;
+      --background: #f5f7fb;
+      --white: #ffffff;
+      --success: #16834a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .preferences-page {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      padding: 24px 18px 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .back-button {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      text-decoration: none;
+    }
+
+    .back-button svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .page-heading {
+      margin-bottom: 26px;
+    }
+
+    .page-heading h1 {
+      margin: 0 0 9px;
+      font-size: clamp(27px, 5vw, 35px);
+      letter-spacing: -1px;
+    }
+
+    .page-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .settings-card {
+      margin-bottom: 18px;
+      padding: 23px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(29, 43, 84, 0.035);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .section-icon {
+      display: grid;
+      place-items: center;
+      width: 43px;
+      height: 43px;
+      flex-shrink: 0;
+      color: var(--accent);
+      background: var(--accent-light);
+      border-radius: 13px;
+    }
+
+    .section-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .section-heading h2 {
+      margin: 0 0 4px;
+      font-size: 16px;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .form-group input,
+    .form-group select {
+      display: block;
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 13px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid #dfe4ef;
+      border-radius: 11px;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(83, 103, 245, 0.12);
+    }
+
+    .help-text {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px 0;
+    }
+
+    .setting-row + .setting-row {
+      border-top: 1px solid var(--border);
+    }
+
+    .setting-row strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    .setting-row p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .setting-row input[type="checkbox"] {
+      width: 21px;
+      height: 21px;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+      margin-top: 23px;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 12px 17px;
+      border: 1px solid var(--accent);
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 750;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      color: #fff;
+      background: var(--accent);
+    }
+
+    .button-secondary {
+      color: var(--accent);
+      background: #fff;
+      border-color: #dfe3ff;
+    }
+
+    .button svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .status-message {
+      min-height: 20px;
+      margin: 14px 0 0;
+      color: var(--success);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .privacy-note {
+      padding: 15px;
+      background: #eef7ff;
+      border: 1px solid #dcecff;
+      border-radius: 12px;
+      color: #355678;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      .preferences-page {
+        padding: 18px 13px 35px;
+      }
+
+      .settings-card {
+        padding: 18px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="preferences-page">
+
+    <header class="topbar">
+      <a class="back-button" href="index.html" aria-label="Back to dashboard">
+        <svg viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M19 12H5"/>
+          <path d="m12 19-7-7 7-7"/>
+        </svg>
+      </a>
+
+      <div class="brand">
+        StudentHub
+        <small>Your student companion</small>
+      </div>
+    </header>
+
+    <section class="page-heading">
+      <h1>Your preferences</h1>
+      <p>
+        Make StudentHub work better for you.
+        Manage your personal information, study routine and reminders.
+      </p>
+    </section>
+
+    <form id="preferencesForm">
+
+      <!-- PERSONAL INFORMATION -->
+      <section class="settings-card">
+
+        <div class="section-heading">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+            </svg>
+          </div>
+
+          <div>
+            <h2>Personal information</h2>
+            <p>Personalise your student experience.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="studentName">Your name</label>
+          <input
+            type="text"
+            id="studentName"
+            name="studentName"
+            placeholder="Enter your name"
+            maxlength="80"
+            autocomplete="given-name"
+          >
+          <span class="help-text">
+            Your name can be used in your dashboard greeting.
+          </span>
+        </div>
+
+      </section>
+
+      <!-- STUDY PREFERENCES -->
+      <section class="settings-card">
+
+        <div class="section-heading">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>
+              <path d="M8 7h8M8 11h6"/>
+            </svg>
+          </div>
+
+          <div>
+            <h2>Study preferences</h2>
+            <p>Choose when you prefer to study.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="studyPreference">Preferred study time</label>
+
+          <select id="studyPreference" name="studyPreference">
+            <option value="">Choose a time</option>
+            <option value="Morning">Morning</option>
+            <option value="Afternoon">Afternoon</option>
+            <option value="Evening">Evening</option>
+            <option value="Night">Night</option>
+            <option value="Flexible">Flexible</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="studyDuration">Daily study target</label>
+
+          <select id="studyDuration" name="studyDuration">
+            <option value="">Choose a duration</option>
+            <option value="30">30 minutes</option>
+            <option value="60">1 hour</option>
+            <option value="90">1 hour 30 minutes</option>
+            <option value="120">2 hours</option>
+            <option value="180">3 hours</option>
+            <option value="240">4 hours</option>
+          </select>
+
+          <span class="help-text">
+            Choose a realistic target that you can maintain.
+          </span>
+        </div>
+
+      </section>
+
+      <!-- NOTIFICATIONS -->
+      <section class="settings-card">
+
+        <div class="section-heading">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+              <path d="M10 21h4"/>
+            </svg>
+          </div>
+
+          <div>
+            <h2>Reminders</h2>
+            <p>Choose your reminder preference.</p>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Class and study reminders</strong>
+            <p>
+              Save whether you want reminders enabled.
+              Actual notifications also require reminder functionality
+              and browser permission.
+            </p>
+          </div>
+
+          <input
+            type="checkbox"
+            id="remindersEnabled"
+            name="remindersEnabled"
+            aria-label="Enable class and study reminders"
+          >
+        </div>
+
+      </section>
+
+      <!-- PRIVACY -->
+      <section class="settings-card">
+
+        <div class="section-heading">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2"/>
+              <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+              <path d="M12 14v3"/>
+            </svg>
+          </div>
+
+          <div>
+            <h2>Data and privacy</h2>
+            <p>Understand where your settings are saved.</p>
+          </div>
+        </div>
+
+        <div class="privacy-note">
+          Your current preferences are saved in this browser on this device
+          using local storage. They are not automatically synchronised
+          between devices or backed up to a server.
+        </div>
+
+      </section>
+
+      <!-- ACTIONS -->
+      <div class="actions">
+
+        <button class="button button-primary" type="submit">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="M20 6 9 17l-5-5"/>
+          </svg>
+          Save changes
+        </button>
+
+        <button class="button button-secondary" type="button" id="resetButton">
+          Reset preferences
+        </button>
+
+      </div>
+
+      <p
+        class="status-message"
+        id="statusMessage"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+    </form>
+
+    <footer class="footer">
+      StudentHub · Built for students<br>
+      <a href="index.html">Dashboard</a> ·
+      <a href="classes.html">Classes</a> ·
+      <a href="study.html">Study planner</a>
+    </footer>
+
+  </main>
+
+  <script>
+    (() => {
+      const form = document.getElementById("preferencesForm");
+      const nameInput = document.getElementById("studentName");
+      const preferenceInput = document.getElementById("studyPreference");
+      const durationInput = document.getElementById("studyDuration");
+      const remindersInput = document.getElementById("remindersEnabled");
+      const statusMessage = document.getElementById("statusMessage");
+      const resetButton = document.getElementById("resetButton");
+
+      const STORAGE_KEYS = {
+        name: "studentName",
+        preference: "studyPreference",
+        duration: "studyDuration",
+        reminders: "studentHubRemindersEnabled"
+      };
+
+      function loadPreferences() {
+        try {
+          nameInput.value =
+            localStorage.getItem(STORAGE_KEYS.name) || "";
+
+          preferenceInput.value =
+            localStorage.getItem(STORAGE_KEYS.preference) || "";
+
+          durationInput.value =
+            localStorage.getItem(STORAGE_KEYS.duration) || "";
+
+          remindersInput.checked =
+            localStorage.getItem(STORAGE_KEYS.reminders) === "true";
+
+          statusMessage.textContent = "";
+        } catch (error) {
+          statusMessage.textContent =
+            "Your browser could not access saved preferences.";
+        }
+      }
+
+      form.addEventListener("submit", event => {
+        event.preventDefault();
+
+        try {
+          const name = nameInput.value.trim();
+
+          localStorage.setItem(STORAGE_KEYS.name, name);
+          localStorage.setItem(
+            STORAGE_KEYS.preference,
+            preferenceInput.value
+          );
+          localStorage.setItem(
+            STORAGE_KEYS.duration,
+            durationInput.value
+          );
+          localStorage.setItem(
+            STORAGE_KEYS.reminders,
+            String(remindersInput.checked)
+          );
+
+          statusMessage.textContent =
+            "Your preferences have been saved successfully.";
+        } catch (error) {
+          statusMessage.textContent =
+            "Unable to save your preferences. Check your browser storage.";
+        }
+      });
+
+      resetButton.addEventListener("click", () => {
+        const confirmed = window.confirm(
+          "Reset your saved preferences? Your name, study time, study target and reminder preference will be cleared."
+        );
+
+        if (!confirmed) return;
+
+        try {
+          Object.values(STORAGE_KEYS).forEach(key => {
+            localStorage.removeItem(key);
+          });
+
+          loadPreferences();
+
+          statusMessage.textContent =
+            "Your preferences have been reset.";
+        } catch (error) {
+          statusMessage.textContent =
+            "Unable to reset your preferences.";
+        }
+      });
+
+      loadPreferences();
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("service-worker.js")
+            .catch(() => {});
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
