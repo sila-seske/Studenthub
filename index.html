@@ -87,6 +87,103 @@ outline-offset: 2px;
   </style>
 </head>
 <body>
+  <!-- =========================
+     WELCOME AND USER SETUP
+========================== --><section id="setupSection"><h1> StudentHub</h1>
+
+<h2>Welcome!</h2>
+
+<p>
+    Tell us a little about yourself
+    so StudentHub can give you the
+    right experience.
+</p>
+
+<!-- ROLE SELECTION -->
+
+<div id="roleSelection">
+
+    <label>
+        How will you use StudentHub?
+    </label>
+
+    <button type="button" id="studentRoleBtn">
+         Student
+    </button>
+
+    <button type="button" id="lecturerRoleBtn">
+         Lecturer
+    </button>
+
+</div>
+
+<!-- STUDENT PREFERENCES -->
+
+<div id="studentPreferences">
+
+    <label for="studentName">Your Name</label>
+
+    <input
+        type="text"
+        id="studentName"
+        placeholder="e.g. Alfred"
+    >
+
+    <label for="studyPreference">
+        When do you prefer to study?
+    </label>
+
+    <select id="studyPreference">
+        <option value="morning"> Morning</option>
+        <option value="afternoon"> Afternoon</option>
+        <option value="evening"> Evening</option>
+        <option value="night"> Night</option>
+        <option value="flexible"> I'm flexible</option>
+    </select>
+
+    <label for="studyDuration">
+        How long do you normally like to study?
+    </label>
+
+    <select id="studyDuration">
+        <option value="30">30 minutes</option>
+        <option value="60">1 hour</option>
+        <option value="90">1.5 hours</option>
+        <option value="120">2 hours</option>
+        <option value="180">3+ hours</option>
+    </select>
+
+</div>
+
+<!-- LECTURER PREFERENCES -->
+
+<div id="lecturerPreferences">
+
+    <label for="lecturerName">Your Name</label>
+
+    <input
+        type="text"
+        id="lecturerName"
+        placeholder="e.g. Dr. Alfred"
+    >
+
+    <label for="lecturerCourse">Course You Teach</label>
+
+    <input
+        type="text"
+        id="lecturerCourse"
+        placeholder="e.g. CSC 301"
+    >
+
+    <p>You can add more courses later.</p>
+
+</div>
+
+<button type="button" id="savePreferencesBtn">
+    Save Preferences
+</button>
+
+</section>
   <aside class="hub-sidebar" id="hubSidebar" aria-label="Main navigation">
     <a class="hub-brand" href="index.html"><span class="hub-brand-mark">S</span><span><strong>StudentHub</strong><small>Your student companion</small></span></a>
     <div class="hub-nav-label">Workspace</div>
