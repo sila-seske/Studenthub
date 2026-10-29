@@ -1,0 +1,939 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#5367f5"><title>Course Materials | StudentHub</title>
+
+<style>
+    :root {
+        --primary: #5367f5;
+        --primary-light: #eef0ff;
+        --background: #f5f7fb;
+        --surface: #ffffff;
+        --text: #20243a;
+        --muted: #747b91;
+        --border: #e6e9f2;
+        --green: #13865c;
+        --radius: 18px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+        font: inherit;
+    }
+
+    button,
+    .button {
+        min-height: 44px;
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 16px;
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+        outline: 3px solid #9ca8ff;
+        outline-offset: 3px;
+    }
+
+    .topbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 14px 5%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .brand {
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+    .brand span {
+        color: var(--primary);
+    }
+
+    .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .nav a {
+        padding: 9px 12px;
+        border-radius: 9px;
+        font-size: 0.9rem;
+        color: var(--muted);
+    }
+
+    .nav a:hover,
+    .nav a.active {
+        background: var(--primary-light);
+        color: var(--primary);
+    }
+
+    main {
+        width: min(1100px, 92%);
+        margin: 28px auto 50px;
+    }
+
+    .hero {
+        background: linear-gradient(135deg, #242b55, #5367f5);
+        color: white;
+        border-radius: 24px;
+        padding: clamp(24px, 5vw, 42px);
+        margin-bottom: 26px;
+    }
+
+    .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        opacity: 0.8;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.8rem, 5vw, 2.7rem);
+        line-height: 1.15;
+        margin: 10px 0;
+    }
+
+    .hero p {
+        max-width: 650px;
+        opacity: 0.9;
+    }
+
+    .search-box {
+        display: flex;
+        gap: 10px;
+        margin-top: 22px;
+        max-width: 700px;
+    }
+
+    .search-box input {
+        flex: 1;
+        min-width: 0;
+        min-height: 48px;
+        padding: 12px 15px;
+        border: 1px solid transparent;
+        border-radius: 11px;
+        background: white;
+        color: #20243a;
+    }
+
+    .primary-button {
+        background: var(--primary);
+        color: white;
+        font-weight: 700;
+    }
+
+    .hero .primary-button {
+        background: white;
+        color: #3445c7;
+    }
+
+    .section {
+        margin-top: 32px;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+
+    .section-heading p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+    }
+
+    .resource-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 15px;
+    }
+
+    .resource-card,
+    .schedule-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        min-width: 0;
+    }
+
+    .resource-card {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .resource-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        background: var(--primary-light);
+        display: grid;
+        place-items: center;
+        font-size: 1.4rem;
+        margin-bottom: 12px;
+    }
+
+    .resource-card h3 {
+        margin: 0 0 7px;
+        font-size: 1.05rem;
+    }
+
+    .resource-card p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin: 0 0 16px;
+        flex: 1;
+    }
+
+    .resource-card .button {
+        background: var(--primary-light);
+        color: #3f50d1;
+        font-weight: 700;
+        font-size: 0.88rem;
+        width: 100%;
+    }
+
+    .resource-card .button:hover {
+        background: #dfe3ff;
+    }
+
+    .schedule-layout {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .schedule-panel h3 {
+        margin: 0 0 5px;
+    }
+
+    .schedule-panel > p {
+        margin: 0 0 15px;
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .schedule-item {
+        border-top: 1px solid var(--border);
+        padding: 13px 0;
+        overflow-wrap: anywhere;
+    }
+
+    .schedule-item strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .schedule-item small {
+        color: var(--muted);
+        display: block;
+        margin-top: 3px;
+    }
+
+    .small-button {
+        background: #f0f2f8;
+        color: var(--text);
+        margin-top: 10px;
+        font-size: 0.85rem;
+    }
+
+    .empty-state {
+        background: #f8f9fd;
+        border: 1px dashed #ccd1e2;
+        border-radius: 12px;
+        padding: 16px;
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .tip {
+        padding: 18px;
+        border-radius: 14px;
+        background: #eaf8f1;
+        color: #176c4d;
+        margin-top: 25px;
+    }
+
+    .tip strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.85rem;
+        padding: 25px 10px;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+
+    @media (max-width: 650px) {
+        .topbar {
+            padding: 13px 4%;
+        }
+
+        .nav {
+            width: 100%;
+        }
+
+        .nav a {
+            padding: 8px 9px;
+        }
+
+        main {
+            width: 92%;
+            margin-top: 18px;
+        }
+
+        .resource-grid,
+        .schedule-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .search-box {
+            flex-direction: column;
+        }
+
+        .search-box button {
+            width: 100%;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .resource-card,
+        .resource-card .button {
+            transition: background 0.15s ease;
+        }
+    }
+</style>
+
+</head><body><header class="topbar">
+    <a class="brand" href="./index.html">
+        Student<span>Hub</span>
+    </a>
+
+    <nav class="nav" aria-label="Main navigation">
+        <a href="./index.html">Home</a>
+        <a href="./classes.html">Classes & Exams</a>
+        <a href="./study.html">Study</a>
+        <a href="./coursematerials.html" class="active"
+           aria-current="page">Materials</a>
+    </nav>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="eyebrow">Your learning library</div>
+
+        <h1>Find the right materials.<br>Prepare with confidence.</h1>
+
+        <p>
+            Discover textbooks, lecture resources, past questions,
+            and academic libraries. Use your class and exam schedule
+            to decide what to study next.
+        </p>
+
+        <form class="search-box" id="resourceSearchForm" role="search">
+            <input
+                type="search"
+                id="resourceSearch"
+                placeholder="Search resources, subjects, or course codes..."
+                aria-label="Search course materials"
+            >
+            <button class="primary-button" type="submit">
+                Search resources
+            </button>
+        </form>
+    </section>
+
+    <section class="section" aria-labelledby="resourcesHeading">
+        <div class="section-heading">
+            <div>
+                <h2 id="resourcesHeading">Explore learning resources</h2>
+                <p id="resourceCount">
+                    Browse the websites below for useful study materials.
+                </p>
+            </div>
+        </div>
+
+        <div class="resource-grid" id="resourceGrid">
+
+            <article class="resource-card"
+                data-search="abs tech connect absapp past questions lecture notes handouts books cbt study">
+                <div class="resource-icon">📚</div>
+                <h3>AbS Tech Connect / AbSApp</h3>
+                <p>
+                    Explore a student learning library with books,
+                    past questions, handouts, notes, and study tools.
+                </p>
+                <a class="button"
+                   href="https://www.abstechconnect.com/library"
+                   target="_blank" rel="noopener noreferrer">
+                    Explore library ↗
+                </a>
+            </article>
+
+            <article class="resource-card"
+                data-search="rugga library books academic resources library">
+                <div class="resource-icon">📖</div>
+                <h3>Rugga Library</h3>
+                <p>
+                    Find library resources and academic reading.
+                    If the site address has changed, search for its current page.
+                </p>
+                <a class="button"
+                   href="https://www.google.com/search?q=Rugga+Library+official+website"
+                   target="_blank" rel="noopener noreferrer">
+                    Find Rugga Library ↗
+                </a>
+            </article>
+
+            <article class="resource-card"
+                data-search="examguard exam preparation practice tests past questions">
+                <div class="resource-icon">🎯</div>
+                <h3>ExamGuard</h3>
+                <p>
+                    Look for exam preparation resources, practice
+                    questions, and revision support.
+                </p>
+                <a class="button"
+                   href="https://www.google.com/search?q=ExamGuard+student+learning+website"
+                   target="_blank" rel="noopener noreferrer">
+                    Find ExamGuard ↗
+                </a>
+            </article>
+
+            <article class="resource-card"
+                data-search="arewaunihub arewa uni hub notes past questions handouts nigeria">
+                <div class="resource-icon">🎓</div>
+                <h3>ArewaUniHub</h3>
+                <p>
+                    Discover student-contributed notes, summaries,
+                    past questions, and other academic resources.
+                </p>
+                <a class="button"
+                   href="https://arewaunihub.com/"
+                   target="_blank" rel="noopener noreferrer">
+                    Visit ArewaUniHub ↗
+                </a>
+            </article>
+
+            <article class="resource-card"
+                data-search="acadron nigeria university past questions study notes">
+                <div class="resource-icon">📝</div>
+                <h3>Acadron</h3>
+                <p>
+                    Search Nigerian university past questions,
+                    study notes, and student learning services.
+                </p>
+                <a class="button"
+                   href="https://acadron.com.ng/"
+                   target="_blank" rel="noopener noreferrer">
+                    Explore Acadron ↗
+                </a>
+            </article>
+
+            <article class="resource-card"
+                data-search="openstax free textbooks mathematics science computer science business">
+                <div class="resource-icon">🌐</div>
+                <h3>OpenStax</h3>
+                <p>
+                    Access free, openly licensed textbooks across
+                    science, mathematics, business, and more.
+                </p>
+                <a class="button"
+                   href="https://openstax.org/subjects"
+                   target="_blank" rel="noopener noreferrer">
+                    Browse textbooks ↗
+                </a>
+            </article>
+
+            <article class="resource-card"
+                data-search="open textbook library free open textbooks engineering computer science business">
+                <div class="resource-icon">📘</div>
+                <h3>Open Textbook Library</h3>
+                <p>
+                    Browse openly licensed textbooks covering
+                    computing, engineering, business, and other subjects.
+                </p>
+                <a class="button"
+                   href="https://open.umn.edu/opentextbooks"
+                   target="_blank" rel="noopener noreferrer">
+                    Browse open textbooks ↗
+                </a>
+            </article>
+
+            <article class="resource-card"
+                data-search="doab directory open access books scholarly research textbooks">
+                <div class="resource-icon">🔎</div>
+                <h3>DOAB</h3>
+                <p>
+                    Search the Directory of Open Access Books for
+                    scholarly, peer-reviewed open-access books.
+                </p>
+                <a class="button"
+                   href="https://www.doabooks.org/"
+                   target="_blank" rel="noopener noreferrer">
+                    Search academic books ↗
+                </a>
+            </article>
+
+        </div>
+
+        <p id="noSearchResults" class="empty-state" hidden>
+            No matching resources found. Try another search term.
+        </p>
+    </section>
+
+    <section class="section" aria-labelledby="scheduleHeading">
+        <div class="section-heading">
+            <div>
+                <h2 id="scheduleHeading">Your classes and exams</h2>
+                <p>
+                    Use your saved timetable to choose what to prepare for.
+                </p>
+            </div>
+
+            <a class="button primary-button" href="./classes.html">
+                Manage schedule
+            </a>
+        </div>
+
+        <div class="schedule-layout">
+
+            <section class="schedule-panel">
+                <h3>📅 Your classes</h3>
+                <p>Classes saved in your StudentHub timetable.</p>
+                <div id="savedClasses">
+                    <p class="empty-state">Loading saved classes...</p>
+                </div>
+                <a class="button small-button" href="./classes.html">
+                    Open class planner
+                </a>
+            </section>
+
+            <section class="schedule-panel" id="examSchedule">
+                <h3>📝 Upcoming exams</h3>
+                <p>Exams saved in your exam schedule.</p>
+                <div id="savedExams">
+                    <p class="empty-state">Loading saved exams...</p>
+                </div>
+                <a class="button small-button"
+                   href="./classes.html#examSchedule">
+                    Open exam planner
+                </a>
+            </section>
+
+        </div>
+    </section>
+
+    <aside class="tip">
+        <strong>💡 Study smarter</strong>
+        Start with the course you have next, then prioritise the exam
+        coming up soonest. Save useful links or download permitted
+        materials while you have internet access.
+    </aside>
+
+</main>
+
+<footer class="footer">
+    StudentHub · Your classes, your studies, your progress.
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ----------------------------------------
+    // RESOURCE SEARCH
+    // ----------------------------------------
+
+    const searchForm =
+        document.getElementById("resourceSearchForm");
+
+    const searchInput =
+        document.getElementById("resourceSearch");
+
+    const resourceCards =
+        Array.from(document.querySelectorAll(".resource-card"));
+
+    const noSearchResults =
+        document.getElementById("noSearchResults");
+
+    const resourceCount =
+        document.getElementById("resourceCount");
+
+    function filterResources() {
+        const query = searchInput.value
+            .trim()
+            .toLowerCase();
+
+        let visibleCount = 0;
+
+        resourceCards.forEach(function (card) {
+            const searchableText =
+                (card.dataset.search || "") + " " +
+                card.textContent;
+
+            const matches =
+                searchableText.toLowerCase().includes(query);
+
+            card.hidden = !matches;
+
+            if (matches) {
+                visibleCount++;
+            }
+        });
+
+        noSearchResults.hidden = visibleCount !== 0;
+
+        resourceCount.textContent = query
+            ? visibleCount + " matching resource(s)"
+            : "Browse the websites below for useful study materials.";
+    }
+
+    searchForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        filterResources();
+    });
+
+    searchInput.addEventListener("input", filterResources);
+
+
+    // ----------------------------------------
+    // SAFELY READ SAVED DATA
+    // ----------------------------------------
+
+    function readArray(key) {
+        try {
+            const value = JSON.parse(
+                localStorage.getItem(key) || "[]"
+            );
+
+            return Array.isArray(value) ? value : [];
+
+        } catch (error) {
+            console.error("Could not read " + key, error);
+            return [];
+        }
+    }
+
+    function addTextElement(parent, tag, text, className) {
+        const element = document.createElement(tag);
+
+        element.textContent = text;
+
+        if (className) {
+            element.className = className;
+        }
+
+        parent.appendChild(element);
+
+        return element;
+    }
+
+    function showEmptyMessage(parent, message) {
+        parent.replaceChildren();
+
+        addTextElement(
+            parent,
+            "p",
+            message,
+            "empty-state"
+        );
+    }
+
+
+    // ----------------------------------------
+    // DISPLAY SAVED CLASSES
+    // ----------------------------------------
+
+    function renderClasses() {
+        const container =
+            document.getElementById("savedClasses");
+
+        // Existing classes.js uses this key.
+        const classes = readArray("studentClasses");
+
+        container.replaceChildren();
+
+        if (classes.length === 0) {
+            showEmptyMessage(
+                container,
+                "No classes saved yet. Add your timetable in the class planner."
+            );
+            return;
+        }
+
+        const dayOrder = [
+            "Monday", "Tuesday", "Wednesday",
+            "Thursday", "Friday", "Saturday", "Sunday"
+        ];
+
+        const sortedClasses = classes.slice().sort(function (a, b) {
+            const dayDifference =
+                dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
+
+            if (dayDifference !== 0) {
+                return dayDifference;
+            }
+
+            return String(a.startTime || "")
+                .localeCompare(String(b.startTime || ""));
+        });
+
+        sortedClasses.forEach(function (item) {
+            const row = document.createElement("article");
+
+            row.className = "schedule-item";
+
+            addTextElement(
+                row,
+                "strong",
+                item.course || item.courseName || "Untitled course"
+            );
+
+            addTextElement(
+                row,
+                "div",
+                (item.day || "Day not specified") +
+                " · " +
+                (item.startTime || "Start time not set") +
+                "–" +
+                (item.endTime || "End time not set")
+                );
+
+                if (item.room) {
+                    addTextElement(
+                        row,
+                        "small",
+                        "Room: " + item.room
+                    );
+                }
+
+                const query = encodeURIComponent(
+                    item.course || item.courseName || ""
+                );
+
+                const link = document.createElement("a");
+
+                link.className = "button small-button";
+                link.href = "https://www.google.com/search?q=" +
+                    query + "+course+materials";
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.textContent = "Find course materials ↗";
+
+                row.appendChild(link);
+
+                container.appendChild(row);
+            });
+        }
+
+
+        // ----------------------------------------
+        // DISPLAY SAVED EXAMS
+        // ----------------------------------------
+
+        function renderExams() {
+            const container =
+                document.getElementById("savedExams");
+
+            const exams = readArray("studentExams");
+
+            container.replaceChildren();
+
+            const today = new Date();
+
+            const todayKey =
+                today.getFullYear() + "-" +
+                String(today.getMonth() + 1).padStart(2, "0") + "-" +
+                String(today.getDate()).padStart(2, "0");
+
+            const upcoming = exams
+                .filter(function (exam) {
+                    return exam.date && exam.date >= todayKey;
+                })
+                .sort(function (a, b) {
+                    const dateDifference =
+                        a.date.localeCompare(b.date);
+
+                    if (dateDifference !== 0) {
+                        return dateDifference;
+                    }
+
+                    return String(a.time || "")
+                        .localeCompare(String(b.time || ""));
+                });
+
+            if (upcoming.length === 0) {
+                showEmptyMessage(
+                    container,
+                    exams.length
+                        ? "No upcoming exams. Check the exam planner for past exams."
+                        : "No exams saved yet. Add your exam dates in the exam planner."
+                );
+
+                return;
+            }
+
+            upcoming.forEach(function (exam) {
+                const row = document.createElement("article");
+
+                row.className = "schedule-item";
+
+                addTextElement(
+                    row,
+                    "strong",
+                    (exam.code || "Exam") + " — " +
+                    (exam.title || "Untitled course")
+                );
+
+                addTextElement(
+                    row,
+                    "div",
+                    "📅 " + formatDate(exam.date) +
+                    (exam.time ? " · " + formatTime(exam.time) : "")
+                );
+
+                if (exam.venue) {
+                    addTextElement(
+                        row,
+                        "small",
+                        "Venue: " + exam.venue
+                    );
+                }
+
+                const query = encodeURIComponent(
+                    (exam.code || "") + " " +
+                    (exam.title || "")
+                );
+
+                const link = document.createElement("a");
+
+                link.className = "button small-button";
+                link.href = "https://www.google.com/search?q=" +
+                    query + "+study+materials";
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.textContent = "Find revision materials ↗";
+
+                row.appendChild(link);
+
+                container.appendChild(row);
+            });
+        }
+
+        function formatDate(dateString) {
+            const parts = dateString.split("-").map(Number);
+
+            if (parts.length !== 3 || parts.some(Number.isNaN)) {
+                return dateString;
+            }
+
+            const date = new Date(
+                parts[0],
+                parts[1] - 1,
+                parts[2]
+            );
+
+            return date.toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric"
+            });
+        }
+
+        function formatTime(timeString) {
+            const parts = timeString.split(":").map(Number);
+
+            if (parts.length < 2 || parts.some(Number.isNaN)) {
+                return timeString;
+            }
+
+            const date = new Date();
+
+            date.setHours(parts[0], parts[1], 0, 0);
+
+            return date.toLocaleTimeString("en-GB", {
+                hour: "numeric",
+                minute: "2-digit"
+            });
+        }
+// ----------------------------------------
+        // REFRESH WHEN SCHEDULES CHANGE
+        // ----------------------------------------
+
+        function renderAll() {
+            renderClasses();
+            renderExams();
+        }
+
+        renderAll();
+
+        // Updates when another tab on the same origin changes data.
+        window.addEventListener("storage", function (event) {
+            if (
+                event.key === "studentClasses" ||
+                event.key === "studentExams"
+            ) {
+                renderAll();
+            }
+        });
+
+        // Refresh when the user returns to this page.
+        window.addEventListener("pageshow", renderAll);
+
+    });
+    </script>
+
+</body>
+</html>
