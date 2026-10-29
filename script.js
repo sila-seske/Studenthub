@@ -755,7 +755,7 @@ console.log(
         if (!name) {
 
             greeting.textContent =
-                "👋 Welcome to StudentHub!";
+                " Welcome to StudentHub!";
 
             return;
         }
@@ -791,7 +791,7 @@ console.log(
 
 
         greeting.textContent =
-            `${message}, ${name}! 👋`;
+            `${message}, ${name}! `;
 
     }
 
@@ -1110,7 +1110,7 @@ console.log(
             if (materialsTitle) {
 
                 materialsTitle.textContent =
-                    "📖 Course Materials";
+                    " Course Materials";
 
             }
 
@@ -1181,7 +1181,7 @@ console.log(
             if (materialsTitle) {
 
                 materialsTitle.textContent =
-                    "📖 Course Materials";
+                    "Course Materials";
 
             }
 
@@ -1529,7 +1529,7 @@ console.log(
                         <div>
 
                             <h3>
-                                📚 Course Materials
+                                 Course Materials
                             </h3>
 
                             <p>
@@ -1622,7 +1622,7 @@ console.log(
                     <div>
 
                         <h3>
-                            📤 Upload Course Material
+                             Upload Course Material
                         </h3>
 
                         <p>
@@ -4112,5 +4112,196 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
     }
+// ========================================
+// STUDENTHUB — EXAM REMINDERS
+// ========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+    const settingsKey = "studentHubNotificationSettings";
+    const sentKey = "studentHubSentExamReminders";
+
+    function readArray(key) {
+        try {
+            const value = JSON.parse(
+                localStorage.getItem(key) || "[]"
+            );
+
+            return Array.isArray(value) ? value : [];
+        } catch {
+            return [];
+        }
+    }
+
+    function getSettings() {
+        try {
+            return JSON.parse(
+                localStorage.getItem(settingsKey) || "{}"
+            );
+        } catch {
+            return {};
+        }
+    }
+
+    function getSentReminders() {
+        try {
+            return JSON.parse(
+                localStorage.getItem(sentKey) || "{}"
+            );
+        } catch {
+            return {};
+        }
+    }
+
+    async function showExamNotification(title, body, tag) {
+        if (!("Notification" in window)) {
+            return false;
+        }
+
+        if (Notification.permission !== "granted") {
+            return false;
+        }
+
+        try {
+            if ("serviceWorker" in navigator) {
+                const registration =
+                    await navigator.serviceWorker.ready;
+
+                await registration.showNotification(title, {
+                    body: body,
+                    tag: tag,
+                    icon: "./icon-192.png",
+                    badge: "./icon-192.png"
+                });
+            } else {
+                new Notification(title, {
+                    body: body,
+                    tag: tag
+                });
+            }
+
+            return true;
+        } catch (error) {
+            console.error(
+                "Could not show exam reminder:",
+                error
+            );
+
+            return false;
+        }
+    }
+
+    async function checkExamReminders() {
+        const settings = getSettings();
+
+        if (
+            settings.enabled !== true ||
+            !("Notification" in window) ||
+            Notification.permission !== "granted"
+        ) {
+            return;
+        }
+
+        const exams = readArray("studentExams");
+        const sent = getSentReminders();
+        const now = new Date();
+
+        const reminderMinutes = Math.max(
+            1,
+            Number(settings.reminderMinutes) || 15
+        );
+
+        for (const exam of exams) {
+            if (!exam.date || !exam.time) {
+                continue;
+            }
+
+            // The exam date is stored as YYYY-MM-DD.
+            const parts = exam.date.split("-").map(Number);
+            const timeParts = exam.time.split(":").map(Number);
+
+            if (
+                parts.length !== 3 ||
+                timeParts.length < 2 ||
+                parts.some(number => !Number.isFinite(number)) ||
+                timeParts.some(number => !Number.isFinite(number))
+            ) {
+                continue;
+            }
+
+            const examDate = new Date(
+                parts[0],
+                parts[1] - 1,
+                parts[2],
+                timeParts[0],
+                timeParts[1],
+                0,
+                0
+            );
+
+            const difference = Math.floor(
+                (examDate.getTime() - now.getTime()) / 60000
+            );
+
+            if (
+                difference < 0 ||
+                difference > reminderMinutes
+            ) {
+                continue;
+            }
+
+            const examId = exam.id ||
+                `${exam.code || ""}-${exam.date}-${exam.time}`;
+
+            const reminderKey = `${examId}-${exam.date}-${exam.time}`;
+
+            if (sent[reminderKey]) {
+                continue;
+            }
+
+            const course = exam.code || "Your exam";
+            const title = exam.title || "Upcoming examination";
+
+            const body =
+                `${course}: ${title} starts in ` +
+                `${difference} minute(s).` +
+                (exam.venue ? ` Venue: ${exam.venue}.` : "");
+
+            const shown = await showExamNotification(
+                "📝 Exam reminder",
+                body,
+                `exam-${reminderKey}`
+            );
+
+            if (shown) {
+                sent[reminderKey] = true;
+
+                localStorage.setItem(
+                    sentKey,
+                    JSON.stringify(sent)
+                );
+            }
+        }
+    }
+
+    // Check immediately, then periodically while this page is open.
+    checkExamReminders();
+
+    setInterval(checkExamReminders, 30000);
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "visible") {
+            checkExamReminders();
+        }
+    });
+
+    window.addEventListener("storage", function (event) {
+        if (
+            event.key === "studentExams" ||
+            event.key === settingsKey
+        ) {
+            checkExamReminders();
+        }
+    });
 
 });
+
