@@ -53,101 +53,70 @@ console.log(
 
     let userRole =
         localStorage.getItem("userRole");
+// =========================
+// USER ROLE AND SETUP
+// =========================
 
+let userRole = localStorage.getItem("userRole");
 
-    // =========================
-    // ELEMENTS
-    // =========================
+const setupSection = document.getElementById("setupSection");
+const studentRoleBtn = document.getElementById("studentRoleBtn");
+const lecturerRoleBtn = document.getElementById("lecturerRoleBtn");
+const studentPreferences = document.getElementById("studentPreferences");
+const lecturerPreferences = document.getElementById("lecturerPreferences");
+const savePreferencesButton = document.getElementById("savePreferencesBtn");
 
-    let setupSection =
-        document.getElementById("setupSection");
-
-    let studentRoleBtn =
-        document.getElementById("studentRoleBtn");
-
-    let lecturerRoleBtn =
-        document.getElementById("lecturerRoleBtn");
-
-    let studentPreferences =
-        document.getElementById("studentPreferences");
-
-    let lecturerPreferences =
-        document.getElementById("lecturerPreferences");
-
-    let savePreferencesButton =
-        document.getElementById("savePreferencesBtn");
-
-
-    // =========================
-    // SETUP VISIBILITY
-    // =========================
+function showRolePreferences(role) {
+    userRole = role;
 
     if (studentPreferences) {
-        studentPreferences.style.display = "none";
+        studentPreferences.style.display =
+            role === "student" ? "block" : "none";
     }
 
     if (lecturerPreferences) {
-        lecturerPreferences.style.display = "none";
+        lecturerPreferences.style.display =
+            role === "lecturer" ? "block" : "none";
     }
-
-
-    // =========================
-    // ROLE SELECTION
-    // =========================
 
     if (studentRoleBtn) {
-
-        studentRoleBtn.addEventListener(
-            "click",
-            function () {
-
-                userRole = "student";
-
-                localStorage.setItem(
-                    "userRole",
-                    "student"
-                );
-
-                if (studentPreferences) {
-                    studentPreferences.style.display = "block";
-                }
-
-                if (lecturerPreferences) {
-                    lecturerPreferences.style.display = "none";
-                }
-
-            }
+        studentRoleBtn.setAttribute(
+            "aria-pressed",
+            String(role === "student")
         );
-
     }
-
 
     if (lecturerRoleBtn) {
-
-        lecturerRoleBtn.addEventListener(
-            "click",
-            function () {
-
-                userRole = "lecturer";
-
-                localStorage.setItem(
-                    "userRole",
-                    "lecturer"
-                );
-
-                if (studentPreferences) {
-                    studentPreferences.style.display = "none";
-                }
-
-                if (lecturerPreferences) {
-                    lecturerPreferences.style.display = "block";
-                }
-
-            }
+        lecturerRoleBtn.setAttribute(
+            "aria-pressed",
+            String(role === "lecturer")
         );
-
     }
+}
 
+if (studentRoleBtn) {
+    studentRoleBtn.addEventListener("click", function () {
+        showRolePreferences("student");
+    });
+}
+
+if (lecturerRoleBtn) {
+    lecturerRoleBtn.addEventListener("click", function () {
+        showRolePreferences("lecturer");
+    });
+}
+
+if (studentPreferences) {
+    studentPreferences.style.display = "none";
+}
+
+if (lecturerPreferences) {
+    lecturerPreferences.style.display = "none";
+}
+
+if (userRole === "student" || userRole === "lecturer") {
+    showRolePreferences(userRole);
+}
 
     // =========================
     // ADD CLASS ELEMENTS
@@ -539,7 +508,7 @@ console.log(
                 ) {
 
                     preferredTime =
-                        "🌅 Morning";
+                        " Morning";
 
                 }
 
@@ -549,7 +518,7 @@ console.log(
                 ) {
 
                     preferredTime =
-                        "☀️ Afternoon";
+                        " Afternoon";
 
                 }
 
@@ -559,7 +528,7 @@ console.log(
                 ) {
 
                     preferredTime =
-                        "🌆 Evening";
+                        "Evening";
 
                 }
 
@@ -569,14 +538,14 @@ console.log(
                 ) {
 
                     preferredTime =
-                        "🌙 Night";
+                        " Night";
 
                 }
 
                 else {
 
                     preferredTime =
-                        "🔄 Flexible";
+                        " Flexible";
 
                 }
 
@@ -682,21 +651,21 @@ console.log(
                         <div class="study-plan">
 
                             <h3>
-                                💡 ${studentName}'s
+                                ${studentName}'s
                                 Study Plan
                             </h3>
 
                             ${classSummary}
 
                             <p>
-                                🕐 Preferred study time:
+                                 Preferred study time:
                                 <strong>
                                     ${preferredTime}
                                 </strong>
                             </p>
 
                             <p>
-                                ⏱️ Preferred session:
+                                Preferred session:
                                 <strong>
                                     ${studyDuration}
                                     minutes
@@ -856,24 +825,86 @@ console.log(
 
 
     // =========================
-    // SAVE PREFERENCES
-    // =========================
+// SAVE PREFERENCES
+// =========================
 
-    if (savePreferencesButton) {
+if (savePreferencesButton) {
+    savePreferencesButton.addEventListener("click", function () {
+        if (!userRole) {
+            alert("Please select Student or Lecturer.");
+            return;
+        }
 
-        savePreferencesButton.addEventListener(
-            "click",
-            function () {
+        if (userRole === "student") {
+            const nameInput = document.getElementById("studentName");
+            const preferenceInput = document.getElementById("studyPreference");
+            const durationInput = document.getElementById("studyDuration");
 
-                if (!userRole) {
+            if (!nameInput || !preferenceInput || !durationInput) {
+                console.error("Student preference fields are missing.");
+                return;
+            }
 
-                    alert(
-                        "Please choose whether you are a Student or Lecturer."
-                    );
+            const name = nameInput.value.trim();
 
-                    return;
+            if (!name) {
+                alert("Please enter your name.");
+                nameInput.focus();
+                return;
+            }
 
-                }
+            localStorage.setItem("studentName", name);
+            localStorage.setItem(
+                "studyPreference",
+                preferenceInput.value
+            );
+            localStorage.setItem(
+                "studyDuration",
+                durationInput.value
+            );
+        }
+
+        if (userRole === "lecturer") {
+            const nameInput = document.getElementById("lecturerName");
+            const courseInput = document.getElementById("lecturerCourse");
+
+            if (!nameInput || !courseInput) {
+                console.error("Lecturer preference fields are missing.");
+                return;
+            }
+
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                alert("Please enter your name.");
+                nameInput.focus();
+                return;
+            }
+
+            localStorage.setItem("lecturerName", name);
+            localStorage.setItem(
+                "lecturerCourse",
+                courseInput.value.trim()
+            );
+        }
+
+        localStorage.setItem("userRole", userRole);
+
+        if (typeof updateInterface === "function") {
+            updateInterface();
+        }
+
+        if (typeof updateGreeting === "function") {
+            updateGreeting();
+        }
+
+        if (setupSection) {
+            setupSection.classList.add("setup-hidden");
+        }
+
+        alert("Preferences saved successfully.");
+    });
+}
 
 
                 // =========================
