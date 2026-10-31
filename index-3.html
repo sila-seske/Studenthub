@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="StudentHub is the student and lecturer companion for class timetables, exam countdowns, study planning, expenses, GPA calculation and course materials.">
+<meta name="keywords" content="student timetable, class schedule, exam countdown, study planner, GPA calculator, student expenses, course materials, lecturer schedule">
+<meta name="author" content="StudentHub">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://mystudenthubapp.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="StudentHub">
+<meta property="og:title" content="StudentHub | Class timetable, exams and study planner">
+<meta property="og:description" content="StudentHub is the student and lecturer companion for class timetables, exam countdowns, study planning, expenses, GPA calculation and course materials.">
+<meta property="og:url" content="https://mystudenthubapp.com/">
+<meta property="og:image" content="https://mystudenthubapp.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="StudentHub logo on an indigo background">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="StudentHub | Class timetable, exams and study planner">
+<meta name="twitter:description" content="StudentHub is the student and lecturer companion for class timetables, exam countdowns, study planning, expenses, GPA calculation and course materials.">
+<meta name="twitter:image" content="https://mystudenthubapp.com/og-image.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="StudentHub">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "StudentHub", "url": "https://mystudenthubapp.com/", "description": "StudentHub is the student and lecturer companion for class timetables, exam countdowns, study planning, expenses, GPA calculation and course materials.", "applicationCategory": "EducationalApplication", "operatingSystem": "Any", "browserRequirements": "Requires a modern web browser", "image": "https://mystudenthubapp.com/icon-512.png", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "NGN"}, "inLanguage": "en"}</script>
+<meta name="theme-color" content="#5367f5">
+<meta name="google-adsense-account" content="ca-pub-4786323542886950">
+<title>StudentHub | Class timetable, exams and study planner</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4786323542886950" crossorigin="anonymous"></script>
+<!-- Replace G-XXXXXXXXXX with your Google Analytics Measurement ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+<style>
+:root{color-scheme:light;--bg:#ECEEF8;--ink:#121629;--muted:#5d6485;--line:rgba(18,22,41,.1);--glass:rgba(255,255,255,.5);--glass-hi:rgba(255,255,255,.92);--accent:#5367f5;--accent-2:#8b5cf6;--bad:#d6336c;--warn:#b7791f;--shadow:0 30px 60px -34px rgba(40,50,120,.45);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#080b17;--ink:#eef0ff;--muted:#9aa2c4;--line:rgba(255,255,255,.12);--glass:rgba(255,255,255,.06);--glass-hi:rgba(255,255,255,.16);--accent:#7d8dff;--accent-2:#b07cff;--bad:#ff7a9c;--warn:#f5b94e;--shadow:0 30px 60px -30px rgba(0,0,0,.8)}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#080b17;--ink:#eef0ff;--muted:#9aa2c4;--line:rgba(255,255,255,.12);--glass:rgba(255,255,255,.06);--glass-hi:rgba(255,255,255,.16);--accent:#7d8dff;--accent-2:#b07cff;--bad:#ff7a9c;--warn:#f5b94e;--shadow:0 30px 60px -30px rgba(0,0,0,.8)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100dvh;font:400 15px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.orbs{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.orbs i{position:absolute;width:52vmax;height:52vmax;border-radius:50%;filter:blur(72px);opacity:.55;background:radial-gradient(circle,var(--accent),transparent 62%);animation:drift 22s ease-in-out infinite alternate}
+.orbs i:nth-child(2){left:55%;top:40%;width:44vmax;height:44vmax;background:radial-gradient(circle,var(--accent-2),transparent 62%);animation-duration:28s}
+.orbs i:nth-child(3){left:-12%;top:60%;width:36vmax;height:36vmax;animation-duration:19s}
+@keyframes drift{to{transform:translate(8vw,-6vh) scale(1.08)}}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.98)}}
+h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0;line-height:1.05;letter-spacing:-.035em;font-weight:800}
+h1{font-size:clamp(34px,5vw,56px)}h2{font-size:24px}h3{font-size:18px}
+p{margin:0}a{color:inherit}
+.muted{color:var(--muted)}
+[hidden]{display:none!important}
+.ic{width:20px;height:20px;flex:0 0 20px;display:block}
+.glass{background:linear-gradient(160deg,var(--glass-hi),var(--glass) 60%);border:1px solid var(--line);border-top-color:var(--glass-hi);border-radius:26px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2),var(--shadow);-webkit-backdrop-filter:blur(24px) saturate(170%);backdrop-filter:blur(24px) saturate(170%);padding:22px;min-width:0;position:relative}
+.edge{border-radius:6px 26px 6px 26px}
+.hero{overflow:hidden}
+.hero:after{content:"";position:absolute;right:-70px;top:-80px;width:230px;height:230px;border-radius:34px;background:linear-gradient(135deg,var(--accent),var(--accent-2));opacity:.28;transform:rotate(18deg);pointer-events:none}
+.chip{display:inline-flex;align-items:center;gap:6px;font:700 12px/1 Figtree,sans-serif;padding:7px 10px;border-radius:4px;background:var(--accent);color:#fff;white-space:nowrap;text-decoration:none}
+.chip.line{background:none;color:var(--accent);box-shadow:inset 0 0 0 1px currentColor}
+.chip.bad{background:var(--bad)}.chip.warn{background:var(--warn)}
+.btn{appearance:none;border:0;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 18px;border-radius:12px;font:700 14px/1 Figtree,sans-serif;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 12px 26px -12px var(--accent),inset 0 1px 0 rgba(255,255,255,.35);cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:var(--glass);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.icon{background:none;box-shadow:none;color:var(--muted);padding:8px}
+.btn.icon:hover{color:var(--bad)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+label{display:grid;gap:7px;font:650 13px Figtree,sans-serif;color:var(--muted);min-width:0}
+input,select,textarea{width:100%;min-width:0;padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--ink);font:500 15px Figtree,sans-serif}
+select option{color:#111}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 60%,transparent);outline-offset:2px}
+.form{display:grid;gap:14px}
+.inline{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));align-items:end}
+.full{grid-column:1/-1}
+.sec{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.grid2{display:grid;gap:18px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.stack{display:grid;gap:18px}
+.row{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--line);text-decoration:none;color:inherit;min-width:0}
+.row:first-of-type{border-top:0}
+.row>div{flex:1;min-width:0;overflow-wrap:anywhere}
+.row small{display:block;color:var(--muted);font-size:13px}
+.time{min-width:88px;font:600 14px Figtree,sans-serif;color:var(--muted);font-variant-numeric:tabular-nums}
+.big{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(36px,4.6vw,54px);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .5s}
+.empty{padding:18px 0;color:var(--muted)}
+.scroll{overflow-x:auto}
+.week{display:grid;grid-template-columns:repeat(7,minmax(138px,1fr));min-width:980px;gap:10px}
+@media (min-width:1180px){.week{min-width:0}}
+.day{padding:14px 12px;border-radius:18px;background:var(--glass);border:1px solid var(--line);min-width:0}
+.day h3{font-size:16px;margin-bottom:12px}
+.slot{position:relative;padding:10px 34px 10px 12px;margin-bottom:8px;border-radius:6px 14px 6px 14px;background:color-mix(in srgb,var(--accent) 14%,transparent);border-left:3px solid var(--accent)}
+.slot.clash{border-left-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,transparent)}
+.slot strong{display:block;font-size:14px;overflow-wrap:anywhere}
+.slot small{display:block;color:var(--muted);font-size:12px}
+.slot .btn{position:absolute;top:2px;right:2px;padding:6px}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:var(--glass-hi);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border-top:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.tabbar a,.nav a{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 4px;border-radius:14px;color:var(--muted);text-decoration:none;font:650 11px Figtree,sans-serif}
+.tabbar a[aria-current],.nav a[aria-current]{color:var(--ink);background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 36%,transparent),transparent)}
+.tabbar a[aria-current] .ic,.nav a[aria-current] .ic{color:var(--accent)}
+.rail{display:none}
+.main{padding:calc(env(safe-area-inset-top,0px) + 22px) 16px 124px;max-width:1140px;margin:0 auto}
+.top{margin-bottom:26px}
+.top p{color:var(--muted);margin-top:10px}
+.brand{display:flex;align-items:center;gap:11px;font:800 20px "Bricolage Grotesque",sans-serif;letter-spacing:-.03em;padding:6px 8px 24px}
+.mark{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border-radius:6px 15px 6px 15px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 10px 24px -10px var(--accent)}
+.nav{display:grid;gap:4px}
+.nav a{flex-direction:row;gap:12px;font-size:14px;padding:11px 12px;border-radius:12px}
+.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translate(-50%,14px);opacity:0;pointer-events:none;z-index:30;max-width:90vw;padding:12px 16px;border-radius:12px;background:var(--ink);color:var(--bg);font:650 14px Figtree,sans-serif;transition:.3s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.onb{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:18px;overflow:auto;background:color-mix(in srgb,var(--bg) 55%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.onb-card{width:min(100%,540px);padding:30px;display:grid;gap:20px;animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+.onb-step{display:none;gap:16px}
+.onb-step.on{display:grid}
+.onb-step.on>*{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.onb-step.on>*:nth-child(2){animation-delay:.08s}
+.onb-step.on>*:nth-child(3){animation-delay:.16s}
+.onb-step.on>*:nth-child(4){animation-delay:.24s}
+.progress{display:flex;gap:8px}
+.progress span{flex:1;height:4px;border-radius:9px;background:var(--line);transition:background .3s}
+.progress span.on{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.onb-actions{display:flex;justify-content:space-between;gap:10px}
+.roles{display:grid;gap:12px}
+.role{display:flex;align-items:center;gap:14px;padding:16px;text-align:left;border-radius:18px;border:1px solid var(--line);background:var(--glass);color:var(--ink);cursor:pointer;font:inherit;transition:transform .2s,box-shadow .2s}
+.role:hover{transform:translateY(-2px)}
+.role[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent),0 16px 30px -18px var(--accent)}
+.role strong{display:block;font-size:16px}
+.role small{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.bubble{display:grid;place-items:center;width:52px;height:52px;flex:0 0 52px;border-radius:6px 16px 6px 16px;background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--accent)}
+.bubble .ic{width:26px;height:26px;flex-basis:26px}
+.prose{max-width:64ch;line-height:1.7}
+.prose h3{margin:24px 0 6px}
+@media (min-width:900px){
+.app{display:grid;grid-template-columns:272px 1fr;min-height:100dvh}
+.rail{display:flex;flex-direction:column;position:sticky;top:0;height:100dvh;margin:14px 0 14px 14px;padding:22px 14px;border-radius:28px}
+.nav a{flex-direction:row}
+.tabbar{display:none}
+.main{margin:0;max-width:none;padding:44px 52px 64px}
+.toast{bottom:30px}
+}
+.install{position:absolute;top:14px;right:14px;z-index:2;gap:8px;padding:10px 14px;font-size:13px;box-shadow:0 14px 30px -14px var(--accent),inset 0 1px 0 rgba(255,255,255,.4)}
+.install .ic{width:17px;height:17px;flex-basis:17px}
+.install[data-ready="true"]{animation:ring 2.4s ease-out infinite}
+@keyframes ring{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 50%,transparent),0 14px 30px -14px var(--accent)}100%{box-shadow:0 0 0 14px transparent,0 14px 30px -14px var(--accent)}}
+.sheet{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:18px;background:color-mix(in srgb,var(--bg) 55%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.sheet[hidden]{display:none}
+.sheet-card{width:min(100%,460px);display:grid;gap:14px;animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+.logo-img{width:40px;height:40px;flex:0 0 40px;border-radius:12px;display:block;box-shadow:0 10px 24px -10px rgba(83,103,245,.45)}
+.logo-img.logo-xl{width:56px;height:56px;flex-basis:56px;border-radius:16px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5V4.5"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></symbol>
+<symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M9 7.5h6M9 12h.01M13 12h.01M9 16h.01M13 16h.01"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 3 9 3 12 0v-5"/></symbol>
+<symbol id="i-screen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2.5"/><path d="M8 21h8M12 17v4"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 21a2 2 0 0 0 4 0"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></symbol>
+</defs></svg>
+<div class="orbs" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<section class="onb" id="onb" aria-label="Welcome to StudentHub" hidden>
+  <div class="glass onb-card">
+    <div class="progress" aria-hidden="true"><span class="on"></span><span></span><span></span></div>
+    <div class="onb-step on" data-s="0">
+      <img class="logo-img" src="icon-192.png" width="40" height="40" alt="">
+      <h1>Welcome to StudentHub.</h1>
+      <p class="muted">Classes, exams, study time, money and course materials in one calm space. Setup takes under a minute.</p>
+    </div>
+    <div class="onb-step" data-s="1">
+      <h2>How will you use it?</h2>
+      <div class="roles">
+        <button class="role" type="button" data-role="student" aria-pressed="false"><span class="bubble"><svg class="ic"><use href="#i-cap"/></svg></span><span><strong>Student</strong><small>Classes, exams, study plans and spending.</small></span></button>
+        <button class="role" type="button" data-role="lecturer" aria-pressed="false"><span class="bubble"><svg class="ic"><use href="#i-screen"/></svg></span><span><strong>Lecturer</strong><small>Teaching schedule, reminders and course materials.</small></span></button>
+      </div>
+      <label>Your name (optional)<input id="onbName" maxlength="40" autocomplete="name" placeholder="What should we call you?"></label>
+    </div>
+    <div class="onb-step" data-s="2">
+      <h2 id="onbReadyTitle">You’re all set.</h2>
+      <p class="muted" id="onbReadyText"></p>
+      <p class="muted" style="font-size:13px">Your choices stay on this device. This is not a secure account login.</p>
+    </div>
+    <div class="onb-actions">
+      <button class="btn ghost" id="onbBack" type="button" hidden>Back</button>
+      <button class="btn" id="onbNext" type="button">Continue <svg class="ic"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<div class="app">
+  <aside class="glass rail" aria-label="Main navigation">
+    <div class="brand"><img class="logo-img logo-xl" src="icon-192.png" width="56" height="56" alt="StudentHub logo">StudentHub</div>
+    <nav class="nav" id="nav" aria-label="Sections"></nav>
+  </aside>
+  <main class="main">
+    <header class="top"><h1 id="ttl"></h1><p id="sub"></p></header>
+    <div id="views"></div>
+  </main>
+</div>
+<nav class="tabbar" id="tab" aria-label="Sections"></nav>
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="glass sheet-card">
+    <div class="sec"><h3 id="sheetTitle">Install StudentHub</h3><button class="btn icon" type="button" data-act="close-sheet" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <p class="muted" id="sheetBody"></p>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const load = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const I = (n) => `<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const uid = () => Math.random().toString(36).slice(2, 10);
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const CATS = ['Food','Transport','Data and airtime','School fees','Books and printing','Other'];
+const GRADES = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
+const WINDOWS = { Morning: [420, 660], Afternoon: [720, 960], Evening: [1020, 1260], Night: [1260, 1380], Flexible: [480, 1320] };
+const TITLES = { home: ['Today', 'Dashboard'], classes: 'Classes and exams', study: 'Study planner', money: 'Money', gpa: 'GPA calculator', materials: ['Study materials', 'Course materials'], more: 'More', settings: 'Settings', privacy: 'Privacy', terms: 'Terms' };
+const SUBS = { home: ['Your classes, exams and spending in one place.', 'Your teaching week, reminders and materials.'], classes: 'Your weekly timetable, exam dates and reminders.', study: 'Turn your classes and exams into sessions you can keep.', money: 'Track what you spend against your monthly budget.', gpa: 'Enter your courses to calculate your semester GPA.', materials: ['Trusted places to find textbooks and past questions.', 'Share links and notes with your students.'], more: 'Tools and settings.', settings: 'Your name, role, budget and theme.', privacy: 'What StudentHub stores, and which Google services run on this site.', terms: 'The short version.' };
+const ROUTES = {
+  student: { views: ['home','classes','study','money','gpa','materials','more','settings','privacy','terms'], nav: [['home','home','Today'],['classes','calendar','Classes'],['study','book','Study'],['money','wallet','Money'],['gpa','calc','GPA'],['materials','search','Materials'],['settings','gear','Settings']], tab: [['home','home','Today'],['classes','calendar','Classes'],['study','book','Study'],['money','wallet','Money'],['more','menu','More']] },
+  lecturer: { views: ['home','materials','settings','privacy','terms'], nav: [['home','home','Dashboard'],['materials','upload','Course materials'],['settings','gear','Settings']], tab: [['home','home','Dashboard'],['materials','upload','Materials'],['settings','gear','Settings']] }
+};
+const DEFAULT_PREFS = { budget: 0, theme: 'system', perDay: 1, lead: 15, remind: false };
+const blank = () => ({ course: '', units: '', grade: 'A' });
+
+let role = localStorage.getItem('studenthubRole') || 'student';
+let prefs = { ...DEFAULT_PREFS, ...load('studentPrefs', {}) };
+let classes = load('studentClasses', []);
+let teach = load('lecturerClasses', []);
+let exams = load('studentExams', []);
+let expenses = load('studentExpenses', []);
+let gpa = load('studentGpa', []);
+let materials = load('lecturerMaterials', []);
+if (!gpa.length) gpa = [blank()];
+let current = 'home';
+const sent = new Set();
+let toastTimer;
+
+const saveAll = () => { save('studentPrefs', prefs); save('studentClasses', classes); save('lecturerClasses', teach); save('studentExams', exams); save('studentExpenses', expenses); save('studentGpa', gpa); save('lecturerMaterials', materials); };
+const toMin = (t) => { const [h, m] = String(t).split(':').map(Number); return h * 60 + m; };
+const hm = (m) => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+const t12 = (t) => { let [h, m] = t.split(':').map(Number); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return h + ':' + String(m).padStart(2, '0') + ' ' + ap; };
+const dayName = (d) => DAYS[(d.getDay() + 6) % 7];
+const today0 = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+const daysTo = (iso) => Math.round((new Date(iso + 'T00:00') - today0()) / 864e5);
+const naira = (n) => '₦' + Math.round(Number(n) || 0).toLocaleString('en-NG');
+const cnt = (n) => n === 0 ? 'today' : n === 1 ? 'tomorrow' : n < 0 ? 'passed' : 'in ' + n + ' days';
+const monthKey = (d = new Date()) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+const todayIso = () => { const d = new Date(); return monthKey(d) + '-' + String(d.getDate()).padStart(2, '0'); };
+const fmtDate = (iso) => iso ? new Date(iso + 'T00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : '';
+const dayOf = (list, d) => list.filter((c) => c.day === d).sort((a, b) => toMin(a.startTime) - toMin(b.startTime));
+const clashes = (list, d, s, e, skip) => dayOf(list, d).some((c) => c.id !== skip && toMin(c.startTime) < e && toMin(c.endTime) > s);
+const examsSorted = () => [...exams].sort((a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || '')));
+const upcomingExams = () => examsSorted().filter((e) => daysTo(e.date) >= 0);
+const monthSpent = (cat) => expenses.filter((e) => (e.date || '').startsWith(monthKey()) && (!cat || e.category === cat)).reduce((a, e) => a + Number(e.amount), 0);
+const greeting = () => { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'; };
+const studentName = () => localStorage.getItem('studentName') || '';
+const applyTheme = () => { document.documentElement.dataset.theme = prefs.theme === 'system' ? '' : prefs.theme; };
+const pick = (v) => Array.isArray(v) ? v[role === 'lecturer' ? 1 : 0] : v;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 2600); }
+function notify(title, body) { try { if ('Notification' in window && Notification.permission === 'granted') new Notification(title, { body }); } catch {} }
+
+function makePlan() {
+  const session = Number(localStorage.getItem('studyDuration')) || 60;
+  const [ws, we] = WINDOWS[localStorage.getItem('studyPreference')] || WINDOWS.Evening;
+  const subjects = [...upcomingExams().map((e) => (e.code || e.title) + ', exam ' + cnt(daysTo(e.date))), ...new Set(classes.map((c) => c.course))];
+  if (!subjects.length) return [];
+  const now = new Date(), nowMin = now.getHours() * 60 + now.getMinutes(), base = today0(), out = [];
+  let k = 0;
+  for (let d = 0; d < 7; d++) {
+    const day = new Date(base); day.setDate(base.getDate() + d);
+    const list = dayOf(classes, dayName(day));
+    let placed = 0;
+    for (let s = ws; s + session <= we && placed < prefs.perDay; s += 30) {
+      const e = s + session;
+      if ((d === 0 && s < nowMin) || list.some((c) => toMin(c.startTime) < e && toMin(c.endTime) > s)) continue;
+      out.push({ day, s, e, subject: subjects[k++ % subjects.length] });
+      placed++;
+      s = e - 30;
+    }
+  }
+  return out;
+}
+
+function checkReminders() {
+  if (!prefs.remind) return;
+  const now = Date.now(), lead = prefs.lead * 60000, list = [], today = today0();
+  dayOf(role === 'lecturer' ? teach : classes, dayName(today)).forEach((c) => {
+    const [h, m] = c.startTime.split(':').map(Number);
+    const at = new Date(today); at.setHours(h, m, 0, 0);
+    list.push({ key: c.id + todayIso(), t: at.getTime(), title: c.course, body: 'Starts at ' + t12(c.startTime) + (c.room ? ' in ' + c.room : '') });
+  });
+  if (role !== 'lecturer') exams.forEach((e) => { if (e.time) list.push({ key: e.id + e.date, t: new Date(e.date + 'T' + e.time).getTime(), title: (e.code || e.title) + ' exam', body: 'Starts at ' + t12(e.time) + (e.venue ? ', ' + e.venue : '') }); });
+  list.forEach((ev) => { const diff = ev.t - now; if (diff > 0 && diff <= lead && !sent.has(ev.key)) { sent.add(ev.key); toast(ev.title + ': ' + ev.body); notify(ev.title, ev.body); } });
+}
+async function toggleRemind() {
+  if (prefs.remind) { prefs.remind = false; toast('Reminders turned off.'); }
+  else {
+    prefs.remind = true;
+    if ('Notification' in window && Notification.permission === 'default') { try { await Notification.requestPermission(); } catch {} }
+    toast('Reminders on. Alerts appear while StudentHub is open.');
+    checkReminders();
+  }
+  saveAll(); render();
+}
+
+const classForm = (id) => `<form class="inline" id="${id}">
+  <label class="full">Course<input name="course" required maxlength="60" placeholder="MTH 101"></label>
+  <label>Day<select name="day">${DAYS.map((d) => `<option>${d}</option>`).join('')}</select></label>
+  <label>Start<input type="time" name="start" required></label>
+  <label>End<input type="time" name="end" required></label>
+  <label>Room<input name="room" maxlength="40" placeholder="LT 3"></label>
+  <button class="btn" type="submit">Save class</button></form>`;
+const remindPanel = () => `<div class="sec"><h3>Reminders</h3><span class="chip ${prefs.remind ? '' : 'line'}">${I('bell')}${prefs.remind ? 'On' : 'Off'}</span></div>
+  <p class="muted">Heads-ups before classes${role === 'lecturer' ? '' : ' and exams'}. Alerts show in the app while this tab is open. System notifications need your permission.</p>
+  <div class="inline" style="margin-top:18px"><label>Remind me before<select data-pref="lead">${[5, 10, 15, 30, 60].map((m) => `<option value="${m}" ${prefs.lead == m ? 'selected' : ''}>${m === 60 ? '1 hour' : m + ' minutes'}</option>`).join('')}</select></label><button class="btn" data-act="remind">${prefs.remind ? 'Turn off reminders' : 'Turn on reminders'}</button></div>`;
+function week(list, k) {
+  return `<div class="scroll"><div class="week">${DAYS.map((d) => `<div class="day"><h3>${d}</h3>${dayOf(list, d).map((c) => { const hit = clashes(list, d, toMin(c.startTime), toMin(c.endTime), c.id); return `<div class="slot ${hit ? 'clash' : ''}"><strong>${esc(c.course)}</strong><small>${t12(c.startTime)} to ${t12(c.endTime)}</small><small>${esc(c.room || 'Room to be confirmed')}${hit ? ', clashes' : ''}</small><button class="btn icon" data-act="del-class" data-k="${k}" data-id="${c.id}" aria-label="Delete ${esc(c.course)}">${I('x')}</button></div>`; }).join('') || '<p class="muted" style="font-size:13px">No classes</p>'}</div>`).join('')}</div></div>`;
+}
+const rowOf = (c) => `<div class="row"><span class="time">${t12(c.startTime)}</span><div><strong>${esc(c.course)}</strong><small>${esc(c.room || 'Room to be confirmed')}, until ${t12(c.endTime)}</small></div></div>`;
+const installBtn = () => `<button class="btn install" type="button" data-act="install" hidden>${I('download')}<span>Install app</span></button>`;
+const greetHero = (sub) => { const n = studentName(); return `<section class="glass hero edge">${role === 'lecturer' ? '' : installBtn()}<p class="muted">${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p><h2 class="big" style="margin-top:14px">${greeting()}${n ? ', ' + esc(n) : ''}.</h2><p class="muted" style="margin-top:12px">${sub}</p></section>`; };
+
+function renderToday() {
+  const now = new Date(), todays = dayOf(classes, dayName(now)), ups = upcomingExams(), ex = ups[0], plan = makePlan()[0];
+  const spent = monthSpent(), left = prefs.budget - spent;
+  return `${greetHero(`${todays.length} class${todays.length === 1 ? '' : 'es'} today${ups.length ? ', ' + ups.length + ' exam' + (ups.length > 1 ? 's' : '') + ' ahead' : ''}.`)}
+  <div class="grid2" style="margin-top:18px">
+    <section class="glass"><h3 class="sec">Classes today</h3>${todays.map(rowOf).join('') || '<p class="empty">Nothing scheduled today. Add classes in Classes.</p>'}</section>
+    <section class="glass stack" style="align-content:start">
+      <div><p class="muted">Next exam</p>${ex ? `<p class="big" style="font-size:34px;margin-top:10px">${esc(ex.code || ex.title)}</p><p class="muted" style="margin-top:8px">${esc(ex.title)}, ${cnt(daysTo(ex.date))}</p>` : '<p style="margin-top:10px;font-weight:700">No exams yet</p><p class="muted">Add exam dates in Classes.</p>'}</div>
+      <div><p class="muted">Next study session</p>${plan ? `<p style="margin-top:10px;font-weight:700">${esc(plan.subject)}</p><p class="muted">${plan.day.toLocaleDateString('en-GB', { weekday: 'long' })}, ${t12(hm(plan.s))} to ${t12(hm(plan.e))}</p>` : '<p class="muted" style="margin-top:10px">Build a plan in Study.</p>'}</div>
+    </section>
+  </div>
+  <section class="glass" style="margin-top:18px"><div class="sec"><h3>Spent this month</h3>${I('wallet')}</div><p class="big" style="font-size:40px">${naira(spent)}</p>${prefs.budget > 0 ? `<div class="bar" style="margin:16px 0 8px"><i style="width:${Math.min(100, spent / prefs.budget * 100)}%"></i></div><p class="muted">${left >= 0 ? naira(left) + ' left' : naira(-left) + ' over'} of ${naira(prefs.budget)}</p>` : '<p class="muted" style="margin-top:10px">Set a monthly budget in Settings.</p>'}</section>`;
+}
+
+function renderTeach() {
+  const list = dayOf(teach, dayName(new Date()));
+  return `${greetHero(`${list.length} teaching session${list.length === 1 ? '' : 's'} today.`)}
+  <div class="grid2" style="margin-top:18px">
+    <section class="glass"><h3 class="sec">Teaching today</h3>${list.map(rowOf).join('') || '<p class="empty">No teaching today. Add your schedule below.</p>'}</section>
+    <section class="glass">${remindPanel()}</section>
+  </div>
+  <section class="glass" style="margin-top:18px"><h3 class="sec">Add to your schedule</h3>${classForm('teachForm')}</section>
+  <h2 class="sec" style="margin:34px 0 16px">Weekly schedule</h2>
+  ${week(teach, 'teach')}
+  <section class="glass" style="margin-top:22px"><div class="sec"><h3>Course materials</h3><a class="chip" href="#materials">${materials.length} shared</a></div><p class="muted">Share links and short notes with your students.</p></section>`;
+}
+
+function renderClasses() {
+  return `<div class="grid2">
+    <section class="glass"><h3 class="sec">Add a class</h3>${classForm('classForm')}</section>
+    <section class="glass">${remindPanel()}</section>
+  </div>
+  <h2 class="sec" style="margin:34px 0 16px">Weekly timetable</h2>
+  ${week(classes, 'student')}
+  <div class="grid2" style="margin-top:34px">
+    <section class="glass"><h3 class="sec" id="examTitle">Add an exam</h3>
+      <form class="form inline" id="examForm"><input type="hidden" name="eid">
+        <label>Course code<input name="code" required maxlength="20" placeholder="MTH 101"></label>
+        <label>Title<input name="title" required maxlength="60" placeholder="Calculus I"></label>
+        <label>Date<input type="date" name="date" required></label>
+        <label>Time<input type="time" name="time"></label>
+        <label>Venue<input name="venue" maxlength="60" placeholder="Hall A"></label>
+        <label class="full">Notes<textarea name="notes" rows="2" maxlength="200" placeholder="Topics or what to bring"></textarea></label>
+        <div class="full" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="examSave" type="submit">Save exam</button><button class="btn ghost" id="examCancel" type="button" data-act="cancel-exam" hidden>Cancel</button></div>
+      </form></section>
+    <section class="glass"><h3 class="sec">Exams</h3>${examsSorted().map((e) => { const n = daysTo(e.date); const cls = n < 0 ? 'ghost' : n <= 3 ? 'bad' : n <= 7 ? 'warn' : ''; return `<div class="row"><span class="chip ${cls}" style="min-width:72px;justify-content:center">${n < 0 ? 'Done' : n === 0 ? 'Today' : n + ' days'}</span><div><strong>${esc(e.code)}, ${esc(e.title)}</strong><small>${fmtDate(e.date)}${e.time ? ', ' + t12(e.time) : ''}${e.venue ? ', ' + esc(e.venue) : ''}</small>${e.notes ? `<small>${esc(e.notes)}</small>` : ''}</div><button class="btn icon" data-act="edit-exam" data-id="${e.id}" aria-label="Edit ${esc(e.title)}">Edit</button><button class="btn icon" data-act="del-exam" data-id="${e.id}" aria-label="Delete ${esc(e.title)}">${I('x')}</button></div>`; }).join('') || '<p class="empty">No exams yet. Add your exam dates so they show on Today.</p>'}</section>
+  </div>`;
+}
+
+function renderStudy() {
+  const plan = makePlan(), time = localStorage.getItem('studyPreference') || 'Evening', dur = localStorage.getItem('studyDuration') || '60';
+  return `<div class="grid2">
+    <section class="glass"><h3 class="sec">Your study rhythm</h3>
+      <form class="form" id="studyForm">
+        <div class="inline">
+          <label>Preferred time<select name="time">${Object.keys(WINDOWS).map((k) => `<option ${k === time ? 'selected' : ''}>${k}</option>`).join('')}</select></label>
+          <label>Session length<select name="session">${[30, 45, 60, 90, 120].map((m) => `<option value="${m}" ${m == dur ? 'selected' : ''}>${m} minutes</option>`).join('')}</select></label>
+          <label>Sessions a day<select name="perDay">${[1, 2, 3].map((n) => `<option value="${n}" ${n == prefs.perDay ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+        </div>
+        <div><button class="btn" type="submit">Build study plan</button></div>
+      </form></section>
+    <section class="glass"><h3 class="sec">Tips</h3><p class="muted">Start with the exam closest to you, then the next one. Revise in focused blocks, and leave a short break between them.</p></section>
+  </div>
+  <h2 class="sec" style="margin:34px 0 16px">Next seven days</h2>
+  ${plan.length ? plan.map((p) => `<div class="row"><span class="time" style="min-width:160px">${p.day.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}, ${t12(hm(p.s))}</span><div><strong>${esc(p.subject)}</strong><small>${t12(hm(p.s))} to ${t12(hm(p.e))}</small></div></div>`).join('') : `<p class="empty">${classes.length || exams.length ? 'No free slots in your preferred time. Try another time or a shorter session.' : 'Add classes or exams first, then build your plan.'}</p>`}`;
+}
+
+function renderMoney() {
+  const spent = monthSpent(), total = expenses.reduce((a, e) => a + Number(e.amount), 0), left = prefs.budget - spent;
+  const cats = CATS.map((c) => [c, monthSpent(c)]), max = Math.max(1, ...cats.map((x) => x[1]));
+  return `<div class="grid2">
+    <section class="glass"><p class="muted">Spent this month</p><p class="big" style="margin-top:10px">${naira(spent)}</p>
+      ${prefs.budget > 0 ? `<div class="bar" style="margin:18px 0 8px"><i style="width:${Math.min(100, spent / prefs.budget * 100)}%"></i></div><p class="muted">${left >= 0 ? naira(left) + ' left' : naira(-left) + ' over'} of ${naira(prefs.budget)}</p>` : '<p class="muted" style="margin-top:12px">Set a monthly budget in Settings to track progress.</p>'}
+      <div style="margin-top:24px">${cats.map(([c, v]) => `<div class="sec" style="margin:12px 0 6px"><span>${esc(c)}</span><span class="num muted">${naira(v)}</span></div><div class="bar" style="height:6px"><i style="width:${v / max * 100}%"></i></div>`).join('')}</div></section>
+    <section class="glass"><h3 class="sec">Log an expense</h3>
+      <form class="inline" id="expForm">
+        <label class="full">What was it?<input name="name" required maxlength="60" placeholder="Lunch at the canteen"></label>
+        <label>Amount (₦)<input name="amount" type="number" min="1" step="any" required></label>
+        <label>Category<select name="category">${CATS.map((c) => `<option>${esc(c)}</option>`).join('')}</select></label>
+        <label>Date<input type="date" name="date" value="${todayIso()}" required></label>
+        <button class="btn" type="submit">Add expense</button>
+      </form></section>
+  </div>
+  <h2 class="sec" style="margin:34px 0 16px">History <span class="muted" style="font-size:15px;font-weight:600">All time, ${naira(total)}</span></h2>
+  <section class="glass">${[...expenses].sort((a, b) => (b.date || '').localeCompare(a.date || '')).map((e) => `<div class="row"><span class="chip line">${esc(e.category)}</span><div><strong>${esc(e.name)}</strong><small>${fmtDate(e.date)}</small></div><strong class="num">${naira(e.amount)}</strong><button class="btn icon" data-act="del-exp" data-id="${e.id}" aria-label="Delete ${esc(e.name)}">${I('x')}</button></div>`).join('') || '<p class="empty">No expenses logged yet.</p>'}</section>`;
+}
+
+function renderGpa() {
+  return `<div class="grid2">
+    <section class="glass"><div class="sec"><h3>Your courses</h3><button class="btn ghost" data-act="gpa-add">${I('plus')}Add course</button></div>
+      <form id="gpaForm">${gpa.map((r, i) => `<div class="inline" style="grid-template-columns:1fr 78px 88px 40px;margin-bottom:10px"><input name="course" placeholder="Course" value="${esc(r.course)}" aria-label="Course ${i + 1}"><input name="units" type="number" min="1" max="12" step="1" placeholder="Units" value="${esc(r.units)}" aria-label="Units, course ${i + 1}"><select name="grade" aria-label="Grade, course ${i + 1}">${Object.keys(GRADES).map((g) => `<option ${g === r.grade ? 'selected' : ''}>${g}</option>`).join('')}</select><button type="button" class="btn icon" data-act="gpa-del" data-i="${i}" aria-label="Remove course ${i + 1}">${I('x')}</button></div>`).join('')}</form></section>
+    <section class="glass"><h3 class="sec">Your GPA</h3><p class="big" id="gpaOut">—</p><p class="muted" id="gpaCls" style="margin-top:10px">Enter units and grades to see your GPA.</p>
+      <p class="muted" style="margin-top:20px;font-size:14px">Grades: A is 5, B is 4, C is 3, D is 2, E is 1 and F is 0. Classes run from 4.50 for First Class, 3.50 for Upper Second, 2.40 for Lower Second, 1.50 for Third and 1.00 for Pass.</p></section>
+  </div>`;
+}
+
+function renderCourseMats() {
+  const courses = [...new Set(teach.map((c) => c.course).filter(Boolean))];
+  return `<div class="grid2">
+    <section class="glass"><h3 class="sec">Add material</h3>
+      <form class="form" id="matForm">
+        <label>Title<input name="title" required maxlength="80" placeholder="Week 3 lecture notes"></label>
+        <label>Course<input name="course" maxlength="40" list="courseList" placeholder="MTH 101"><datalist id="courseList">${courses.map((c) => `<option value="${esc(c)}">`).join('')}</datalist></label>
+        <label>Link or note<textarea name="value" required rows="4" maxlength="2000" placeholder="Paste a link starting with https:// or write a short note"></textarea></label>
+        <div><button class="btn" type="submit">${I('plus')}Add material</button></div>
+      </form></section>
+    <section class="glass"><h3 class="sec">Shared with students</h3>${materials.map((m) => { const link = /^https?:\/\//i.test(m.value); return `<div class="row">${I(link ? 'link' : 'file')}<div><strong>${esc(m.title)}</strong><small>${m.course ? esc(m.course) + ', ' : ''}${fmtDate(m.date)}</small>${link ? `<a class="chip line" style="margin-top:10px" href="${esc(m.value)}" target="_blank" rel="noopener">Open link</a>` : `<p class="muted" style="margin-top:8px;white-space:pre-wrap">${esc(m.value)}</p>`}</div><button class="btn icon" data-act="del-mat" data-id="${m.id}" aria-label="Delete ${esc(m.title)}">${I('trash')}</button></div>`; }).join('') || '<p class="empty">No materials yet. Add your first link or note.</p>'}</section>
+  </div>`;
+}
+
+function renderMaterials() {
+  const courses = [...new Set(classes.map((c) => (c.course || '').trim()).filter(Boolean))];
+  const q = (c) => 'https://www.google.com/search?q=' + encodeURIComponent(c + ' past questions');
+  const explore = [['AbSApp, AbS Tech Connect', 'Books, past questions, handouts and notes.', 'https://www.abstechconnect.com/library'], ['Rugga Library', 'Library resources and academic reading.', 'https://www.google.com/search?q=Rugga%20Library%20official%20website'], ['ExamGuard', 'Exam preparation, practice questions and revision.', 'https://www.google.com/search?q=ExamGuard%20student%20learning%20website'], ['ArewaUniHub', 'Student-contributed notes, summaries and past questions.', 'https://arewaunihub.com/'], ['Acadron', 'Nigerian university past questions and study notes.', 'https://acadron.com.ng/'], ['OpenStax', 'Free, openly licensed textbooks.', 'https://openstax.org/subjects'], ['Open Textbook Library', 'Openly licensed textbooks across many subjects.', 'https://open.umn.edu/opentextbooks'], ['DOAB', 'Open-access scholarly books, peer reviewed.', 'https://www.doabooks.org/']];
+  return `<label style="margin-bottom:24px">Search resources<input id="matSearch" type="search" placeholder="Try textbook, past questions or OpenStax"></label>
+  ${courses.length ? `<h2 class="sec">For your courses</h2><section class="glass">${courses.map((c) => `<a class="row" href="${q(c)}" target="_blank" rel="noopener" data-t="${esc((c + ' past questions').toLowerCase())}">${I('search')}<div><strong>${esc(c)}, past questions</strong><small>Search the web for papers and notes for this course.</small></div></a>`).join('')}</section>` : ''}
+  <h2 class="sec" style="margin-top:30px">Explore</h2>
+  <section class="glass">${explore.map(([n, d, u]) => `<a class="row" href="${u}" target="_blank" rel="noopener" data-t="${esc((n + ' ' + d).toLowerCase())}">${I('book')}<div><strong>${esc(n)}</strong><small>${esc(d)}</small></div></a>`).join('')}</section>`;
+}
+
+const roleBtn = (r, label, desc, icon) => `<button class="role" type="button" data-set-role="${r}" aria-pressed="${role === r}"><span class="bubble">${I(icon)}</span><span><strong>${label}</strong><small>${desc}</small></span></button>`;
+function renderSettings() {
+  return `<div class="grid2">
+    <section class="glass"><h3 class="sec">Profile</h3>
+      <form class="form" id="prefForm">
+        <label>Your name<input name="name" maxlength="40" value="${esc(studentName())}" placeholder="What should we call you?"></label>
+        ${role === 'student' ? `<label>Monthly budget (₦)<input name="budget" type="number" min="0" step="500" value="${prefs.budget || ''}" placeholder="Leave empty for none"></label>` : ''}
+        <label>Theme<select name="theme">${[['system', 'Match my device'], ['light', 'Light'], ['dark', 'Dark']].map(([v, l]) => `<option value="${v}" ${prefs.theme === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+        <div><button class="btn" type="submit">Save changes</button></div>
+      </form></section>
+    <section class="glass"><h3 class="sec">Your role</h3>
+      <div class="roles">${roleBtn('student', 'Student', 'Classes, exams, study plans and spending.', 'cap')}${roleBtn('lecturer', 'Lecturer', 'Teaching schedule, reminders and course materials.', 'screen')}</div>
+      <p class="muted" style="margin-top:16px">Switching takes you to the matching dashboard.</p></section>
+  </div>
+  <section class="glass" style="margin-top:18px"><h3 class="sec">Your data</h3><p class="muted">Everything is saved in this browser on this device. There are no accounts.</p><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px"><a class="btn ghost" href="privacy.html">Privacy</a><a class="btn ghost" href="terms.html">Terms</a><a class="btn ghost" href="about.html">About</a><a class="btn ghost" href="contact.html">Contact</a></div><div style="margin-top:18px"><button class="btn ghost" data-act="wipe" style="color:var(--bad)">Erase all data</button></div></section>`;
+}
+
+const renderMore = () => `<section class="glass">${[['gpa', 'calc', 'GPA calculator', 'Calculate your semester GPA.'], ['materials', 'search', 'Study materials', 'Find textbooks and past questions.'], ['settings', 'gear', 'Settings', 'Name, role, budget and theme.'], ['privacy', 'file', 'Privacy', 'What is stored, and which Google services run.'], ['terms', 'file', 'Terms', 'The short version.'], ['about', 'info', 'About', 'Who StudentHub is for and how it works.'], ['contact', 'mail', 'Contact', 'Questions, bugs and privacy requests.']].map(([v, ic, t, d]) => `<a class="row" href="#${v}">${I(ic)}<div><strong>${t}</strong><small>${d}</small></div></a>`).join('')}</section>`;
+
+const PRIVACY = `<article class="glass prose"><p class="muted">Last updated 31 October 2026.</p>
+<h3>Google services on this site</h3><p>StudentHub uses Google Analytics to measure visits, and Google AdSense to show advertisements. These services can set cookies and collect technical and usage information. You can manage ad personalisation in Google Ads Settings.</p>
+<h3>What stays on your device</h3><p>Your name, role, timetable, exam dates, expenses, GPA entries, course materials and settings are saved only in this browser on this device. StudentHub does not send them to a server.</p>
+<h3>Reminders</h3><p>Alerts appear while StudentHub is open. System notifications need your permission, and you can turn reminders off at any time.</p>
+<h3>Erasing your data</h3><p>Use Erase all data in Settings, or clear this site’s storage in your browser.</p>
+<h3>Contact</h3><p>getstudenthub@gmail.com</p></article>`;
+const TERMS = `<article class="glass prose"><ul>
+<li>StudentHub is a personal planning tool for students and lecturers. It is not an official university system.</li>
+<li>Confirm exam dates, venues and timetables with your department or the official portal.</li>
+<li>GPAs, budgets and study plans are estimates to help you plan. They are not official results.</li>
+<li>Study materials link to websites we do not control. Their own terms apply.</li>
+<li>StudentHub is provided as is. You use it at your own discretion.</li></ul></article>`;
+
+const RENDER = { home: () => role === 'lecturer' ? renderTeach() : renderToday(), classes: renderClasses, study: renderStudy, money: renderMoney, gpa: renderGpa, materials: () => role === 'lecturer' ? renderCourseMats() : renderMaterials(), more: renderMore, settings: renderSettings, privacy: () => PRIVACY, terms: () => TERMS };
+function render() { const el = $('#v-' + current); if (!el) return; el.innerHTML = RENDER[current](); if (current === 'gpa') updateGpa(); paintInstall(); }
+
+function readGpa() {
+  gpa = [...document.querySelectorAll('.inline input[name=course]')].map((c) => { const row = c.parentElement; return { course: c.value, units: row.querySelector('[name=units]').value, grade: row.querySelector('[name=grade]').value }; });
+  if (!gpa.length) gpa = [blank()];
+}
+const classify = (g) => g >= 4.5 ? 'First Class' : g >= 3.5 ? 'Upper Second Class' : g >= 2.4 ? 'Lower Second Class' : g >= 1.5 ? 'Third Class' : g >= 1 ? 'Pass' : 'Below pass';
+function updateGpa() {
+  if (!$('#gpaOut')) return;
+  readGpa(); saveAll();
+  const rows = gpa.filter((r) => Number(r.units) > 0);
+  const units = rows.reduce((a, r) => a + Number(r.units), 0);
+  const points = rows.reduce((a, r) => a + Number(r.units) * (GRADES[r.grade] ?? 0), 0);
+  $('#gpaOut').textContent = units ? (points / units).toFixed(2) : '—';
+  $('#gpaCls').textContent = units ? classify(points / units) + ', ' + units + ' units' : 'Enter units and grades to see your GPA.';
+}
+
+function fillExam(id) {
+  const e = exams.find((x) => x.id === id), f = $('#examForm');
+  if (!e || !f) return;
+  const set = (n, v) => { f.elements[n].value = v || ''; };
+  set('eid', e.id); set('code', e.code); set('title', e.title); set('date', e.date); set('time', e.time); set('venue', e.venue); set('notes', e.notes);
+  $('#examTitle').textContent = 'Edit exam'; $('#examSave').textContent = 'Update exam'; $('#examCancel').hidden = false;
+  f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function resetExam() {
+  const f = $('#examForm'); if (!f) return;
+  f.reset(); f.elements.eid.value = '';
+  $('#examTitle').textContent = 'Add an exam'; $('#examSave').textContent = 'Save exam'; $('#examCancel').hidden = true;
+}
+function filterMats() { const q = $('#matSearch').value.trim().toLowerCase(); $$('[data-t]').forEach((el) => { el.hidden = !!q && !el.dataset.t.includes(q); }); }
+
+function buildNav() {
+  const R = ROUTES[role] || ROUTES.student;
+  $('#nav').innerHTML = R.nav.map(([v, ic, l]) => `<a href="#${v}" data-nav="${v}">${I(ic)}<span>${l}</span></a>`).join('');
+  $('#tab').innerHTML = R.tab.map(([v, ic, l]) => `<a href="#${v}" data-nav="${v}">${I(ic)}<span>${l}</span></a>`).join('');
+  $('#views').innerHTML = R.views.map((v) => `<section class="view" id="v-${v}" hidden></section>`).join('');
+  document.body.dataset.role = role;
+}
+const tabFor = (v) => role === 'lecturer' ? (v === 'privacy' || v === 'terms' ? 'settings' : v) : (['gpa', 'materials', 'settings', 'privacy', 'terms'].includes(v) ? 'more' : v);
+function route() {
+  const R = ROUTES[role] || ROUTES.student;
+  let v = location.hash.slice(1);
+  if (['privacy', 'terms', 'about', 'contact'].includes(v)) { location.href = v + '.html'; return; }
+  if (!R.views.includes(v)) v = 'home';
+  current = v;
+  $$('.view').forEach((s) => { s.hidden = s.id !== 'v-' + v; });
+  $$('#nav a').forEach((a) => a.dataset.nav === v ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+  $$('#tab a').forEach((a) => a.dataset.nav === tabFor(v) ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+  $('#ttl').textContent = pick(TITLES[v]);
+  $('#sub').textContent = pick(SUBS[v]);
+  document.title = pick(TITLES[v]) + ' | StudentHub';
+  render();
+  window.scrollTo(0, 0);
+}
+function setRole(r) {
+  role = r; localStorage.setItem('studenthubRole', r);
+  buildNav(); location.hash = '#home'; route();
+  toast(r === 'lecturer' ? 'Lecturer dashboard ready.' : 'Student dashboard ready.');
+}
+
+let step = 0, chosen = role;
+const onb = $('#onb');
+function showStep(i) {
+  step = i;
+  $$('.onb-step').forEach((s) => s.classList.toggle('on', Number(s.dataset.s) === i));
+  $$('.progress span').forEach((b, k) => b.classList.toggle('on', k <= i));
+  $('#onbBack').hidden = i === 0;
+  $('#onbNext').innerHTML = (i === 2 ? 'Enter StudentHub ' : 'Continue ') + I('arrow');
+}
+$$('.role[data-role]').forEach((b) => b.addEventListener('click', () => {
+  chosen = b.dataset.role;
+  $$('.role[data-role]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+}));
+$('#onbName').value = studentName();
+$('#onbBack').addEventListener('click', () => showStep(Math.max(0, step - 1)));
+$('#onbNext').addEventListener('click', () => {
+  if (step === 0) return showStep(1);
+  if (step === 1) {
+    if (!chosen) return toast('Choose student or lecturer to continue.');
+    const n = $('#onbName').value.trim();
+    $('#onbReadyTitle').textContent = n ? 'You’re all set, ' + n + '.' : 'You’re all set.';
+    $('#onbReadyText').textContent = chosen === 'lecturer' ? 'Your dashboard shows your teaching schedule, reminders and course materials.' : 'Your dashboard shows today’s classes, exams, study plan and spending.';
+    return showStep(2);
+  }
+  const n = $('#onbName').value.trim().slice(0, 40);
+  if (n) localStorage.setItem('studentName', n); else localStorage.removeItem('studentName');
+  localStorage.setItem('studenthubOnboardingComplete', 'true');
+  onb.hidden = true;
+  setRole(chosen);
+});
+
+document.addEventListener('click', (e) => {
+  const sr = e.target.closest('[data-set-role]');
+  if (sr) { if (sr.dataset.setRole !== role) setRole(sr.dataset.setRole); return; }
+  const b = e.target.closest('[data-act]');
+  if (!b) return;
+  const a = b.dataset.act, id = b.dataset.id;
+  switch (a) {
+    case 'remind': return toggleRemind();
+    case 'install': return installApp();
+    case 'close-sheet': return closeSheet();
+    case 'edit-exam': return fillExam(id);
+    case 'cancel-exam': return resetExam();
+    case 'wipe': {
+      if (!confirm('Erase all StudentHub data on this device?')) return;
+      ['studenthubRole', 'studenthubOnboardingComplete', 'studentName', 'studyPreference', 'studyDuration', 'studentPrefs', 'studentClasses', 'lecturerClasses', 'studentExams', 'studentExpenses', 'studentGpa', 'lecturerMaterials'].forEach((k) => localStorage.removeItem(k));
+      location.reload(); return;
+    }
+    case 'del-class': if (b.dataset.k === 'teach') teach = teach.filter((x) => x.id !== id); else classes = classes.filter((x) => x.id !== id); break;
+    case 'del-exam': exams = exams.filter((x) => x.id !== id); break;
+    case 'del-exp': expenses = expenses.filter((x) => x.id !== id); break;
+    case 'del-mat': materials = materials.filter((x) => x.id !== id); break;
+    case 'gpa-add': readGpa(); gpa.push(blank()); break;
+    case 'gpa-del': readGpa(); gpa.splice(Number(b.dataset.i), 1); if (!gpa.length) gpa.push(blank()); break;
+    default: return;
+  }
+  saveAll(); render();
+});
+
+document.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const f = e.target, v = Object.fromEntries(new FormData(f));
+  if (f.id === 'gpaForm') return updateGpa();
+  if (f.id === 'classForm' || f.id === 'teachForm') {
+    if (toMin(v.end) <= toMin(v.start)) return toast('End time must be after start time.');
+    const item = { id: uid(), course: v.course.trim(), day: v.day, startTime: v.start, endTime: v.end, room: (v.room || '').trim() };
+    if (f.id === 'teachForm') teach.push(item); else classes.push(item);
+    toast('Class saved.');
+  } else if (f.id === 'examForm') {
+    const item = { id: v.eid || uid(), code: v.code.trim(), title: v.title.trim(), date: v.date, time: v.time || '', venue: (v.venue || '').trim(), notes: (v.notes || '').trim() };
+    exams = v.eid ? exams.map((x) => (x.id === v.eid ? item : x)) : [...exams, item];
+    resetExam(); toast('Exam saved.');
+  } else if (f.id === 'expForm') {
+    const amount = Number(v.amount);
+    if (!(amount > 0)) return toast('Enter an amount above zero.');
+    expenses.push({ id: uid(), name: v.name.trim(), amount, category: v.category, date: v.date });
+    toast('Expense added.');
+  } else if (f.id === 'matForm') {
+    materials.unshift({ id: uid(), title: v.title.trim(), course: (v.course || '').trim(), value: v.value.trim(), date: todayIso() });
+    toast('Material shared.');
+  } else if (f.id === 'studyForm') {
+    localStorage.setItem('studyPreference', v.time);
+    localStorage.setItem('studyDuration', v.session);
+    prefs.perDay = Number(v.perDay);
+    toast('Study plan updated.');
+  } else if (f.id === 'prefForm') {
+    const n = (v.name || '').trim().slice(0, 40);
+    if (n) localStorage.setItem('studentName', n); else localStorage.removeItem('studentName');
+    if (v.budget !== undefined) prefs.budget = Math.max(0, Number(v.budget) || 0);
+    prefs.theme = v.theme;
+    applyTheme(); toast('Settings saved.');
+  } else return;
+  saveAll(); render();
+});
+
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'matSearch') filterMats();
+  else if (e.target.closest('.inline') && e.target.closest('#gpaForm')) updateGpa();
+});
+document.addEventListener('change', (e) => {
+  const t = e.target;
+  if (t.closest('#gpaForm')) return updateGpa();
+  if (t.dataset.pref) { const v = t.value; prefs[t.dataset.pref] = isNaN(v) ? v : Number(v); saveAll(); toast('Saved.'); }
+});
+
+let deferredPrompt = null;
+const isInstalled = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function paintInstall() {
+  $$('[data-act="install"]').forEach((b) => { b.hidden = isInstalled(); b.dataset.ready = deferredPrompt ? 'true' : 'false'; });
+}
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; paintInstall(); });
+window.addEventListener('appinstalled', () => { deferredPrompt = null; paintInstall(); toast('StudentHub is installed. Open it from your home screen.'); });
+function openSheet() {
+  $('#sheetBody').textContent = isIOS()
+    ? 'In Safari, tap the Share button, then choose Add to Home Screen. StudentHub will then open full screen, like any other app.'
+    : 'Open your browser menu and choose Install app or Add to Home screen. In Chrome or Edge, you can also use the install icon in the address bar.';
+  $('#sheet').hidden = false;
+}
+function closeSheet() { $('#sheet').hidden = true; }
+async function installApp() {
+  if (!deferredPrompt) return openSheet();
+  const prompt = deferredPrompt;
+  deferredPrompt = null; paintInstall();
+  prompt.prompt();
+  const { outcome } = await prompt.userChoice;
+  toast(outcome === 'accepted' ? 'Installing StudentHub.' : 'No problem. You can install it anytime from the Install app button.');
+}
+$('#sheet').addEventListener('click', (e) => { if (e.target.id === 'sheet') closeSheet(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(() => {}));
+
+applyTheme();
+buildNav();
+if (localStorage.getItem('studenthubOnboardingComplete') !== 'true') { onb.hidden = false; showStep(0); }
+window.addEventListener('hashchange', route);
+setInterval(checkReminders, 30000);
+route();
+checkReminders();
+})();
+</script>
+</body>
+</html>
