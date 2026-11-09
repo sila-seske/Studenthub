@@ -1,5 +1,5 @@
-const CACHE = 'studenthub-v4';
-const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './apple-touch-icon.png', './favicon-32.png', './og-image.png'];
+const CACHE = 'studenthub-v5';
+const SHELL = ['./', './index.html', './app.js', './head.js', './pages.css', './manifest.json', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './apple-touch-icon.png', './favicon-32.png', './og-image.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

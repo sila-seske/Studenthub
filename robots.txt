@@ -1,3 +1,37 @@
+# StudentHub crawler policy: search and assistant retrieval allowed, model training opted out.
+# To change the training decision, change the Disallow lines for GPTBot, ClaudeBot and Google-Extended.
+# Blocking Google-Extended does not remove the site from Google Search.
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
 User-agent: *
 Allow: /
 
