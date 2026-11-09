@@ -4,6 +4,12 @@ try { var savedTheme = JSON.parse(localStorage.getItem('studentPrefs') || '{}').
 window.dataLayer = window.dataLayer || [];
 function gtag() { window.dataLayer.push(arguments); }
 gtag('js', new Date());
-gtag('config', 'G-XXXXXXXXXX'); // Replace with your Google Analytics Measurement ID. This is the only place it is set in the app.
+gtag('config', '<script async src="https://www.googletagmanager.com/gtag/js?id=G-HGTRD8N6TG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HGTRD8N6TG');
+</script>'); // Replace with your Google Analytics Measurement ID. This is the only place it is set in the app.
 var gaScript = document.createElement('script'); gaScript.async = true;
 gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX'; document.head.appendChild(gaScript);
