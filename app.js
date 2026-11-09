@@ -647,7 +647,7 @@ window.addEventListener('pagehide', saveNotes);
 
 // ---------- Accounts, Discover, Tasks and charts ----------
 // Paste your Supabase project URL and anon (public) key here. Never paste the service_role key.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
 const CHART_COLOURS = ['#5367f5', '#22a06b', '#e0a030', '#e0457b', '#8b5cf6', '#8a94b0'];
 let sb = null, me = null, myProfile = null, authMode = 'signin';
 let tasks = load('studentTasks', []), taskFilter = 'open';
