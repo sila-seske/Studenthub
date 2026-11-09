@@ -1,3 +1,8 @@
+// StudentHub app.
+// DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
+// Never paste the service_role or secret key here.
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
+
 (() => {
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -10,11 +15,11 @@ const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sun
 const CATS = ['Food','Transport','Data and airtime','School fees','Books and printing','Other'];
 const GRADES = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
 const WINDOWS = { Morning: [420, 660], Afternoon: [720, 960], Evening: [1020, 1260], Night: [1260, 1380], Flexible: [480, 1320] };
-const TITLES = { messages: 'Messages', discover: 'Discover', tasks: 'Tasks', login: 'Account', notes: 'Study notes', home: ['StudentHub', 'Dashboard'], classes: 'Classes and exams', study: 'Study planner', money: 'Money', gpa: 'GPA calculator', materials: ['Study materials', 'Course materials'], more: 'More', settings: 'Settings', privacy: 'Privacy', terms: 'Terms' };
-const SUBS = { messages: 'Text chat with students you are connected with.', discover: 'Find students who chose to be visible to other students.', tasks: 'Deadlines and to-dos in one list.', login: 'Sign in, your profile and your privacy choices.', notes: 'Course notes, pinned and searchable.', home: ['Your classes, exams and spending in one place.', 'Your teaching week, reminders and materials.'], classes: 'Your weekly timetable, exam dates and reminders.', study: 'Turn your classes and exams into sessions you can keep.', money: 'Track what you spend against your monthly budget.', gpa: 'Enter your courses to calculate your semester GPA.', materials: ['Trusted places to find textbooks and past questions.', 'Share links and notes with your students.'], more: 'Tools and settings.', settings: 'Your name, role, budget and theme.', privacy: 'What StudentHub stores, and which Google services run on this site.', terms: 'The short version.' };
+const TITLES = { discover: 'Discover', tasks: 'Tasks', login: 'Account', notes: 'Study notes', home: ['StudentHub', 'Dashboard'], classes: 'Classes and exams', study: 'Study planner', money: 'Money', gpa: 'GPA calculator', materials: ['Study materials', 'Course materials'], more: 'More', settings: 'Settings', privacy: 'Privacy', terms: 'Terms' };
+const SUBS = { discover: 'Find students who chose to be visible to other students.', tasks: 'Deadlines and to-dos in one list.', login: 'Sign in, your profile and your privacy choices.', notes: 'Course notes, pinned and searchable.', home: ['Your classes, exams and spending in one place.', 'Your teaching week, reminders and materials.'], classes: 'Your weekly timetable, exam dates and reminders.', study: 'Turn your classes and exams into sessions you can keep.', money: 'Track what you spend against your monthly budget.', gpa: 'Enter your courses to calculate your semester GPA.', materials: ['Trusted places to find textbooks and past questions.', 'Share links and notes with your students.'], more: 'Tools and settings.', settings: 'Your name, role, budget and theme.', privacy: 'What StudentHub stores, and which Google services run on this site.', terms: 'The short version.' };
 const ROUTES = {
-  student: { views: ['home','classes','study','discover','messages','tasks','money','gpa','materials','more','settings','notes','login','privacy','terms'], nav: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['messages','send','Messages'],['tasks','check','Tasks'],['money','wallet','Money'],['gpa','calc','GPA'],['materials','file','Materials'],['notes','file','Notes'],['login','upload','Account'],['settings','gear','Settings']], tab: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['tasks','check','Tasks']] },
-  lecturer: { views: ['home','materials','login','settings','privacy','terms'], nav: [['home','home','Dashboard'],['materials','upload','Course materials'],['login','upload','Account'],['settings','gear','Settings']], tab: [['home','home','Dashboard'],['materials','upload','Materials'],['login','upload','Account'],['settings','gear','Settings']] }
+  student: { views: ['home','classes','study','discover','tasks','money','gpa','materials','more','settings','notes','login','privacy','terms'], nav: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['tasks','check','Tasks'],['money','wallet','Money'],['gpa','calc','GPA'],['materials','file','Materials'],['notes','file','Notes'],['login','cap','Account'],['settings','gear','Settings']], tab: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['tasks','check','Tasks'],['login','cap','Account']] },
+  lecturer: { views: ['home','materials','settings','privacy','terms'], nav: [['home','home','Dashboard'],['materials','upload','Course materials'],['settings','gear','Settings']], tab: [['home','home','Dashboard'],['materials','upload','Materials'],['settings','gear','Settings']] }
 };
 const DEFAULT_PREFS = { budget: 0, theme: 'system', perDay: 1, lead: 15, remind: false };
 const blank = () => ({ course: '', units: '', grade: 'A' });
@@ -255,15 +260,16 @@ function renderSettings() {
       <div class="roles">${roleBtn('student', 'Student', 'Classes, exams, study plans and spending.', 'cap')}${roleBtn('lecturer', 'Lecturer', 'Teaching schedule, reminders and course materials.', 'screen')}</div>
       <p class="muted" style="margin-top:16px">Switching takes you to the matching dashboard.</p></section>
   </div>
-  <section class="glass" style="margin-top:18px"><h3 class="sec">Your data</h3><p class="muted">Everything is saved in this browser on this device. There are no accounts.</p><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px"><a class="btn ghost" href="privacy.html">Privacy</a><a class="btn ghost" href="terms.html">Terms</a><a class="btn ghost" href="about.html">About</a><a class="btn ghost" href="contact.html">Contact</a></div><div style="margin-top:18px"><button class="btn ghost" data-act="wipe" style="color:var(--bad)">Erase all data</button></div></section>`;
+  <section class="glass" style="margin-top:18px"><h3 class="sec">Your data</h3><p class="muted">Your planner data is saved in this browser on this device. Sign-in is optional and only needed for Discover.</p><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px"><a class="btn ghost" href="privacy.html">Privacy</a><a class="btn ghost" href="terms.html">Terms</a><a class="btn ghost" href="about.html">About</a><a class="btn ghost" href="contact.html">Contact</a></div><div style="margin-top:18px"><button class="btn ghost" data-act="wipe" style="color:var(--bad)">Erase all data</button></div></section>`;
 }
 
 const renderMore = () => `<section class="glass">${[['notes', 'file', 'Study notes', 'Course notes, pinned and searchable.'], ['learn', 'book', 'Study guides', 'Practical guides on timetables, GPA and exams.'], ['gpa', 'calc', 'GPA calculator', 'Calculate your semester GPA.'], ['materials', 'search', 'Study materials', 'Find textbooks and past questions.'], ['settings', 'gear', 'Settings', 'Name, role, budget and theme.'], ['privacy', 'file', 'Privacy', 'What is stored, and which Google services run.'], ['terms', 'file', 'Terms', 'The short version.'], ['about', 'info', 'About', 'Who StudentHub is for and how it works.'], ['contact', 'mail', 'Contact', 'Questions, bugs and privacy requests.']].map(([v, ic, t, d]) => `<a class="row" href="#${v}">${I(ic)}<div><strong>${t}</strong><small>${d}</small></div></a>`).join('')}</section>`;
 
-const PRIVACY = `<article class="glass prose"><p class="muted">Last updated 31 October 2026.</p>
+const PRIVACY = `<article class="glass prose"><p class="muted">Last updated 9 November 2026.</p>
 <h3>Google services on this site</h3><p>StudentHub uses Google Analytics to measure visits, and Google AdSense to show advertisements. These services can set cookies and collect technical and usage information. You can manage ad personalisation in Google Ads Settings.</p>
 <h3>What stays on your device</h3><p>Your name, role, timetable, exam dates, expenses, GPA entries, course materials and settings are saved only in this browser on this device. StudentHub does not send them to a server.</p>
 <h3>Reminders</h3><p>Alerts appear while StudentHub is open. System notifications need your permission, and you can turn reminders off at any time.</p>
+<h3>Accounts</h3><p>If you create an account, we store your email, display name, university, department, interests and connections on Supabase servers so that Discover works. Your planner data stays on this device.</p>
 <h3>Erasing your data</h3><p>Use Erase all data in Settings, or clear this site’s storage in your browser.</p>
 <h3>Contact</h3><p>getstudenthub@gmail.com</p></article>`;
 const TERMS = `<article class="glass prose"><ul>
@@ -273,8 +279,8 @@ const TERMS = `<article class="glass prose"><ul>
 <li>Study materials link to websites we do not control. Their own terms apply.</li>
 <li>StudentHub is provided as is. You use it at your own discretion.</li></ul></article>`;
 
-const RENDER = { home: () => role === 'lecturer' ? renderTeach() : renderToday() + quickAccess(), classes: renderClasses, notes: renderNotes, login: renderLogin, discover: renderDiscover, tasks: renderTasks, study: renderStudy, money: renderMoney, gpa: renderGpa, materials: () => role === 'lecturer' ? renderLecturerMaterials() : renderStudentMaterials(), more: renderMore, settings: renderProfilePage, messages: renderMessages, privacy: () => PRIVACY, terms: () => TERMS };
-function render() { const el = $('#v-' + current); if (!el) return; el.innerHTML = RENDER[current](); if (current === 'gpa') updateGpa(); if (current === 'notes') { paintFilters(); paintList(); paintEditor(); } paintInstall(); paintAvatar(); if (current === 'messages') refreshChat().catch(handleError); if (current === 'materials' && me) loadShared().catch(handleError); }
+const RENDER = { home: () => role === 'lecturer' ? renderTeach() : renderToday() + quickAccess(), classes: renderClasses, notes: renderNotes, login: renderLogin, discover: renderDiscover, tasks: renderTasks, study: renderStudy, money: renderMoney, gpa: renderGpa, materials: () => role === 'lecturer' ? renderCourseMats() : renderMaterials(), more: renderMore, settings: renderSettings, privacy: () => PRIVACY, terms: () => TERMS };
+function render() { const el = $('#v-' + current); if (!el) return; el.innerHTML = RENDER[current](); if (current === 'gpa') updateGpa(); if (current === 'notes') { paintFilters(); paintList(); paintEditor(); } paintInstall(); paintAvatar(); }
 
 function readGpa() {
   gpa = [...document.querySelectorAll('.inline input[name=course]')].map((c) => { const row = c.parentElement; return { course: c.value, units: row.querySelector('[name=units]').value, grade: row.querySelector('[name=grade]').value }; });
@@ -313,7 +319,7 @@ function buildNav() {
   $('#views').innerHTML = R.views.map((v) => `<section class="view" id="v-${v}" hidden></section>`).join('');
   document.body.dataset.role = role;
 }
-const tabFor = (v) => role === 'lecturer' ? (v === 'privacy' || v === 'terms' || v === 'login' ? 'settings' : v) : ({ notes: 'study', money: 'home', gpa: 'home', materials: 'home', login: 'home', settings: 'home', privacy: 'home', terms: 'home', messages: 'discover' }[v] || v);
+const tabFor = (v) => role === 'lecturer' ? (v === 'privacy' || v === 'terms' ? 'settings' : v) : ({ notes: 'study', money: 'home', gpa: 'home', materials: 'home', settings: 'home', privacy: 'home', terms: 'home' }[v] || v);
 function route() {
   const R = ROUTES[role] || ROUTES.student;
   let v = location.hash.slice(1);
@@ -326,9 +332,9 @@ function route() {
   $('#ttl').textContent = pick(TITLES[v]);
   $('#sub').textContent = pick(SUBS[v]);
   document.title = pick(TITLES[v]) === 'StudentHub' ? 'StudentHub | Class timetable, exams and study planner' : pick(TITLES[v]) + ' | StudentHub';
-  startChatPolling();
   render();
-  if (current === 'discover' && me) loadPeople().catch(handleError);
+  if (current === 'discover' && me) loadPeople();
+  startChatPolling();
   window.scrollTo(0, 0);
 }
 function setRole(r) {
@@ -414,7 +420,7 @@ document.addEventListener('submit', (e) => {
     if (!(amount > 0)) return toast('Enter an amount above zero.');
     expenses.push({ id: uid(), name: v.name.trim(), amount, category: v.category, date: v.date });
     toast('Expense added.');
-  } else if (f.id === 'matForm') { uploadMaterial(f).catch(handleError); return; } else if (f.id === 'legacyMat') {
+  } else if (f.id === 'matForm') {
     materials.unshift({ id: uid(), title: v.title.trim(), course: (v.course || '').trim(), value: v.value.trim(), date: todayIso() });
     toast('Material shared.');
   } else if (f.id === 'studyForm') {
@@ -430,9 +436,9 @@ document.addEventListener('submit', (e) => {
     applyTheme(); toast('Settings saved.');
   } else if (f.id === 'taskForm') { addTask(v); }
   else if (f.id === 'authForm') { authSubmit(f); return; }
+  else if (f.id === 'newPassForm') { setNewPassword(f); return; }
+  else if (f.id === 'chatForm') { sendChat(v.body).catch(handleError); return; }
   else if (f.id === 'accountForm') { saveAccount(v); return; }
-  else if (f.id === 'msgForm') { sendMessage(v.body).catch(handleError); return; }
-  else if (f.id === 'newPassForm') { setNewPassword(f).catch(handleError); return; }
   else return;
   saveAll(); render();
 });
@@ -646,16 +652,30 @@ document.addEventListener('change', (e) => {
 window.addEventListener('pagehide', saveNotes);
 
 // ---------- Accounts, Discover, Tasks and charts ----------
-// Paste your Supabase project URL and anon (public) key here. Never paste the service_role key.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
 const CHART_COLOURS = ['#5367f5', '#22a06b', '#e0a030', '#e0457b', '#8b5cf6', '#8a94b0'];
 let sb = null, me = null, myProfile = null, authMode = 'signin';
 let tasks = load('studentTasks', []), taskFilter = 'open';
 let discoverRows = [], connMap = {}, requestRows = [], requestNames = {};
 const saveTasks = () => save('studentTasks', tasks);
 const configured = () => /^https:\/\//.test(SH_CONFIG.url) && SH_CONFIG.anonKey.length > 20 && !/PASTE_/.test(SH_CONFIG.anonKey);
+let recovering = false; // true after the user opens a password-reset link
 const setAuthMsg = (t) => { const el = $('#authMsg'); if (el) el.textContent = t; };
 const notice = (text) => `<section class="glass"><p class="muted">${text}</p></section>`;
+
+function friendly(err) {
+  const m = String((err && (err.message || err.code)) || '');
+  if (/rate_limited|rate limit|too many|429/i.test(m)) return 'You are going too fast. Wait a few minutes, then try again.';
+  if (/not_connected/.test(m)) return 'You can message a student once they accept your connection request.';
+  if (/\bblocked\b/.test(m)) return 'This action is not available between these two accounts.';
+  if (/invalid login/i.test(m)) return 'That email and password do not match.';
+  if (/already registered|already exists/i.test(m)) return 'An account with this email already exists. Try signing in.';
+  if (/not confirmed/i.test(m)) return 'Confirm your email first. Check your inbox, or resend the email below.';
+  if (/password/i.test(m)) return 'Choose a longer password, at least 8 characters.';
+  if (/fetch|network|failed to load/i.test(m)) return 'No connection. Check your internet and try again.';
+  if (/row-level security|permission denied|42501/i.test(m)) return 'You do not have permission to do that.';
+  return 'Something went wrong. Try again.';
+}
+function handleError(err) { console.error(err); toast(friendly(err)); }
 
 function loadSupabase() {
   return new Promise((resolve, reject) => {
@@ -672,73 +692,105 @@ async function initAccounts() {
   try {
     const lib = await loadSupabase();
     sb = lib.createClient(SH_CONFIG.url, SH_CONFIG.anonKey);
+    sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') { recovering = true; location.hash = '#login'; render(); return; }
+      setUser(session ? session.user : null).catch(handleError);
+    });
     const { data } = await sb.auth.getSession();
     await setUser(data.session ? data.session.user : null);
-    sb.auth.onAuthStateChange((event, session) => { if (event === 'PASSWORD_RECOVERY') { recovering = true; location.hash = '#login'; render(); return; } setUser(session ? session.user : null); });
-  } catch { toast('Accounts could not connect. Check your connection and try again.'); }
+  } catch (err) { handleError(err); }
 }
 async function setUser(user) {
-  me = user || null; myProfile = null; lecturerApproved = false; myRole = 'student';
+  me = user || null; myProfile = null;
   if (me && sb) {
     const pending = load('studentPendingProfile', null);
-    if (pending) { await sb.from('public_profiles').update(pending).eq('id', me.id); localStorage.removeItem('studentPendingProfile'); }
-    const { data } = await sb.from('public_profiles').select('*').eq('id', me.id).single();
+    if (pending) {
+      const { error } = await sb.from('public_profiles').update(pending).eq('id', me.id);
+      if (!error) localStorage.removeItem('studentPendingProfile');
+    }
+    const { data, error } = await sb.from('public_profiles').select('*').eq('id', me.id).maybeSingle();
+    if (error) console.error(error);
     myProfile = data || null;
-    await loadRoleFlags().catch(handleError);
   }
+  paintAvatar();
   if (current === 'login' || current === 'discover') render();
   if (current === 'discover' && me) loadPeople();
 }
-function friendly(err) {
-  const m = (err && err.message) || '';
-  if (/rate limit|too many|429/i.test(m)) return 'Too many attempts. Wait a few minutes, then try again.';
-  if (/invalid login/i.test(m)) return 'That email and password do not match.';
-  if (/already registered/i.test(m)) return 'An account with this email already exists. Try signing in.';
-  if (/not confirmed/i.test(m)) return 'Confirm your email first. Check your inbox.';
-  if (/password/i.test(m)) return 'Choose a longer password, at least 8 characters.';
-  return m || 'Something went wrong. Try again.';
+function paintAvatar() {
+  const btn = $('#avatarBtn');
+  if (!btn) return;
+  const name = (myProfile && myProfile.display_name) || studentName() || (me && me.email) || '';
+  btn.innerHTML = name ? esc(name.charAt(0).toUpperCase()) : I('cap');
+  btn.setAttribute('aria-label', name ? 'Open your account, ' + name : 'Sign in or create an account');
 }
 async function authSubmit(f) {
   if (!sb) return setAuthMsg('Accounts are not connected yet.');
   const v = Object.fromEntries(new FormData(f));
-  const email = v.email.trim(), password = v.password;
+  const email = (v.email || '').trim(), password = v.password || '';
+  if (authMode === 'signup' && !v.age) return setAuthMsg('You must be 16 or older to create an account.');
   setAuthMsg('Please wait.');
   try {
     if (authMode === 'signup') {
-      const { data, error } = await sb.auth.signUp({ email, password, options: { data: { name: v.name.trim() } } });
+      const name = (v.name || '').trim();
+      const { data, error } = await sb.auth.signUp({ email, password, options: { data: { name } } });
       if (error) throw error;
-      save('studentPendingProfile', { university: (v.university || '').trim(), department: (v.department || '').trim() });
-      setAuthMsg(data.session ? 'Account created.' : 'Check your email to confirm your account, then sign in.');
+      save('studentPendingProfile', { display_name: name, university: (v.university || '').trim(), department: (v.department || '').trim() });
+      setAuthMsg(data.session ? 'Account created.' : 'Check your email and tap the confirmation link, then sign in.');
     } else {
       const { error } = await sb.auth.signInWithPassword({ email, password });
       if (error) throw error;
       setAuthMsg('');
     }
-  } catch (err) { setAuthMsg(friendly(err)); }
+  } catch (err) { console.error(err); setAuthMsg(friendly(err)); }
 }
 async function resetPassword() {
   if (!sb) return toast('Accounts are not connected yet.');
-  const email = (document.querySelector('#authForm [name=email]')?.value || '').trim();
+  const email = (document.querySelector('#authEmail')?.value || '').trim();
   if (!email) return toast('Enter your email first, then tap Forgot password.');
   const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/index.html#login' });
-  toast(error ? friendly(error) : 'Reset link sent. Check your email.');
+  if (error) return handleError(error);
+  toast('If an account exists for that email, a reset link is on its way.');
 }
-async function signOut() { if (!sb) return; await sb.auth.signOut(); toast('Signed out.'); }
+async function resendConfirmation() {
+  if (!sb) return toast('Accounts are not connected yet.');
+  const email = (document.querySelector('#authEmail')?.value || '').trim();
+  if (!email) return toast('Enter your email first.');
+  const { error } = await sb.auth.resend({ type: 'signup', email });
+  if (error) return handleError(error);
+  toast('Confirmation email sent again.');
+}
+async function setNewPassword(f) {
+  if (!sb) return;
+  const v = Object.fromEntries(new FormData(f));
+  if (v.password !== v.confirm) return setAuthMsg('The two passwords do not match.');
+  setAuthMsg('Please wait.');
+  const { error } = await sb.auth.updateUser({ password: v.password });
+  if (error) return setAuthMsg(friendly(error));
+  recovering = false; toast('Password updated. You are signed in.'); render();
+}
+async function signOut() {
+  if (!sb) return;
+  const { error } = await sb.auth.signOut();
+  if (error) return handleError(error);
+  toast('Signed out.');
+}
 async function deleteAccount() {
   if (!sb || !me) return;
   if (!confirm('Delete your StudentHub account and its server data? This cannot be undone.')) return;
   const { error } = await sb.rpc('delete_my_account');
-  if (error) return toast('Could not delete the account. Try again.');
-  await sb.auth.signOut(); toast('Your account has been deleted.');
+  if (error) return handleError(error);
+  await sb.auth.signOut();
+  toast('Your account has been deleted.');
 }
 async function saveAccount(v) {
   if (!sb || !me) return;
   const interests = (v.interests || '').split(',').map((x) => x.trim()).filter(Boolean).slice(0, 10);
   const update = { display_name: (v.display_name || '').trim(), university: (v.university || '').trim(), department: (v.department || '').trim(), interests, discoverable: !!v.discoverable };
+  if (!update.display_name) return toast('Add a display name.');
   const { error } = await sb.from('public_profiles').update(update).eq('id', me.id);
-  if (error) return toast('Could not save your profile.');
+  if (error) return handleError(error);
   myProfile = { ...myProfile, ...update };
-  toast('Profile saved.'); render();
+  paintAvatar(); toast('Profile saved.'); render();
 }
 
 // Tasks
@@ -811,32 +863,44 @@ function quickAccess() {
 }
 
 // Sign in, sign up and account
+const newPasswordForm = () => `<section class="glass" id="recoverySection"><h3>Choose a new password</h3>
+  <form class="form" id="newPassForm" style="margin-top:14px">
+    <div class="pass-row"><label>New password<input id="newPassword" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters"></label></div>
+    <label>Confirm new password<input id="newPasswordConfirm" name="confirm" type="password" required minlength="8" autocomplete="new-password"></label>
+    <div><button class="btn" id="btnSaveNewPassword" type="submit">Save new password</button></div>
+  </form>
+  <p class="note-line" id="authMsg" aria-live="polite"></p></section>`;
+
 function renderLogin() {
   if (recovering) return newPasswordForm();
   if (me) return renderAccount();
   const signup = authMode === 'signup';
   return `<div class="grid2">
-    <section class="glass">
+    <section class="glass" id="loginSection">
       <div class="seg" role="tablist" aria-label="Account">
-        <button type="button" role="tab" aria-selected="${!signup}" data-auth-act="mode" data-mode="signin">Sign in</button>
-        <button type="button" role="tab" aria-selected="${signup}" data-auth-act="mode" data-mode="signup">Create account</button>
+        <button id="tabSignIn" type="button" role="tab" aria-selected="${!signup}" data-auth-act="mode" data-mode="signin">Sign in</button>
+        <button id="tabSignUp" type="button" role="tab" aria-selected="${signup}" data-auth-act="mode" data-mode="signup">Create account</button>
       </div>
-      ${configured() ? '' : '<p class="note-banner" style="margin-top:14px">Accounts are not connected yet. The owner needs to add the Supabase details to turn them on.</p>'}
+      ${configured() ? '' : '<p class="note-banner" id="notConnectedBanner" style="margin-top:14px">Accounts are not connected yet. The owner needs to add the Supabase details to turn them on.</p>'}
       <form class="form" id="authForm" style="margin-top:16px">
-        ${signup ? `<label>Display name<input name="name" required maxlength="40" autocomplete="name" placeholder="How other students see you"></label>
-        <label>University<input name="university" maxlength="80" placeholder="For example, University of Ilorin"></label>
-        <label>Department<input name="department" maxlength="80" placeholder="For example, Computer Science"></label>` : ''}
-        <label>Email<input name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
-        <label>Password<input name="password" type="password" required minlength="8" autocomplete="${signup ? 'new-password' : 'current-password'}" placeholder="At least 8 characters"></label>
-        ${signup ? `<label class="opt"><input type="checkbox" name="age" required> I am 16 or older</label>
-        <label class="opt"><input type="checkbox" name="terms" required> I agree to the <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy policy</a></label>` : ''}
-        <div><button class="btn" type="submit">${signup ? 'Create account' : 'Sign in'}</button></div>
+        ${signup ? `<label>Display name<input id="signupName" name="name" required maxlength="40" autocomplete="name" placeholder="How other students see you"></label>
+        <label>University<input id="signupUniversity" name="university" maxlength="80" placeholder="For example, University of Ilorin"></label>
+        <label>Department<input id="signupDepartment" name="department" maxlength="80" placeholder="For example, Computer Science"></label>` : ''}
+        <label>Email<input id="authEmail" name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+        <div class="pass-row"><label>Password<input id="authPassword" name="password" type="password" required minlength="8" autocomplete="${signup ? 'new-password' : 'current-password'}" placeholder="At least 8 characters"></label><button class="btn ghost" id="btnShowPass" type="button" data-auth-act="show-pass">Show</button></div>
+        ${signup ? `<label class="opt"><input id="ageCheck" type="checkbox" name="age" required> I am 16 or older</label>
+        <label class="opt"><input id="termsCheck" type="checkbox" name="terms" required> I agree to the <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy policy</a></label>` : ''}
+        <div><button class="btn" id="btnAuthSubmit" type="submit">${signup ? 'Create account' : 'Sign in'}</button></div>
       </form>
       <p class="note-line" id="authMsg" aria-live="polite"></p>
-      <div class="actions" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"><button class="btn quiet" type="button" data-auth-act="reset">Forgot password?</button><button class="btn quiet" type="button" data-auth-act="resend">Resend confirmation email</button><button class="btn quiet" type="button" data-auth-act="guest">Continue without an account</button></div>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn quiet" id="btnForgot" type="button" data-auth-act="reset">Forgot password?</button>
+        <button class="btn quiet" id="btnResend" type="button" data-auth-act="resend">Resend confirmation email</button>
+        <button class="btn quiet" id="btnGuest" type="button" data-auth-act="guest">Continue without an account</button>
+      </div>
     </section>
-    <section class="glass"><h3 class="sec">Why create an account?</h3>
-      <ul><li>Find and connect with students who choose to be visible.</li><li>Keep your profile, interests and connections in one place.</li><li>Sync your timetable, tasks and spending across devices. This is coming next.</li></ul>
+    <section class="glass" id="whySection"><h3 class="sec">Why create an account?</h3>
+      <ul><li>Find students who choose to be visible, and send them a connection request.</li><li>Once they accept, message each other in Discover.</li><li>Keep your profile, university and interests in one place.</li></ul>
       <p class="note-line">We ask only for what these features need. Read our <a href="/privacy.html">privacy policy</a> before you sign up.</p>
     </section>
   </div>`;
@@ -844,54 +908,182 @@ function renderLogin() {
 function renderAccount() {
   const p = myProfile || {};
   return `<div class="grid2">
-    <section class="glass"><h3 class="sec">Your profile</h3>
+    <section class="glass" id="profileSection"><h3 class="sec">Your profile</h3>
       <form class="form" id="accountForm">
-        <label>Display name<input name="display_name" required maxlength="40" value="${esc(p.display_name || '')}"></label>
-        <label>University<input name="university" maxlength="80" value="${esc(p.university || '')}"></label>
-        <label>Department<input name="department" maxlength="80" value="${esc(p.department || '')}"></label>
-        <label>Interests<input name="interests" maxlength="200" value="${esc((p.interests || []).join(', '))}" placeholder="Coding, Football, Anime"></label>
-        <label class="opt"><input type="checkbox" name="discoverable" ${p.discoverable ? 'checked' : ''}> Show my profile to other students in Discover</label>
-        <div><button class="btn" type="submit">Save profile</button></div>
+        <label>Display name<input id="profileName" name="display_name" required maxlength="40" value="${esc(p.display_name || '')}"></label>
+        <label>University<input id="profileUniversity" name="university" maxlength="80" value="${esc(p.university || '')}"></label>
+        <label>Department<input id="profileDepartment" name="department" maxlength="80" value="${esc(p.department || '')}"></label>
+        <label>Interests<input id="profileInterests" name="interests" maxlength="200" value="${esc((p.interests || []).join(', '))}" placeholder="Coding, Football, Anime"></label>
+        <label class="opt"><input id="profileDiscoverable" type="checkbox" name="discoverable" ${p.discoverable ? 'checked' : ''}> Show my profile to other students in Discover</label>
+        <div><button class="btn" id="btnSaveProfile" type="submit">Save profile</button></div>
       </form></section>
-    <section class="glass"><h3 class="sec">Account</h3>
+    <section class="glass" id="accountSection"><h3 class="sec">Account</h3>
       <p class="muted">Signed in as ${esc(me.email)}.</p>
-      <div class="actions" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px"><button class="btn quiet" type="button" data-auth-act="signout">Sign out</button><button class="btn danger" type="button" data-auth-act="delete">Delete account</button></div>
-      <p class="note-line">Deleting your account removes your profile, connections and server-side data.</p>
+      <div class="actions" style="margin-top:14px"><button class="btn quiet" id="btnSignOut" type="button" data-auth-act="signout">Sign out</button><button class="btn danger" id="btnDeleteAccount" type="button" data-auth-act="delete">Delete account</button></div>
+      <p class="note-line">Deleting your account removes your profile, connections, messages and server-side data.</p>
     </section></div>`;
 }
 
-// Discover
+// Discover: requests, connections and chat
+let connections = [], chatUnread = {}, chatMessages = [], chatWith = null, chatTimer = null;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const cleanText = (t) => String(t || '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, 1000);
+
 function renderDiscover() {
   if (!configured()) return notice('Discover needs accounts, and accounts are not connected yet.');
-  if (!me) return `<section class="glass"><h3 class="sec">Sign in to find students</h3><p class="muted">Create an account to see students who chose to be visible, and to connect with them.</p><div class="actions" style="margin-top:14px"><a class="btn" href="#login">Sign in or create an account</a></div></section>`;
+  if (!me) return `<section class="glass" id="discoverSignIn"><h3 class="sec">Sign in to find students</h3><p class="muted">Create an account to see students who chose to be visible, connect with them and message them.</p><div class="actions" style="margin-top:14px"><a class="btn" id="btnDiscoverSignIn" href="#login">Sign in or create an account</a></div></section>`;
   return `<div class="grid2">
-    <section class="glass"><h3 class="sec">Requests for you</h3><div id="requestList"><p class="muted">Loading.</p></div></section>
-    <section class="glass"><h3 class="sec">Visibility</h3><p class="muted">Only students who switch on "Show my profile" appear here. Email addresses and contact details are never shown.</p><div class="actions" style="margin-top:14px"><a class="btn quiet" href="#login">Edit your profile</a><a class="btn quiet" href="#messages">Messages</a></div></section>
+    <section class="glass" id="requestsSection"><h3 class="sec">Requests for you</h3><div id="requestList"><p class="muted">Loading.</p></div></section>
+    <section class="glass" id="connectionsSection"><div class="sec"><h3>Your connections</h3><span class="muted" id="connectionCount"></span></div><div id="connectionList"><p class="muted">Loading.</p></div></section>
   </div>
-  <section class="glass" style="margin-top:18px"><div class="sec"><h3>Students you might connect with</h3><span class="muted" id="discoverCount"></span></div>
+  <section class="glass" id="chatSection" style="margin-top:18px" ${chatWith ? '' : 'hidden'}>
+    <div class="thread-head" id="chatHead"></div>
+    <div class="thread" id="chatThread" aria-live="polite"></div>
+    <form class="composer" id="chatForm"><label class="sr-only" for="chatBody">Message</label><textarea id="chatBody" name="body" rows="2" maxlength="1000" required placeholder="Write a message. Text only."></textarea><button class="btn" id="btnSendChat" type="submit">${I('send')}Send</button></form>
+    <p class="note-line">Text only. You can message students you are connected with, and you can report or block anyone at any time.</p>
+  </section>
+  <section class="glass" id="studentsSection" style="margin-top:18px"><div class="sec"><h3>Students you might connect with</h3><span class="muted" id="discoverCount"></span></div>
     <label class="search-field"><span class="sr-only">Search students</span>${I('search')}<input id="discoverSearch" type="search" placeholder="Search by name, university, department or interest"></label>
     <div id="discoverList" style="margin-top:8px"><p class="muted">Loading.</p></div>
-  </section>`;
+  </section>
+  <section class="glass" id="visibilitySection" style="margin-top:18px"><h3 class="sec">Visibility</h3><p class="muted">Only students who switch on "Show my profile" appear here. Email addresses and contact details are never shown.</p><div class="actions" style="margin-top:14px"><a class="btn quiet" id="btnEditProfile" href="#login">Edit your profile</a></div></section>`;
 }
+async function loadConnections() {
+  const [c, u] = await Promise.all([
+    sb.rpc('my_connections'),
+    sb.from('messages').select('sender_id').eq('recipient_id', me.id).is('read_at', null).limit(500)
+  ]);
+  if (c.error) throw c.error;
+  if (u.error) throw u.error;
+  connections = c.data || [];
+  chatUnread = {};
+  (u.data || []).forEach((m) => { chatUnread[m.sender_id] = (chatUnread[m.sender_id] || 0) + 1; });
+  paintConnections();
+}
+function paintConnections() {
+  const el = $('#connectionList'); if (!el) return;
+  const accepted = connections.filter((c) => c.status === 'accepted');
+  const count = $('#connectionCount'); if (count) count.textContent = accepted.length ? accepted.length + ' connected' : '';
+  el.innerHTML = accepted.length ? accepted.map((c) => {
+    const n = chatUnread[c.partner_id] || 0;
+    return `<div class="row"><span class="avatar">${esc((c.display_name || '?').charAt(0).toUpperCase())}</span><div><strong>${esc(c.display_name || 'Student')}</strong><small>${esc([c.university, c.department].filter(Boolean).join(', ') || 'Student')}</small></div>${n ? `<span class="chip">${n} new</span>` : ''}<button class="btn" type="button" data-discover-act="open-chat" data-id="${c.partner_id}">${I('send')}Message</button></div>`;
+  }).join('') : '<p class="empty">No connections yet. Send a request to a student below. When they accept, you can message them here.</p>';
+}
+function paintChatHead() {
+  const el = $('#chatHead'); if (!el) return;
+  const p = connections.find((c) => c.partner_id === chatWith) || {};
+  el.innerHTML = `<span class="avatar">${esc((p.display_name || '?').charAt(0).toUpperCase())}</span><div><strong>${esc(p.display_name || 'Student')}</strong><small>${esc([p.university, p.department].filter(Boolean).join(', ') || 'Student')}</small></div><button class="btn quiet" id="btnReportChat" type="button" data-chat-act="report">Report</button><button class="btn quiet" id="btnBlockChat" type="button" data-chat-act="block">Block</button><button class="btn icon" id="btnCloseChat" type="button" data-chat-act="close" aria-label="Close conversation">${I('x')}</button>`;
+}
+function paintThread() {
+  const el = $('#chatThread'); if (!el) return;
+  const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 60;
+  el.innerHTML = chatMessages.length ? chatMessages.map((m) => {
+    const mine = m.sender_id === me.id;
+    const when = new Date(m.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    return `<div class="msg-row ${mine ? 'mine' : ''}"><div class="msg-bubble">${esc(m.body)}<small class="msg-time">${when}</small></div>${mine ? `<button class="btn icon" type="button" data-chat-act="delete-msg" data-id="${m.id}" aria-label="Delete this message">${I('x')}</button>` : ''}</div>`;
+  }).join('') : '<p class="empty">No messages yet. Say hello.</p>';
+  if (nearBottom) el.scrollTop = el.scrollHeight;
+}
+async function loadThread() {
+  if (!sb || !me || !UUID_RE.test(chatWith || '')) return;
+  const { data, error } = await sb.from('messages').select('id, sender_id, body, created_at, read_at')
+    .or(`and(sender_id.eq.${me.id},recipient_id.eq.${chatWith}),and(sender_id.eq.${chatWith},recipient_id.eq.${me.id})`)
+    .order('created_at', { ascending: true }).limit(200);
+  if (error) throw error;
+  chatMessages = data || [];
+  const { error: readErr } = await sb.from('messages').update({ read_at: new Date().toISOString() })
+    .eq('recipient_id', me.id).eq('sender_id', chatWith).is('read_at', null);
+  if (readErr) throw readErr;
+  paintThread();
+}
+async function openChat(id) {
+  if (!sb || !me || !UUID_RE.test(id || '')) return;
+  if (!connections.some((c) => c.partner_id === id)) await loadConnections();
+  if (!connections.some((c) => c.partner_id === id && c.status === 'accepted')) {
+    return toast('You can message a student once they accept your connection request.');
+  }
+  chatWith = id;
+  const section = $('#chatSection');
+  if (section) section.hidden = false;
+  paintChatHead();
+  try { await loadThread(); } catch (err) { handleError(err); }
+  startChatPolling();
+  if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function closeChat() {
+  chatWith = null; chatMessages = [];
+  const section = $('#chatSection'); if (section) section.hidden = true;
+  startChatPolling();
+}
+async function sendChat(text) {
+  const body = cleanText(text);
+  if (!body) return toast('Write a message first.');
+  if (!sb || !me || !UUID_RE.test(chatWith || '')) return toast('Choose a student to message.');
+  const { error } = await sb.from('messages').insert({ sender_id: me.id, recipient_id: chatWith, body });
+  if (error) throw error;
+  const box = $('#chatBody'); if (box) box.value = '';
+  await loadThread();
+}
+async function chatAction(a, b) {
+  if (!sb || !me) return;
+  try {
+    if (a === 'close') return closeChat();
+    if (a === 'delete-msg') {
+      const { error } = await sb.from('messages').delete().eq('id', b.dataset.id);
+      if (error) throw error;
+      return loadThread();
+    }
+    if (a === 'block') {
+      if (!confirm('Block this student? You will no longer be able to message each other.')) return;
+      const { error } = await sb.from('blocks').insert({ blocker_id: me.id, blocked_id: chatWith });
+      if (error) throw error;
+      toast('Student blocked.'); closeChat(); return loadPeople();
+    }
+    if (a === 'report') {
+      const reason = (prompt('Why are you reporting this student? Describe what happened.') || '').trim();
+      if (!reason) return;
+      const { error } = await sb.from('reports').insert({ reporter_id: me.id, reported_id: chatWith, reason: reason.slice(0, 500) });
+      if (error) throw error;
+      toast('Thank you. We will review this report.');
+    }
+  } catch (err) { handleError(err); }
+}
+function startChatPolling() {
+  clearInterval(chatTimer); chatTimer = null;
+  if (current === 'discover' && chatWith) chatTimer = setInterval(() => { refreshChat().catch(handleError); }, 8000);
+}
+async function refreshChat() {
+  if (!sb || !me || !chatWith || current !== 'discover') return;
+  await loadConnections();
+  if (!connections.some((c) => c.partner_id === chatWith && c.status === 'accepted')) { closeChat(); return; }
+  await loadThread();
+}
+
 async function loadPeople() {
   if (!sb || !me) return;
-  const [d, c, r] = await Promise.all([
-    sb.rpc('discover_students', { max_results: 30 }),
-    sb.from('connections').select('requester_id, addressee_id, status'),
-    sb.from('connections').select('id, requester_id').eq('addressee_id', me.id).eq('status', 'pending')
-  ]);
-  if (d.error) throw d.error;
-  discoverRows = d.data || [];
-  connMap = {};
-  (c.data || []).forEach((x) => { connMap[x.requester_id === me.id ? x.addressee_id : x.requester_id] = x.status; });
-  requestRows = r.data || [];
-  const ids = [...new Set(requestRows.map((x) => x.requester_id))];
-  requestNames = {};
-  if (ids.length) {
-    const { data } = await sb.from('public_profiles').select('id, display_name').in('id', ids);
-    (data || []).forEach((p) => { requestNames[p.id] = p.display_name; });
-  }
-  paintRequests(); paintDiscover();
+  try {
+    const [d, c, r] = await Promise.all([
+      sb.rpc('discover_students', { max_results: 30 }),
+      sb.from('connections').select('requester_id, addressee_id, status'),
+      sb.from('connections').select('id, requester_id').eq('addressee_id', me.id).eq('status', 'pending')
+    ]);
+    const firstError = d.error || c.error || r.error;
+    if (firstError) handleError(firstError);
+    discoverRows = d.data || [];
+    connMap = {};
+    (c.data || []).forEach((x) => { connMap[x.requester_id === me.id ? x.addressee_id : x.requester_id] = x.status; });
+    requestRows = r.data || [];
+    const ids = [...new Set(requestRows.map((x) => x.requester_id))];
+    requestNames = {};
+    if (ids.length) {
+      const { data, error } = await sb.from('public_profiles').select('id, display_name').in('id', ids);
+      if (error) throw error;
+      (data || []).forEach((p) => { requestNames[p.id] = p.display_name; });
+    }
+    paintRequests(); paintDiscover();
+    await loadConnections();
+    if (chatWith) { paintChatHead(); await loadThread(); }
+  } catch (err) { handleError(err); }
 }
 function paintRequests() {
   const el = $('#requestList'); if (!el) return;
@@ -904,252 +1096,69 @@ function paintDiscover() {
   const count = $('#discoverCount'); if (count) count.textContent = rows.length + (rows.length === 1 ? ' student' : ' students');
   el.innerHTML = rows.length ? rows.map((p) => {
     const st = connMap[p.id];
-    const action = st === 'accepted' ? `<button class="btn" type="button" data-discover-act="message" data-id="${p.id}">Message</button>` : st === 'pending' ? '<span class="chip line">Request sent</span>' : st === 'declined' ? '' : `<button class="btn" type="button" data-discover-act="connect" data-id="${p.id}">${I('plus')}Connect</button>`;
+    const action = st === 'accepted' ? `<button class="btn" type="button" data-discover-act="open-chat" data-id="${p.id}">${I('send')}Message</button>`
+      : st === 'pending' ? '<span class="chip line">Request sent</span>'
+      : st === 'declined' ? ''
+      : `<button class="btn" type="button" data-discover-act="connect" data-id="${p.id}">${I('plus')}Connect</button>`;
     return `<div class="row"><span class="avatar">${esc((p.display_name || '?').charAt(0).toUpperCase())}</span><div><strong>${esc(p.display_name || 'Student')}</strong><small>${esc([p.university, p.department].filter(Boolean).join(', ') || 'Student')}</small><div class="chips" style="margin-top:8px">${(p.interests || []).map((i) => `<span class="chip line">${esc(i)}</span>`).join('')}</div></div><div class="stack-sm">${action}<button class="btn icon" type="button" data-discover-act="block" data-id="${p.id}" aria-label="Block this student">Block</button><button class="btn icon" type="button" data-discover-act="report" data-id="${p.id}" aria-label="Report this profile">Report</button></div></div>`;
   }).join('') : `<p class="empty">${discoverRows.length ? 'No students match your search.' : 'No students are visible yet. Switch on "Show my profile" in your account to be the first.'}</p>`;
 }
 async function discoverAction(a, b) {
   if (!sb || !me) return;
   const id = b.dataset.id;
-  if (a === 'message') { chatWith = id; location.hash = '#messages'; return; }
-  if (a === 'connect') { const { error } = await sb.from('connections').insert({ requester_id: me.id, addressee_id: id }); toast(error ? 'Could not send the request.' : 'Request sent.'); return loadPeople(); }
-  if (a === 'accept' || a === 'decline') { const { error } = await sb.from('connections').update({ status: a === 'accept' ? 'accepted' : 'declined' }).eq('id', id); if (error) toast('Could not update the request.'); return loadPeople(); }
-  if (a === 'block') { if (!confirm('Block this student? You will not see each other in Discover.')) return; const { error } = await sb.from('blocks').insert({ blocker_id: me.id, blocked_id: id }); if (error) toast('Could not block this student.'); return loadPeople(); }
-  if (a === 'report') {
-    const reason = (prompt('Why are you reporting this profile? Describe it briefly.') || '').trim();
-    if (!reason) return;
-    const { error } = await sb.from('reports').insert({ reporter_id: me.id, reported_id: id, reason: reason.slice(0, 500) });
-    toast(error ? 'Could not send the report.' : 'Thank you. We will review this report.');
-  }
+  if (a === 'open-chat') return openChat(id);
+  try {
+    if (a === 'connect') {
+      const { error } = await sb.from('connections').insert({ requester_id: me.id, addressee_id: id });
+      if (error) throw error;
+      toast('Request sent. You can message them once they accept.'); return loadPeople();
+    }
+    if (a === 'accept' || a === 'decline') {
+      const { error } = await sb.from('connections').update({ status: a === 'accept' ? 'accepted' : 'declined' }).eq('id', id);
+      if (error) throw error;
+      if (a === 'accept') toast('Connected. You can message them now.');
+      return loadPeople();
+    }
+    if (a === 'block') {
+      if (!confirm('Block this student? You will not see each other in Discover.')) return;
+      const { error } = await sb.from('blocks').insert({ blocker_id: me.id, blocked_id: id });
+      if (error) throw error;
+      toast('Student blocked.'); return loadPeople();
+    }
+    if (a === 'report') {
+      const reason = (prompt('Why are you reporting this profile? Describe it briefly.') || '').trim();
+      if (!reason) return;
+      const { error } = await sb.from('reports').insert({ reporter_id: me.id, reported_id: id, reason: reason.slice(0, 500) });
+      if (error) throw error;
+      toast('Thank you. We will review this report.');
+    }
+  } catch (err) { handleError(err); }
 }
 function authAction(a, b) {
   if (a === 'mode') { authMode = b.dataset.mode; return render(); }
+  if (a === 'show-pass') {
+    const inp = $('#authPassword'); if (!inp) return;
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    b.textContent = inp.type === 'password' ? 'Show' : 'Hide';
+    return;
+  }
   if (a === 'reset') return resetPassword();
   if (a === 'resend') return resendConfirmation();
   if (a === 'guest') { location.hash = '#home'; return; }
   if (a === 'signout') return signOut();
   if (a === 'delete') return deleteAccount();
 }
-
+// The account button in the top-right corner opens the account page
 document.addEventListener('click', (e) => {
-  if (e.target.closest('#avatarBtn')) { location.hash = '#settings'; return; }
-  const mb = e.target.closest('[data-msg-act],[data-mat-act]');
-  if (mb) { if (mb.dataset.msgAct) return messageAction(mb.dataset.msgAct, mb); return materialAction(mb.dataset.matAct, mb); }
-  const b = e.target.closest('[data-auth-act],[data-task-act],[data-discover-act]');
+  if (e.target.closest('#avatarBtn')) { location.hash = '#login'; return; }
+  const b = e.target.closest('[data-auth-act],[data-task-act],[data-discover-act],[data-chat-act]');
   if (!b) return;
   if (b.dataset.authAct) return authAction(b.dataset.authAct, b);
   if (b.dataset.taskAct) return taskAction(b.dataset.taskAct, b);
+  if (b.dataset.chatAct) return chatAction(b.dataset.chatAct, b);
   return discoverAction(b.dataset.discoverAct, b);
 });
 document.addEventListener('input', (e) => { if (e.target.id === 'discoverSearch') paintDiscover(); });
-
-// ---------- Security, sign-in, chat, materials and profile ----------
-let recovering = false, myRole = 'student', lecturerApproved = false, chatTimer = null;
-let chatWith = null, partners = [], chatMessages = [];
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const cleanText = (t) => String(t || '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, 1000);
-const signInPrompt = (text) => `<section class="glass"><h3>Sign in to continue</h3><p class="muted">${text}</p><div class="actions" style="margin-top:14px"><a class="btn" href="#login">Sign in or create an account</a></div></section>`;
-const newPasswordForm = () => `<section class="glass"><h3>Choose a new password</h3><form class="form" id="newPassForm" style="margin-top:14px"><label>New password<input name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters"></label><label>Confirm new password<input name="confirm" type="password" required minlength="8" autocomplete="new-password"></label><div><button class="btn" type="submit">Save new password</button></div></form></section>`;
-
-function handleError(err) {
-  const m = String((err && (err.message || err.code)) || '');
-  console.error(err);
-  if (/rate_limited|too many|429/i.test(m)) return toast('You are going too fast. Wait a moment, then try again.');
-  if (/not_connected/.test(m)) return toast('You can only message students you are connected with.');
-  if (/blocked/.test(m)) return toast('This action is not available between these two accounts.');
-  if (/not_signed_in/.test(m)) return toast('Please sign in first.');
-  if (/row-level security|permission denied|insufficient|42501/i.test(m)) return toast('You do not have permission to do that.');
-  toast('Something went wrong. Please try again.');
-}
-window.addEventListener('error', (e) => { if (e.filename && !e.filename.includes('app.js')) return; console.error(e.error || e.message); toast('Something went wrong. Please refresh the page.'); });
-window.addEventListener('unhandledrejection', (e) => { console.error(e.reason); toast('Something went wrong. Please try again.'); });
-
-async function setNewPassword(f) {
-  if (!sb) return toast('Accounts are not connected yet.');
-  const v = Object.fromEntries(new FormData(f));
-  if (v.password !== v.confirm) return toast('The two passwords do not match.');
-  const { error } = await sb.auth.updateUser({ password: v.password });
-  if (error) return toast(friendly(error));
-  recovering = false; toast('Password updated. You are signed in.'); render();
-}
-async function resendConfirmation() {
-  const field = document.querySelector('#authForm [name=email]');
-  const email = field ? field.value.trim() : '';
-  if (!sb || !email) return toast('Enter your email first.');
-  const { error } = await sb.auth.resend({ type: 'signup', email });
-  toast(error ? friendly(error) : 'Confirmation email sent again.');
-}
-async function loadRoleFlags() {
-  const { data, error } = await sb.from('profiles').select('role, lecturer_approved').eq('id', me.id).single();
-  if (error) throw error;
-  myRole = data.role; lecturerApproved = !!data.lecturer_approved;
-}
-function paintAvatar() {
-  const btn = $('#avatarBtn'); if (!btn) return;
-  const name = (myProfile && myProfile.display_name) || studentName() || (me && me.email) || '';
-  btn.innerHTML = name ? esc(name.charAt(0).toUpperCase()) : I('user');
-  btn.setAttribute('aria-label', name ? 'Open your profile, ' + name : 'Open your profile and settings');
-}
-function renderProfilePage() {
-  const name = (myProfile && myProfile.display_name) || studentName() || (me ? me.email : 'Your profile');
-  const place = myProfile ? [myProfile.university, myProfile.department].filter(Boolean).join(', ') : '';
-  return `<section class="glass profile-hero"><span class="avatar big-avatar">${esc(name.charAt(0).toUpperCase())}</span><div><h2>${esc(name)}</h2><p class="muted">${esc(place || (me ? 'Add your university and department in Account' : 'Sign in to add your university and department'))}</p><div class="chips" style="margin-top:12px"><span class="chip line">${role === 'lecturer' ? 'Lecturer' : 'Student'}</span><span class="chip ${me ? '' : 'line'}">${me ? 'Signed in' : 'Guest'}</span>${role === 'lecturer' ? `<span class="chip ${lecturerApproved ? '' : 'warn'}">${lecturerApproved ? 'Uploads on' : 'Approval pending'}</span>` : ''}</div></div><div class="actions profile-actions"><a class="btn ${me ? 'quiet' : ''}" href="#login">${me ? 'Account and privacy' : 'Sign in'}</a></div></section>` + renderSettings();
-}
-
-// ----- Chat (text only, between accepted connections) -----
-function renderMessages() {
-  if (!configured()) return notice('Messages need accounts, and accounts are not connected yet.');
-  if (!me) return signInPrompt('Sign in to message students you are connected with.');
-  return `<div class="chat"><section class="glass"><h3 class="sec">Connections</h3><div id="partnerList"><p class="muted">Loading.</p></div></section><section class="glass chat-thread" id="threadPane"><p class="muted">Loading.</p></section></div><p class="note-line">Messages are text only. They are shared only between students who are connected, and you can report or block someone at any time.</p>`;
-}
-async function loadPartners() {
-  const { data, error } = await sb.rpc('my_connections');
-  if (error) throw error;
-  partners = (data || []).filter((p) => p.status === 'accepted');
-}
-function paintPartners() {
-  const el = $('#partnerList'); if (!el) return;
-  el.innerHTML = partners.length ? partners.map((p) => `<button class="line-btn ${p.partner_id === chatWith ? 'on' : ''}" type="button" data-msg-act="open" data-id="${p.partner_id}"><span class="avatar">${esc((p.display_name || '?').charAt(0).toUpperCase())}</span><span><strong>${esc(p.display_name || 'Student')}</strong><small>${esc([p.university, p.department].filter(Boolean).join(', ') || 'Student')}</small></span></button>`).join('') : '<p class="empty">No connections yet. Connect with students in Discover, then message them here.</p>';
-}
-async function loadThread() {
-  if (!sb || !me || !UUID_RE.test(chatWith || '')) return;
-  const { data, error } = await sb.from('messages').select('id, sender_id, body, created_at, read_at')
-    .or(`and(sender_id.eq.${me.id},recipient_id.eq.${chatWith}),and(sender_id.eq.${chatWith},recipient_id.eq.${me.id})`)
-    .order('created_at', { ascending: true }).limit(200);
-  if (error) throw error;
-  chatMessages = data || [];
-  const { error: readErr } = await sb.from('messages').update({ read_at: new Date().toISOString() }).eq('recipient_id', me.id).eq('sender_id', chatWith).is('read_at', null);
-  if (readErr) throw readErr;
-  paintThread();
-}
-function paintThread() {
-  const el = $('#threadPane'); if (!el) return;
-  const p = partners.find((x) => x.partner_id === chatWith);
-  if (!p) { el.innerHTML = '<p class="empty">Choose a connection to start a conversation.</p>'; return; }
-  el.innerHTML = `<div class="thread-head"><span class="avatar">${esc((p.display_name || '?').charAt(0).toUpperCase())}</span><div><strong>${esc(p.display_name || 'Student')}</strong><small>${esc([p.university, p.department].filter(Boolean).join(', ') || 'Student')}</small></div><button class="btn quiet" type="button" data-msg-act="report">Report</button><button class="btn quiet" type="button" data-msg-act="block">Block</button></div>
-  <div class="thread" id="threadBody">${chatMessages.map((m) => `<div class="msg-row ${m.sender_id === me.id ? 'mine' : ''}"><div class="msg-bubble">${esc(m.body)}</div>${m.sender_id === me.id ? `<button class="btn icon" type="button" data-msg-act="delete-msg" data-id="${m.id}" aria-label="Delete this message">${I('x')}</button>` : ''}</div>`).join('') || '<p class="empty">No messages yet. Say hello.</p>'}</div>
-  <form class="composer" id="msgForm"><label class="sr-only" for="msgBody">Message</label><textarea id="msgBody" name="body" rows="2" maxlength="1000" required placeholder="Write a message. Text only."></textarea><button class="btn" type="submit">${I('send')}Send</button></form>`;
-  const body = $('#threadBody'); if (body) body.scrollTop = body.scrollHeight;
-}
-async function sendMessage(text) {
-  const body = cleanText(text);
-  if (!body) return toast('Write a message first.');
-  if (!UUID_RE.test(chatWith || '')) return toast('Choose a student to message.');
-  const { error } = await sb.from('messages').insert({ sender_id: me.id, recipient_id: chatWith, body });
-  if (error) throw error;
-  await loadThread();
-}
-async function refreshChat() {
-  if (!sb || !me) return;
-  await loadPartners();
-  if (chatWith && !partners.some((p) => p.partner_id === chatWith)) chatWith = null;
-  paintPartners();
-  if (chatWith) await loadThread(); else paintThread();
-}
-function startChatPolling() {
-  clearInterval(chatTimer); chatTimer = null;
-  if (current === 'messages') chatTimer = setInterval(() => { refreshChat().catch(handleError); }, 8000);
-}
-async function messageAction(a, b) {
-  if (!sb || !me) return;
-  try {
-    if (a === 'open') { chatWith = b.dataset.id; return await refreshChat(); }
-    if (a === 'delete-msg') { const { error } = await sb.from('messages').delete().eq('id', b.dataset.id); if (error) throw error; return await loadThread(); }
-    if (a === 'block') {
-      if (!confirm('Block this student? You will not be able to message each other.')) return;
-      const { error } = await sb.from('blocks').insert({ blocker_id: me.id, blocked_id: chatWith }); if (error) throw error;
-      chatWith = null; return await refreshChat();
-    }
-    if (a === 'report') {
-      const reason = (prompt('Why are you reporting this student?') || '').trim(); if (!reason) return;
-      const { error } = await sb.from('reports').insert({ reporter_id: me.id, reported_id: chatWith, reason: reason.slice(0, 500) }); if (error) throw error;
-      toast('Thank you. We will review this report.');
-    }
-  } catch (err) { handleError(err); }
-}
-
-// ----- Course materials: any signed-in student can read; only approved lecturers can add -----
-function renderStudentMaterials() {
-  const top = !configured() ? notice('Lecturer materials need accounts, and accounts are not connected yet.')
-    : !me ? signInPrompt('Sign in to see materials shared by your lecturers.')
-    : `<section class="glass" style="margin-bottom:22px"><div class="sec"><h3>From your lecturers</h3><span class="muted" id="sharedCount"></span></div><div id="sharedList"><p class="muted">Loading.</p></div></section>`;
-  return top + renderMaterials();
-}
-function renderLecturerMaterials() {
-  if (!configured()) return notice('Course uploads need accounts, and accounts are not connected yet.');
-  if (!me) return signInPrompt('Sign in to share course materials with students.');
-  if (!lecturerApproved) return `<section class="glass"><h3>Lecturer access is pending</h3><p class="muted">Uploads are switched on after we check your details. Email us from the address you signed up with, and include your university and department.</p><div class="actions" style="margin-top:14px"><a class="btn quiet" href="mailto:getstudenthub@gmail.com?subject=Lecturer%20access">Request lecturer access</a></div></section>`;
-  return `<div class="grid2"><section class="glass"><h3 class="sec">Share with students</h3>
-    <form class="form" id="matForm">
-      <label>Title<input name="title" required maxlength="120" placeholder="Week 3 lecture notes"></label>
-      <div class="inline"><label>Course<input name="course" maxlength="40" placeholder="MTH 101"></label><label>Type<select name="kind"><option value="file">File (PDF, DOCX, PPTX or TXT, up to 10 MB)</option><option value="link">Link (https only)</option><option value="note">Note</option></select></label></div>
-      <label>File<input name="file" type="file" accept=".pdf,.docx,.pptx,.txt"></label>
-      <label>Link or note<textarea name="value" rows="3" maxlength="2000" placeholder="Used for links and notes"></textarea></label>
-      <div><button class="btn" type="submit">${I('upload')}Share with students</button></div>
-    </form></section>
-    <section class="glass"><h3 class="sec">Your uploads</h3><div id="ownList"><p class="muted">Loading.</p></div></section></div>`;
-}
-async function loadShared() {
-  if (!sb || !me) return;
-  const { data, error } = await sb.from('shared_materials').select('id, uploader_id, title, course, kind, body, file_path, file_name, created_at').order('created_at', { ascending: false }).limit(200);
-  if (error) throw error;
-  const rows = data || [];
-  const shared = $('#sharedList'), count = $('#sharedCount'), own = $('#ownList');
-  if (count) count.textContent = rows.length + (rows.length === 1 ? ' item' : ' items');
-  if (shared) shared.innerHTML = rows.length ? rows.map((m) => materialRow(m, false)).join('') : '<p class="empty">No materials have been shared yet.</p>';
-  if (own) { const mine = rows.filter((m) => m.uploader_id === me.id); own.innerHTML = mine.length ? mine.map((m) => materialRow(m, true)).join('') : '<p class="empty">You have not shared anything yet.</p>'; }
-}
-function materialRow(m, mine) {
-  const when = fmtDate(String(m.created_at).slice(0, 10));
-  let body;
-  if (m.kind === 'link' && /^https:\/\//.test(m.body)) body = `<a class="chip line" style="margin-top:8px" href="${esc(m.body)}" target="_blank" rel="noopener noreferrer">Open link</a>`;
-  else if (m.kind === 'file') body = `<button class="chip line" type="button" style="margin-top:8px" data-mat-act="download" data-path="${esc(m.file_path)}">Download ${esc(m.file_name || 'file')}</button>`;
-  else body = `<p class="muted" style="margin-top:6px;white-space:pre-wrap">${esc(m.body)}</p>`;
-  return `<div class="row">${I(m.kind === 'file' ? 'file' : m.kind === 'link' ? 'link' : 'book')}<div><strong>${esc(m.title)}</strong><small>${esc(m.course || 'General')}, ${when}</small>${body}</div>${mine ? `<button class="btn icon" type="button" data-mat-act="delete" data-id="${m.id}" data-path="${esc(m.file_path || '')}" aria-label="Delete ${esc(m.title)}">${I('trash')}</button>` : ''}</div>`;
-}
-async function uploadMaterial(f) {
-  if (!sb || !me) return toast('Sign in to share materials.');
-  if (!lecturerApproved) return toast('Lecturer uploads are not switched on for this account yet.');
-  const v = Object.fromEntries(new FormData(f));
-  const row = { uploader_id: me.id, title: (v.title || '').trim(), course: (v.course || '').trim(), kind: v.kind || 'note', body: '' };
-  if (!row.title) return toast('Add a title.');
-  if (row.kind === 'file') {
-    const file = f.elements.file.files[0];
-    if (!file) return toast('Choose a file to upload.');
-    if (file.size > 10 * 1024 * 1024) return toast('Files must be 10 MB or smaller.');
-    const safe = file.name.replace(/[^A-Za-z0-9._-]/g, '_').slice(0, 120);
-    const path = `${me.id}/${uid()}-${safe}`;
-    const { error: upErr } = await sb.storage.from('course-files').upload(path, file, { contentType: file.type || 'application/octet-stream' });
-    if (upErr) throw upErr;
-    Object.assign(row, { file_path: path, file_name: safe });
-  } else {
-    row.body = (v.value || '').trim();
-    if (!row.body) return toast('Add a link or a note.');
-    if (row.kind === 'link' && !/^https:\/\//.test(row.body)) return toast('Links must start with https://');
-  }
-  const { error } = await sb.from('shared_materials').insert(row);
-  if (error) throw error;
-  f.reset(); toast('Shared with students.'); await loadShared();
-}
-async function materialAction(a, b) {
-  if (!sb || !me) return;
-  try {
-    if (a === 'download') {
-      const win = window.open('about:blank', '_blank');
-      const { data, error } = await sb.storage.from('course-files').createSignedUrl(b.dataset.path, 300);
-      if (error) { if (win) win.close(); throw error; }
-      if (win) { win.location.href = data.signedUrl; win.opener = null; } else { toast('Allow pop-ups for this site to open the file.'); }
-      return;
-    }
-    if (a === 'delete') {
-      if (!confirm('Delete this material for all students?')) return;
-      const { error } = await sb.from('shared_materials').delete().eq('id', b.dataset.id);
-      if (error) throw error;
-      if (b.dataset.path) await sb.storage.from('course-files').remove([b.dataset.path]);
-      toast('Material deleted.'); await loadShared();
-    }
-  } catch (err) { handleError(err); }
-}
 
 applyTheme();
 buildNav();
