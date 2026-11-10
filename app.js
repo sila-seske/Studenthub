@@ -1,7 +1,9 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
+// Public key for push alerts. Safe to share. The private key stays in Supabase secrets only.
+const VAPID_PUBLIC_KEY = 'BIEDEj6vErurrCZBr2hEc8S_nNnRpZ1ZHDLrEq9WvVg-kZ8yCBAr_aRT5F_9iuUBelAneaFHWHXH2keFGX2rp0c';
 
 (() => {
 const $ = (s) => document.querySelector(s);
@@ -721,7 +723,7 @@ async function setUser(user) {
     if (error) console.error(error);
     myProfile = data || null;
   }
-  if (me) { subscribeAlerts(); loadAlerts().catch((err) => console.error(err)); } else { unsubscribeAlerts(); }
+  if (me) { subscribeAlerts(); loadAlerts().catch((err) => console.error(err)); if ('Notification' in window && Notification.permission === 'granted') enablePush().catch((err) => console.error(err)); } else { unsubscribeAlerts(); }
   paintAvatar();
   if (gateOn() && !PUBLIC_VIEWS.includes(current)) { location.hash = '#login'; return; }
   if (current === 'login' || current === 'discover') render();
@@ -782,6 +784,7 @@ async function setNewPassword(f) {
 }
 async function signOut() {
   if (!sb) return;
+  await disablePush();
   const { error } = await sb.auth.signOut();
   if (error) return handleError(error);
   localStorage.removeItem('studenthubGuest'); toast('Signed out.'); location.hash = '#login';
@@ -789,6 +792,7 @@ async function signOut() {
 async function deleteAccount() {
   if (!sb || !me) return;
   if (!confirm('Delete your StudentHub account and its server data? This cannot be undone.')) return;
+  await disablePush();
   const { error } = await sb.rpc('delete_my_account');
   if (error) return handleError(error);
   await sb.auth.signOut();
@@ -995,6 +999,32 @@ function unsubscribeAlerts() {
   alertChannel = null; clearInterval(alertTimer); alertTimer = null; serverAlerts = [];
   paintBell();
 }
+function urlBase64ToUint8Array(base64) {
+  const padding = '='.repeat((4 - (base64.length % 4)) % 4);
+  const raw = atob((base64 + padding).replace(/-/g, '+').replace(/_/g, '/'));
+  return Uint8Array.from(raw, (c) => c.charCodeAt(0));
+}
+async function enablePush() {
+  if (!sb || !me || !('serviceWorker' in navigator) || !('PushManager' in window)) return false;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return false;
+  const reg = await navigator.serviceWorker.ready;
+  let sub = await reg.pushManager.getSubscription();
+  if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) });
+  const j = sub.toJSON();
+  const { error } = await sb.rpc('register_push', { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth });
+  if (error) throw error;
+  return true;
+}
+async function disablePush() {
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    if (!sub) return;
+    if (sb) await sb.rpc('unregister_push', { p_endpoint: sub.endpoint });
+    await sub.unsubscribe();
+  } catch (err) { console.error(err); }
+}
 function renderAlerts() {
   const permission = 'Notification' in window ? Notification.permission : 'unsupported';
   const banner = permission === 'default' ? `<section class="glass" id="alertsPermission"><div class="row"><div><strong>Turn on alerts</strong><small>Get a notification when a request or message arrives, or when a class, exam or task is coming up.</small></div><button class="btn" id="btnAlertsOn" type="button" data-alert-act="permission">Turn on</button></div></section>` : '';
@@ -1012,7 +1042,11 @@ function paintAlerts() {
 }
 async function alertAction(a, b) {
   try {
-    if (a === 'permission') { if ('Notification' in window) await Notification.requestPermission(); return render(); }
+    if (a === 'permission') {
+      if ('Notification' in window) await Notification.requestPermission();
+      if ('Notification' in window && Notification.permission === 'granted') { await enablePush(); toast('Alerts are on for this device.'); }
+      return render();
+    }
     if (a === 'read-all') {
       localAlerts = localAlerts.map((x) => ({ ...x, read: true })); saveLocalAlerts();
       if (sb && me) { const { error } = await sb.from('notifications').update({ read_at: new Date().toISOString() }).eq('user_id', me.id).is('read_at', null); if (error) throw error; }
