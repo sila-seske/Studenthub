@@ -1,7 +1,7 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
 
 (() => {
 const $ = (s) => document.querySelector(s);
@@ -15,11 +15,11 @@ const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sun
 const CATS = ['Food','Transport','Data and airtime','School fees','Books and printing','Other'];
 const GRADES = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
 const WINDOWS = { Morning: [420, 660], Afternoon: [720, 960], Evening: [1020, 1260], Night: [1260, 1380], Flexible: [480, 1320] };
-const TITLES = { discover: 'Discover', tasks: 'Tasks', login: 'Account', notes: 'Study notes', home: ['StudentHub', 'Dashboard'], classes: 'Classes and exams', study: 'Study planner', money: 'Money', gpa: 'GPA calculator', materials: ['Study materials', 'Course materials'], more: 'More', settings: 'Settings', privacy: 'Privacy', terms: 'Terms' };
-const SUBS = { discover: 'Find students who chose to be visible to other students.', tasks: 'Deadlines and to-dos in one list.', login: 'Sign in, your profile and your privacy choices.', notes: 'Course notes, pinned and searchable.', home: ['Your classes, exams and spending in one place.', 'Your teaching week, reminders and materials.'], classes: 'Your weekly timetable, exam dates and reminders.', study: 'Turn your classes and exams into sessions you can keep.', money: 'Track what you spend against your monthly budget.', gpa: 'Enter your courses to calculate your semester GPA.', materials: ['Trusted places to find textbooks and past questions.', 'Share links and notes with your students.'], more: 'Tools and settings.', settings: 'Your name, role, budget and theme.', privacy: 'What StudentHub stores, and which Google services run on this site.', terms: 'The short version.' };
+const TITLES = { profile: 'Profile', messages: 'Messages', discover: 'Discover', tasks: 'Tasks', login: 'Account', notes: 'Study notes', home: ['StudentHub', 'Dashboard'], classes: 'Classes and exams', study: 'Study planner', money: 'Money', gpa: 'GPA calculator', materials: ['Study materials', 'Course materials'], more: 'More', settings: 'Settings', privacy: 'Privacy', terms: 'Terms' };
+const SUBS = { profile: 'Profile and connection.', messages: 'Chats with students you are connected with.', discover: 'Find students who chose to be visible to other students.', tasks: 'Deadlines and to-dos in one list.', login: 'Sign in, your profile and your privacy choices.', notes: 'Course notes, pinned and searchable.', home: ['Your classes, exams and spending in one place.', 'Your teaching week, reminders and materials.'], classes: 'Your weekly timetable, exam dates and reminders.', study: 'Turn your classes and exams into sessions you can keep.', money: 'Track what you spend against your monthly budget.', gpa: 'Enter your courses to calculate your semester GPA.', materials: ['Trusted places to find textbooks and past questions.', 'Share links and notes with your students.'], more: 'Tools and settings.', settings: 'Your name, role, budget and theme.', privacy: 'What StudentHub stores, and which Google services run on this site.', terms: 'The short version.' };
 const ROUTES = {
-  student: { views: ['home','classes','study','discover','tasks','money','gpa','materials','more','settings','notes','login','privacy','terms'], nav: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['tasks','check','Tasks'],['money','wallet','Money'],['gpa','calc','GPA'],['materials','file','Materials'],['notes','file','Notes'],['login','cap','Account'],['settings','gear','Settings']], tab: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['tasks','check','Tasks'],['login','cap','Account']] },
-  lecturer: { views: ['home','materials','settings','privacy','terms'], nav: [['home','home','Dashboard'],['materials','upload','Course materials'],['settings','gear','Settings']], tab: [['home','home','Dashboard'],['materials','upload','Materials'],['settings','gear','Settings']] }
+  student: { views: ['home','classes','study','discover','profile','messages','tasks','money','gpa','materials','more','settings','notes','login','privacy','terms'], nav: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['messages','send','Messages'],['tasks','check','Tasks'],['money','wallet','Money'],['gpa','calc','GPA'],['materials','file','Materials'],['notes','file','Notes'],['settings','gear','Settings']], tab: [['home','home','Home'],['classes','calendar','Classes'],['discover','search','Discover'],['messages','send','Messages'],['study','book','Study']] },
+  lecturer: { views: ['home','materials','login','settings','privacy','terms'], nav: [['home','home','Dashboard'],['materials','upload','Course materials'],['settings','gear','Settings']], tab: [['home','home','Dashboard'],['materials','upload','Materials'],['settings','gear','Settings']] }
 };
 const DEFAULT_PREFS = { budget: 0, theme: 'system', perDay: 1, lead: 15, remind: false };
 const blank = () => ({ course: '', units: '', grade: 'A' });
@@ -279,8 +279,8 @@ const TERMS = `<article class="glass prose"><ul>
 <li>Study materials link to websites we do not control. Their own terms apply.</li>
 <li>StudentHub is provided as is. You use it at your own discretion.</li></ul></article>`;
 
-const RENDER = { home: () => role === 'lecturer' ? renderTeach() : renderToday() + quickAccess(), classes: renderClasses, notes: renderNotes, login: renderLogin, discover: renderDiscover, tasks: renderTasks, study: renderStudy, money: renderMoney, gpa: renderGpa, materials: () => role === 'lecturer' ? renderCourseMats() : renderMaterials(), more: renderMore, settings: renderSettings, privacy: () => PRIVACY, terms: () => TERMS };
-function render() { const el = $('#v-' + current); if (!el) return; el.innerHTML = RENDER[current](); if (current === 'gpa') updateGpa(); if (current === 'notes') { paintFilters(); paintList(); paintEditor(); } paintInstall(); paintAvatar(); }
+const RENDER = { messages: renderMessages, profile: renderPersonProfile, home: () => role === 'lecturer' ? renderTeach() : renderToday() + quickAccess(), classes: renderClasses, notes: renderNotes, login: renderLogin, discover: renderDiscover, tasks: renderTasks, study: renderStudy, money: renderMoney, gpa: renderGpa, materials: () => role === 'lecturer' ? renderCourseMats() : renderMaterials(), more: renderMore, settings: renderSettings, privacy: () => PRIVACY, terms: () => TERMS };
+function render() { const el = $('#v-' + current); if (!el) return; el.innerHTML = RENDER[current](); if (current === 'gpa') updateGpa(); if (current === 'notes') { paintFilters(); paintList(); paintEditor(); } paintInstall(); paintAvatar(); if (current === 'messages' && me) refreshChat().catch(handleError); }
 
 function readGpa() {
   gpa = [...document.querySelectorAll('.inline input[name=course]')].map((c) => { const row = c.parentElement; return { course: c.value, units: row.querySelector('[name=units]').value, grade: row.querySelector('[name=grade]').value }; });
@@ -315,16 +315,20 @@ function filterMats() { const q = $('#matSearch').value.trim().toLowerCase(); $$
 function buildNav() {
   const R = ROUTES[role] || ROUTES.student;
   $('#nav').innerHTML = R.nav.map(([v, ic, l]) => `<a href="#${v}" data-nav="${v}">${I(ic)}<span>${l}</span></a>`).join('');
-  $('#tab').innerHTML = R.tab.map(([v, ic, l]) => `<a href="#${v}" data-nav="${v}">${I(ic)}<span>${l}</span></a>`).join('');
+  $('#tab').innerHTML = R.tab.map(([v, ic, l]) => v === 'discover'
+    ? `<a class="ball-tab" href="#${v}" data-nav="${v}" aria-label="${l}"><span class="ball-gap" aria-hidden="true"></span><span class="ball" aria-hidden="true">${I(ic)}</span><span>${l}</span></a>`
+    : `<a href="#${v}" data-nav="${v}">${I(ic)}<span>${l}</span></a>`).join('');
   $('#views').innerHTML = R.views.map((v) => `<section class="view" id="v-${v}" hidden></section>`).join('');
   document.body.dataset.role = role;
 }
-const tabFor = (v) => role === 'lecturer' ? (v === 'privacy' || v === 'terms' ? 'settings' : v) : ({ notes: 'study', money: 'home', gpa: 'home', materials: 'home', settings: 'home', privacy: 'home', terms: 'home' }[v] || v);
+const tabFor = (v) => role === 'lecturer' ? (v === 'privacy' || v === 'terms' || v === 'login' ? 'settings' : v) : ({ notes: 'study', money: 'home', gpa: 'home', materials: 'home', settings: 'home', privacy: 'home', terms: 'home', profile: 'discover' }[v] || v);
 function route() {
   const R = ROUTES[role] || ROUTES.student;
   let v = location.hash.slice(1);
   if (['privacy', 'terms', 'about', 'contact', 'learn'].includes(v)) { location.href = v + '.html'; return; }
   if (!R.views.includes(v)) v = 'home';
+  if (gateOn() && !PUBLIC_VIEWS.includes(v)) { location.hash = '#login'; return; }
+  document.body.classList.toggle('gated', gateOn());
   current = v;
   $$('.view').forEach((s) => { s.hidden = s.id !== 'v-' + v; });
   $$('#nav a').forEach((a) => a.dataset.nav === (v === 'notes' ? 'study' : v) ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
@@ -333,7 +337,7 @@ function route() {
   $('#sub').textContent = pick(SUBS[v]);
   document.title = pick(TITLES[v]) === 'StudentHub' ? 'StudentHub | Class timetable, exams and study planner' : pick(TITLES[v]) + ' | StudentHub';
   render();
-  if (current === 'discover' && me) loadPeople();
+  if ((current === 'discover' || current === 'profile') && me) loadPeople();
   startChatPolling();
   window.scrollTo(0, 0);
 }
@@ -659,6 +663,10 @@ let discoverRows = [], connMap = {}, requestRows = [], requestNames = {};
 const saveTasks = () => save('studentTasks', tasks);
 const configured = () => /^https:\/\//.test(SH_CONFIG.url) && SH_CONFIG.anonKey.length > 20 && !/PASTE_/.test(SH_CONFIG.anonKey);
 let recovering = false; // true after the user opens a password-reset link
+let authChecked = false; // true once the first sign-in check has finished
+const PUBLIC_VIEWS = ['login']; // screens that can be opened without signing in
+// Signed-out users see the sign-in page first, unless they chose to continue without an account
+const gateOn = () => configured() && authChecked && !me && localStorage.getItem('studenthubGuest') !== 'true';
 const setAuthMsg = (t) => { const el = $('#authMsg'); if (el) el.textContent = t; };
 const notice = (text) => `<section class="glass"><p class="muted">${text}</p></section>`;
 
@@ -701,7 +709,7 @@ async function initAccounts() {
   } catch (err) { handleError(err); }
 }
 async function setUser(user) {
-  me = user || null; myProfile = null;
+  me = user || null; myProfile = null; authChecked = true;
   if (me && sb) {
     const pending = load('studentPendingProfile', null);
     if (pending) {
@@ -713,6 +721,7 @@ async function setUser(user) {
     myProfile = data || null;
   }
   paintAvatar();
+  if (gateOn() && !PUBLIC_VIEWS.includes(current)) { location.hash = '#login'; return; }
   if (current === 'login' || current === 'discover') render();
   if (current === 'discover' && me) loadPeople();
 }
@@ -740,6 +749,7 @@ async function authSubmit(f) {
       const { error } = await sb.auth.signInWithPassword({ email, password });
       if (error) throw error;
       setAuthMsg('');
+      location.hash = '#home';
     }
   } catch (err) { console.error(err); setAuthMsg(friendly(err)); }
 }
@@ -772,7 +782,7 @@ async function signOut() {
   if (!sb) return;
   const { error } = await sb.auth.signOut();
   if (error) return handleError(error);
-  toast('Signed out.');
+  localStorage.removeItem('studenthubGuest'); toast('Signed out.'); location.hash = '#login';
 }
 async function deleteAccount() {
   if (!sb || !me) return;
@@ -859,7 +869,7 @@ function expenseCharts() {
 }
 function renderMoney() { return expenseCharts() + renderMoneyBase(); }
 function quickAccess() {
-  return `<h2 class="sec" style="margin:34px 0 14px">Quick access</h2><div class="tiles">${[['money', 'wallet', 'Money'], ['materials', 'file', 'Materials'], ['tasks', 'check', 'Tasks'], ['classes', 'calendar', 'Classes'], ['notes', 'file', 'Notes']].map(([v, ic, l]) => `<a class="glass tile" href="#${v}">${I(ic)}<span>${l}</span></a>`).join('')}<a class="glass tile" href="/learn.html">${I('book')}<span>Study guides</span></a></div>`;
+  return `<h2 class="sec" style="margin:34px 0 14px">Quick access</h2><div class="tiles">${[['money', 'wallet', 'Money'], ['materials', 'file', 'Materials'], ['tasks', 'check', 'Tasks'], ['classes', 'calendar', 'Classes'], ['notes', 'file', 'Notes'], ['gpa', 'calc', 'GPA'], ['settings', 'gear', 'Settings']].map(([v, ic, l]) => `<a class="glass tile" href="#${v}">${I(ic)}<span>${l}</span></a>`).join('')}<a class="glass tile" href="/learn.html">${I('book')}<span>Study guides</span></a></div>`;
 }
 
 // Sign in, sign up and account
@@ -924,10 +934,38 @@ function renderAccount() {
     </section></div>`;
 }
 
-// Discover: requests, connections and chat
-let connections = [], chatUnread = {}, chatMessages = [], chatWith = null, chatTimer = null;
+// Discover, requests, connections, profiles and messages
+let connections = [], chatUnread = {}, chatPreview = {}, chatMessages = [], chatWith = null, chatTimer = null, viewPerson = null;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const cleanText = (t) => String(t || '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, 1000);
+const dayLabel = (d) => {
+  const now = new Date(), yest = new Date(now); yest.setDate(now.getDate() - 1);
+  if (d.toDateString() === now.toDateString()) return 'Today';
+  if (d.toDateString() === yest.toDateString()) return 'Yesterday';
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+};
+const clockOf = (iso) => new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+const initialOf = (name) => (String(name || '?').trim().charAt(0) || '?').toUpperCase();
+const schoolOf = (p) => [p.university, p.department].filter(Boolean).join(', ') || 'Student';
+
+function relationOf(id) {
+  if (connections.some((c) => c.partner_id === id && c.status === 'accepted')) return 'accepted';
+  if (requestRows.some((r) => r.requester_id === id)) return 'received';
+  if (connMap[id] === 'pending') return 'sent';
+  if (connMap[id] === 'declined') return 'declined';
+  return 'none';
+}
+function personOf(id) {
+  const c = connections.find((x) => x.partner_id === id);
+  if (c) return { display_name: c.display_name, university: c.university, department: c.department, interests: [] };
+  const p = discoverRows.find((x) => x.id === id);
+  if (p) return { display_name: p.display_name, university: p.university, department: p.department, interests: p.interests || [] };
+  return { display_name: 'Student', university: '', department: '', interests: [] };
+}
+function requestRowHtml(x) {
+  const name = requestNames[x.requester_id] || 'A student';
+  return `<div class="row"><span class="avatar">${esc(initialOf(name))}</span><div><strong>${esc(name)}</strong><small>wants to connect</small></div><button class="btn" type="button" data-discover-act="accept" data-id="${x.id}">Accept</button><button class="btn quiet" type="button" data-discover-act="decline" data-id="${x.id}">Decline</button></div>`;
+}
 
 function renderDiscover() {
   if (!configured()) return notice('Discover needs accounts, and accounts are not connected yet.');
@@ -936,53 +974,115 @@ function renderDiscover() {
     <section class="glass" id="requestsSection"><h3 class="sec">Requests for you</h3><div id="requestList"><p class="muted">Loading.</p></div></section>
     <section class="glass" id="connectionsSection"><div class="sec"><h3>Your connections</h3><span class="muted" id="connectionCount"></span></div><div id="connectionList"><p class="muted">Loading.</p></div></section>
   </div>
-  <section class="glass" id="chatSection" style="margin-top:18px" ${chatWith ? '' : 'hidden'}>
-    <div class="thread-head" id="chatHead"></div>
-    <div class="thread" id="chatThread" aria-live="polite"></div>
-    <form class="composer" id="chatForm"><label class="sr-only" for="chatBody">Message</label><textarea id="chatBody" name="body" rows="2" maxlength="1000" required placeholder="Write a message. Text only."></textarea><button class="btn" id="btnSendChat" type="submit">${I('send')}Send</button></form>
-    <p class="note-line">Text only. You can message students you are connected with, and you can report or block anyone at any time.</p>
-  </section>
   <section class="glass" id="studentsSection" style="margin-top:18px"><div class="sec"><h3>Students you might connect with</h3><span class="muted" id="discoverCount"></span></div>
     <label class="search-field"><span class="sr-only">Search students</span>${I('search')}<input id="discoverSearch" type="search" placeholder="Search by name, university, department or interest"></label>
     <div id="discoverList" style="margin-top:8px"><p class="muted">Loading.</p></div>
   </section>
   <section class="glass" id="visibilitySection" style="margin-top:18px"><h3 class="sec">Visibility</h3><p class="muted">Only students who switch on "Show my profile" appear here. Email addresses and contact details are never shown.</p><div class="actions" style="margin-top:14px"><a class="btn quiet" id="btnEditProfile" href="#login">Edit your profile</a></div></section>`;
 }
+
+function profileActions(rel) {
+  if (rel === 'accepted') return `<button class="paper-btn" id="btnPersonSend" type="button" data-profile-act="chat" aria-label="Send message">${I('send')}</button>`;
+  if (rel === 'received') {
+    const r = requestRows.find((x) => x.requester_id === viewPerson);
+    return r ? `<button class="btn" id="btnPersonAccept" type="button" data-discover-act="accept" data-id="${r.id}">Accept</button><button class="btn quiet" id="btnPersonDecline" type="button" data-discover-act="decline" data-id="${r.id}">Decline</button>` : '';
+  }
+  if (rel === 'sent') return '<span class="chip line" id="personRequestSent">Request sent</span>';
+  if (rel === 'declined') return '';
+  return `<button class="btn" id="btnPersonConnect" type="button" data-discover-act="connect" data-id="${viewPerson}">${I('plus')}Connect</button>`;
+}
+function renderPersonProfile() {
+  if (!configured()) return notice('Profiles need accounts, and accounts are not connected yet.');
+  if (!me) return `<section class="glass"><h3 class="sec">Sign in to view profiles</h3><div class="actions" style="margin-top:14px"><a class="btn" href="#login">Sign in or create an account</a></div></section>`;
+  if (!UUID_RE.test(viewPerson || '')) return `<section class="glass"><p class="muted">Choose a student in Discover to see their profile.</p><div class="actions" style="margin-top:14px"><a class="btn quiet" href="#discover">Back to Discover</a></div></section>`;
+  const p = personOf(viewPerson), rel = relationOf(viewPerson);
+  return `<section class="glass profile-card" id="personCard">
+    <div class="person-top">
+      <span class="avatar big-avatar" id="personAvatar">${esc(initialOf(p.display_name))}</span>
+      ${rel === 'accepted' ? `<button class="icon-round" id="btnPersonMessages" type="button" data-profile-act="chat" aria-label="Open messages with ${esc(p.display_name || 'this student')}">${I('msg')}</button>` : ''}
+    </div>
+    <h2 id="personName">${esc(p.display_name || 'Student')}</h2>
+    <p class="muted" id="personSchool">${esc(schoolOf(p))}</p>
+    ${p.interests.length ? `<div class="chips" style="margin-top:10px">${p.interests.map((i) => `<span class="chip line">${esc(i)}</span>`).join('')}</div>` : ''}
+    <div class="person-actions" id="personActions">${profileActions(rel)}</div>
+    <div class="actions" style="margin-top:16px"><button class="btn quiet" id="btnPersonBlock" type="button" data-discover-act="block" data-id="${viewPerson}">Block</button><button class="btn quiet" id="btnPersonReport" type="button" data-discover-act="report" data-id="${viewPerson}">Report</button><a class="btn quiet" id="btnPersonBack" href="#discover">Back</a></div>
+  </section>`;
+}
+
+function renderMessages() {
+  if (!configured()) return notice('Messages need accounts, and accounts are not connected yet.');
+  if (!me) return `<section class="glass" id="messagesSignIn"><h3 class="sec">Sign in to message</h3><p class="muted">Sign in to see your chats with the students you are connected with.</p><div class="actions" style="margin-top:14px"><a class="btn" id="btnMessagesSignIn" href="#login">Sign in or create an account</a></div></section>`;
+  return `<div class="msg-app" id="msgApp" data-open="${chatWith ? 1 : 0}">
+    <section class="glass inbox" id="inboxPane">
+      <div class="sec"><h3>Messages</h3><span class="muted" id="inboxCount"></span></div>
+      <div id="requestsStrip"></div>
+      <div id="inboxList"><p class="muted">Loading.</p></div>
+    </section>
+    <section class="glass thread-pane" id="chatSection" ${chatWith ? '' : 'hidden'}>
+      <div class="thread-head" id="chatHead"></div>
+      <div class="thread" id="chatThread" aria-live="polite"></div>
+      <form class="composer" id="chatForm"><label class="sr-only" for="chatBody">Message</label><textarea id="chatBody" name="body" rows="1" maxlength="1000" required placeholder="Message"></textarea><button class="send-btn" id="btnSendChat" type="submit" aria-label="Send message">${I('send')}</button></form>
+    </section>
+  </div>
+  <p class="note-line" id="messagesNote">Text only. Only students you are connected with can message you. You can report or block anyone at any time.</p>`;
+}
+
 async function loadConnections() {
-  const [c, u] = await Promise.all([
+  const [c, m] = await Promise.all([
     sb.rpc('my_connections'),
-    sb.from('messages').select('sender_id').eq('recipient_id', me.id).is('read_at', null).limit(500)
+    sb.from('messages').select('sender_id, recipient_id, body, created_at, read_at').or(`sender_id.eq.${me.id},recipient_id.eq.${me.id}`).order('created_at', { ascending: false }).limit(500)
   ]);
   if (c.error) throw c.error;
-  if (u.error) throw u.error;
+  if (m.error) throw m.error;
   connections = c.data || [];
-  chatUnread = {};
-  (u.data || []).forEach((m) => { chatUnread[m.sender_id] = (chatUnread[m.sender_id] || 0) + 1; });
-  paintConnections();
+  chatUnread = {}; chatPreview = {};
+  (m.data || []).forEach((x) => {
+    const mine = x.sender_id === me.id;
+    const partner = mine ? x.recipient_id : x.sender_id;
+    if (!chatPreview[partner]) chatPreview[partner] = { body: x.body, created_at: x.created_at, mine };
+    if (!mine && !x.read_at) chatUnread[x.sender_id] = (chatUnread[x.sender_id] || 0) + 1;
+  });
+  paintConnections(); paintInbox();
 }
 function paintConnections() {
   const el = $('#connectionList'); if (!el) return;
   const accepted = connections.filter((c) => c.status === 'accepted');
   const count = $('#connectionCount'); if (count) count.textContent = accepted.length ? accepted.length + ' connected' : '';
+  el.innerHTML = accepted.length ? accepted.map((c) => `<div class="row"><span class="avatar">${esc(initialOf(c.display_name))}</span><div><strong>${esc(c.display_name || 'Student')}</strong><small>${esc(schoolOf(c))}</small></div><button class="paper-btn sm" type="button" data-discover-act="open-chat" data-id="${c.partner_id}" aria-label="Send message">${I('send')}</button></div>`).join('')
+    : '<p class="empty">No connections yet. Send a request to a student below. When they accept, you can message them here.</p>';
+}
+function paintInbox() {
+  const el = $('#inboxList'); if (!el) return;
+  const accepted = connections.filter((c) => c.status === 'accepted');
+  const count = $('#inboxCount'); if (count) count.textContent = accepted.length ? accepted.length + (accepted.length === 1 ? ' chat' : ' chats') : '';
   el.innerHTML = accepted.length ? accepted.map((c) => {
-    const n = chatUnread[c.partner_id] || 0;
-    return `<div class="row"><span class="avatar">${esc((c.display_name || '?').charAt(0).toUpperCase())}</span><div><strong>${esc(c.display_name || 'Student')}</strong><small>${esc([c.university, c.department].filter(Boolean).join(', ') || 'Student')}</small></div>${n ? `<span class="chip">${n} new</span>` : ''}<button class="btn" type="button" data-discover-act="open-chat" data-id="${c.partner_id}">${I('send')}Message</button></div>`;
-  }).join('') : '<p class="empty">No connections yet. Send a request to a student below. When they accept, you can message them here.</p>';
+    const pv = chatPreview[c.partner_id], n = chatUnread[c.partner_id] || 0;
+    const preview = pv ? (pv.mine ? 'You: ' : '') + pv.body : 'Say hello';
+    const when = pv ? (dayLabel(new Date(pv.created_at)) === 'Today' ? clockOf(pv.created_at) : dayLabel(new Date(pv.created_at))) : '';
+    return `<button class="inbox-row ${n ? 'unread' : ''} ${c.partner_id === chatWith ? 'on' : ''}" type="button" data-chat-act="open" data-id="${c.partner_id}"><span class="avatar">${esc(initialOf(c.display_name))}</span><span class="inbox-text"><strong>${esc(c.display_name || 'Student')}</strong><small>${esc(preview.slice(0, 70))}</small></span><span class="inbox-meta"><small>${when}</small>${n ? `<span class="unread-dot">${n > 99 ? '99+' : n}</span>` : ''}</span></button>`;
+  }).join('') : `<div class="empty-note">${I('msg')}<h3>No chats yet</h3><p class="muted">Connect with a student in Discover. Once they accept, your chat appears here.</p></div>`;
+}
+function paintShell() {
+  const app = $('#msgApp'); if (app) app.dataset.open = chatWith ? '1' : '0';
+  const section = $('#chatSection'); if (section) section.hidden = !chatWith;
 }
 function paintChatHead() {
   const el = $('#chatHead'); if (!el) return;
-  const p = connections.find((c) => c.partner_id === chatWith) || {};
-  el.innerHTML = `<span class="avatar">${esc((p.display_name || '?').charAt(0).toUpperCase())}</span><div><strong>${esc(p.display_name || 'Student')}</strong><small>${esc([p.university, p.department].filter(Boolean).join(', ') || 'Student')}</small></div><button class="btn quiet" id="btnReportChat" type="button" data-chat-act="report">Report</button><button class="btn quiet" id="btnBlockChat" type="button" data-chat-act="block">Block</button><button class="btn icon" id="btnCloseChat" type="button" data-chat-act="close" aria-label="Close conversation">${I('x')}</button>`;
+  const p = connections.find((c) => c.partner_id === chatWith) || { display_name: 'Student' };
+  el.innerHTML = `<button class="btn icon back-btn" id="btnCloseChat" type="button" data-chat-act="close" aria-label="Back to chats">${I('arrow')}</button><span class="avatar">${esc(initialOf(p.display_name))}</span><div><strong>${esc(p.display_name || 'Student')}</strong><small>${esc(schoolOf(p))}</small></div><button class="btn quiet" id="btnReportChat" type="button" data-chat-act="report">Report</button><button class="btn quiet" id="btnBlockChat" type="button" data-chat-act="block">Block</button>`;
 }
 function paintThread() {
   const el = $('#chatThread'); if (!el) return;
   const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 60;
+  let lastDay = '';
   el.innerHTML = chatMessages.length ? chatMessages.map((m) => {
+    const d = new Date(m.created_at), key = d.toDateString();
+    const sep = key !== lastDay ? `<div class="day-sep"><span>${dayLabel(d)}</span></div>` : '';
+    lastDay = key;
     const mine = m.sender_id === me.id;
-    const when = new Date(m.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    return `<div class="msg-row ${mine ? 'mine' : ''}"><div class="msg-bubble">${esc(m.body)}<small class="msg-time">${when}</small></div>${mine ? `<button class="btn icon" type="button" data-chat-act="delete-msg" data-id="${m.id}" aria-label="Delete this message">${I('x')}</button>` : ''}</div>`;
-  }).join('') : '<p class="empty">No messages yet. Say hello.</p>';
-  if (nearBottom) el.scrollTop = el.scrollHeight;
+    return `${sep}<div class="bubble-row ${mine ? 'mine' : ''}"><div class="bubble">${esc(m.body)}<span class="bubble-time">${clockOf(m.created_at)}</span></div>${mine ? `<button class="bubble-del" type="button" data-chat-act="delete-msg" data-id="${m.id}" aria-label="Delete this message">${I('x')}</button>` : ''}</div>`;
+  }).join('') : `<div class="empty-note">${I('send')}<h3>Say hello</h3><p class="muted">Messages are text only. Report anything that feels wrong.</p></div>`;
+  if (nearBottom || el.scrollTop === 0) el.scrollTop = el.scrollHeight;
 }
 async function loadThread() {
   if (!sb || !me || !UUID_RE.test(chatWith || '')) return;
@@ -1003,30 +1103,34 @@ async function openChat(id) {
     return toast('You can message a student once they accept your connection request.');
   }
   chatWith = id;
-  const section = $('#chatSection');
-  if (section) section.hidden = false;
-  paintChatHead();
+  if (current !== 'messages') { location.hash = '#messages'; return; }
+  paintShell(); paintChatHead(); paintInbox();
   try { await loadThread(); } catch (err) { handleError(err); }
   startChatPolling();
-  if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 function closeChat() {
   chatWith = null; chatMessages = [];
-  const section = $('#chatSection'); if (section) section.hidden = true;
-  startChatPolling();
+  paintShell(); paintInbox(); startChatPolling();
 }
 async function sendChat(text) {
   const body = cleanText(text);
   if (!body) return toast('Write a message first.');
-  if (!sb || !me || !UUID_RE.test(chatWith || '')) return toast('Choose a student to message.');
+  if (!sb || !me || !UUID_RE.test(chatWith || '')) return toast('Choose a chat first.');
   const { error } = await sb.from('messages').insert({ sender_id: me.id, recipient_id: chatWith, body });
   if (error) throw error;
-  const box = $('#chatBody'); if (box) box.value = '';
+  const box = $('#chatBody'); if (box) { box.value = ''; box.style.height = 'auto'; }
   await loadThread();
+  await loadConnections();
 }
 async function chatAction(a, b) {
   if (!sb || !me) return;
   try {
+    if (a === 'open') {
+      chatWith = b.dataset.id;
+      paintShell(); paintChatHead(); paintInbox();
+      await loadThread();
+      return;
+    }
     if (a === 'close') return closeChat();
     if (a === 'delete-msg') {
       const { error } = await sb.from('messages').delete().eq('id', b.dataset.id);
@@ -1050,44 +1154,53 @@ async function chatAction(a, b) {
 }
 function startChatPolling() {
   clearInterval(chatTimer); chatTimer = null;
-  if (current === 'discover' && chatWith) chatTimer = setInterval(() => { refreshChat().catch(handleError); }, 8000);
+  if (current === 'messages') chatTimer = setInterval(() => { refreshChat().catch(handleError); }, 8000);
 }
 async function refreshChat() {
-  if (!sb || !me || !chatWith || current !== 'discover') return;
+  if (!sb || !me || current !== 'messages') return;
+  await loadRequests();
   await loadConnections();
-  if (!connections.some((c) => c.partner_id === chatWith && c.status === 'accepted')) { closeChat(); return; }
-  await loadThread();
+  if (chatWith && !connections.some((c) => c.partner_id === chatWith && c.status === 'accepted')) { closeChat(); return; }
+  paintShell(); paintChatHead();
+  if (chatWith) await loadThread();
 }
 
+async function loadRequests() {
+  const { data, error } = await sb.from('connections').select('id, requester_id').eq('addressee_id', me.id).eq('status', 'pending');
+  if (error) throw error;
+  requestRows = data || [];
+  const ids = [...new Set(requestRows.map((x) => x.requester_id))];
+  requestNames = {};
+  if (ids.length) {
+    const r = await sb.from('public_profiles').select('id, display_name').in('id', ids);
+    if (r.error) throw r.error;
+    (r.data || []).forEach((p) => { requestNames[p.id] = p.display_name; });
+  }
+  paintRequests();
+}
 async function loadPeople() {
   if (!sb || !me) return;
   try {
-    const [d, c, r] = await Promise.all([
+    const [d, c] = await Promise.all([
       sb.rpc('discover_students', { max_results: 30 }),
-      sb.from('connections').select('requester_id, addressee_id, status'),
-      sb.from('connections').select('id, requester_id').eq('addressee_id', me.id).eq('status', 'pending')
+      sb.from('connections').select('requester_id, addressee_id, status')
     ]);
-    const firstError = d.error || c.error || r.error;
+    const firstError = d.error || c.error;
     if (firstError) handleError(firstError);
     discoverRows = d.data || [];
     connMap = {};
     (c.data || []).forEach((x) => { connMap[x.requester_id === me.id ? x.addressee_id : x.requester_id] = x.status; });
-    requestRows = r.data || [];
-    const ids = [...new Set(requestRows.map((x) => x.requester_id))];
-    requestNames = {};
-    if (ids.length) {
-      const { data, error } = await sb.from('public_profiles').select('id, display_name').in('id', ids);
-      if (error) throw error;
-      (data || []).forEach((p) => { requestNames[p.id] = p.display_name; });
-    }
-    paintRequests(); paintDiscover();
+    await loadRequests();
+    paintDiscover();
     await loadConnections();
-    if (chatWith) { paintChatHead(); await loadThread(); }
+    if (current === 'profile') render();
   } catch (err) { handleError(err); }
 }
 function paintRequests() {
-  const el = $('#requestList'); if (!el) return;
-  el.innerHTML = requestRows.length ? requestRows.map((x) => { const name = requestNames[x.requester_id] || 'A student'; return `<div class="row"><span class="avatar">${esc(name.charAt(0).toUpperCase())}</span><div><strong>${esc(name)}</strong><small>wants to connect</small></div><button class="btn" type="button" data-discover-act="accept" data-id="${x.id}">Accept</button><button class="btn quiet" type="button" data-discover-act="decline" data-id="${x.id}">Decline</button></div>`; }).join('') : '<p class="empty">No requests right now.</p>';
+  const list = $('#requestList');
+  if (list) list.innerHTML = requestRows.length ? requestRows.map(requestRowHtml).join('') : '<p class="empty">No requests right now.</p>';
+  const strip = $('#requestsStrip');
+  if (strip) strip.innerHTML = requestRows.length ? `<p class="strip-title">Requests</p>${requestRows.map(requestRowHtml).join('')}` : '';
 }
 function paintDiscover() {
   const el = $('#discoverList'); if (!el) return;
@@ -1095,17 +1208,19 @@ function paintDiscover() {
   const rows = discoverRows.filter((p) => !q || [p.display_name, p.university, p.department, ...(p.interests || [])].join(' ').toLowerCase().includes(q));
   const count = $('#discoverCount'); if (count) count.textContent = rows.length + (rows.length === 1 ? ' student' : ' students');
   el.innerHTML = rows.length ? rows.map((p) => {
-    const st = connMap[p.id];
-    const action = st === 'accepted' ? `<button class="btn" type="button" data-discover-act="open-chat" data-id="${p.id}">${I('send')}Message</button>`
-      : st === 'pending' ? '<span class="chip line">Request sent</span>'
-      : st === 'declined' ? ''
+    const rel = relationOf(p.id);
+    const action = rel === 'accepted' ? `<button class="paper-btn sm" type="button" data-discover-act="open-chat" data-id="${p.id}" aria-label="Send message">${I('send')}</button>`
+      : rel === 'received' ? `<button class="btn" type="button" data-discover-act="accept" data-id="${requestRows.find((x) => x.requester_id === p.id).id}">Accept</button>`
+      : rel === 'sent' ? '<span class="chip line">Request sent</span>'
+      : rel === 'declined' ? ''
       : `<button class="btn" type="button" data-discover-act="connect" data-id="${p.id}">${I('plus')}Connect</button>`;
-    return `<div class="row"><span class="avatar">${esc((p.display_name || '?').charAt(0).toUpperCase())}</span><div><strong>${esc(p.display_name || 'Student')}</strong><small>${esc([p.university, p.department].filter(Boolean).join(', ') || 'Student')}</small><div class="chips" style="margin-top:8px">${(p.interests || []).map((i) => `<span class="chip line">${esc(i)}</span>`).join('')}</div></div><div class="stack-sm">${action}<button class="btn icon" type="button" data-discover-act="block" data-id="${p.id}" aria-label="Block this student">Block</button><button class="btn icon" type="button" data-discover-act="report" data-id="${p.id}" aria-label="Report this profile">Report</button></div></div>`;
+    return `<div class="row"><button class="person-link" type="button" data-discover-act="view" data-id="${p.id}" aria-label="View profile"><span class="avatar">${esc(initialOf(p.display_name))}</span><span><strong>${esc(p.display_name || 'Student')}</strong><small>${esc(schoolOf(p))}</small><span class="chips" style="margin-top:6px">${(p.interests || []).map((i) => `<span class="chip line">${esc(i)}</span>`).join('')}</span></span></button><div class="stack-sm">${action}<button class="btn icon" type="button" data-discover-act="block" data-id="${p.id}" aria-label="Block this student">Block</button><button class="btn icon" type="button" data-discover-act="report" data-id="${p.id}" aria-label="Report this profile">Report</button></div></div>`;
   }).join('') : `<p class="empty">${discoverRows.length ? 'No students match your search.' : 'No students are visible yet. Switch on "Show my profile" in your account to be the first.'}</p>`;
 }
 async function discoverAction(a, b) {
   if (!sb || !me) return;
   const id = b.dataset.id;
+  if (a === 'view') { viewPerson = id; location.hash = '#profile'; return; }
   if (a === 'open-chat') return openChat(id);
   try {
     if (a === 'connect') {
@@ -1123,7 +1238,9 @@ async function discoverAction(a, b) {
       if (!confirm('Block this student? You will not see each other in Discover.')) return;
       const { error } = await sb.from('blocks').insert({ blocker_id: me.id, blocked_id: id });
       if (error) throw error;
-      toast('Student blocked.'); return loadPeople();
+      toast('Student blocked.');
+      if (current === 'profile') { viewPerson = null; location.hash = '#discover'; return; }
+      return loadPeople();
     }
     if (a === 'report') {
       const reason = (prompt('Why are you reporting this profile? Describe it briefly.') || '').trim();
@@ -1133,6 +1250,9 @@ async function discoverAction(a, b) {
       toast('Thank you. We will review this report.');
     }
   } catch (err) { handleError(err); }
+}
+async function profileAction(a) {
+  if (a === 'chat') return openChat(viewPerson);
 }
 function authAction(a, b) {
   if (a === 'mode') { authMode = b.dataset.mode; return render(); }
@@ -1144,21 +1264,25 @@ function authAction(a, b) {
   }
   if (a === 'reset') return resetPassword();
   if (a === 'resend') return resendConfirmation();
-  if (a === 'guest') { location.hash = '#home'; return; }
+  if (a === 'guest') { localStorage.setItem('studenthubGuest', 'true'); location.hash = '#home'; route(); return; }
   if (a === 'signout') return signOut();
   if (a === 'delete') return deleteAccount();
 }
 // The account button in the top-right corner opens the account page
 document.addEventListener('click', (e) => {
   if (e.target.closest('#avatarBtn')) { location.hash = '#login'; return; }
-  const b = e.target.closest('[data-auth-act],[data-task-act],[data-discover-act],[data-chat-act]');
+  const b = e.target.closest('[data-auth-act],[data-task-act],[data-discover-act],[data-chat-act],[data-profile-act]');
   if (!b) return;
   if (b.dataset.authAct) return authAction(b.dataset.authAct, b);
   if (b.dataset.taskAct) return taskAction(b.dataset.taskAct, b);
   if (b.dataset.chatAct) return chatAction(b.dataset.chatAct, b);
+  if (b.dataset.profileAct) return profileAction(b.dataset.profileAct);
   return discoverAction(b.dataset.discoverAct, b);
 });
-document.addEventListener('input', (e) => { if (e.target.id === 'discoverSearch') paintDiscover(); });
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'discoverSearch') paintDiscover();
+  if (e.target.id === 'chatBody') { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 110) + 'px'; }
+});
 
 applyTheme();
 buildNav();
