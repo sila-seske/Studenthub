@@ -1,7 +1,7 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
 // Public key for push alerts. Safe to share. The private key stays in Supabase secrets only.
 const VAPID_PUBLIC_KEY = 'BIEDEj6vErurrCZBr2hEc8S_nNnRpZ1ZHDLrEq9WvVg-kZ8yCBAr_aRT5F_9iuUBelAneaFHWHXH2keFGX2rp0c';
 
@@ -1067,6 +1067,7 @@ async function alertAction(a, b) {
 
 // Discover, requests, connections, profiles and messages
 let connections = [], chatUnread = {}, chatPreview = {}, chatMessages = [], chatWith = null, chatTimer = null, viewPerson = null;
+let chatMenuOpen = false;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const cleanText = (t) => String(t || '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, 1000);
 const dayLabel = (d) => {
@@ -1200,7 +1201,7 @@ function paintShell() {
 function paintChatHead() {
   const el = $('#chatHead'); if (!el) return;
   const p = connections.find((c) => c.partner_id === chatWith) || { display_name: 'Student' };
-  el.innerHTML = `<button class="btn icon back-btn" id="btnCloseChat" type="button" data-chat-act="close" aria-label="Back to chats">${I('arrow')}</button><span class="avatar">${esc(initialOf(p.display_name))}</span><div><strong>${esc(p.display_name || 'Student')}</strong><small>${esc(schoolOf(p))}</small></div><button class="btn quiet" id="btnReportChat" type="button" data-chat-act="report">Report</button><button class="btn quiet" id="btnBlockChat" type="button" data-chat-act="block">Block</button>`;
+  el.innerHTML = `<button class="btn icon back-btn" id="btnCloseChat" type="button" data-chat-act="close" aria-label="Back to chats">${I('arrow')}</button><span class="avatar">${esc(initialOf(p.display_name))}</span><div class="chat-title"><strong>${esc(p.display_name || 'Student')}</strong><small>${esc(schoolOf(p))}</small></div><button class="btn icon" id="btnChatMenu" type="button" data-chat-act="menu" aria-label="Chat options">${I('dots')}</button><div class="chat-menu" id="chatMenu" ${chatMenuOpen ? '' : 'hidden'}><button class="btn quiet" id="btnReportChat" type="button" data-chat-act="report">Report</button><button class="btn quiet" id="btnBlockChat" type="button" data-chat-act="block">Block</button></div>`;
 }
 function paintThread() {
   const el = $('#chatThread'); if (!el) return;
@@ -1211,7 +1212,7 @@ function paintThread() {
     const sep = key !== lastDay ? `<div class="day-sep"><span>${dayLabel(d)}</span></div>` : '';
     lastDay = key;
     const mine = m.sender_id === me.id;
-    return `${sep}<div class="bubble-row ${mine ? 'mine' : ''}"><div class="bubble">${esc(m.body)}<span class="bubble-time">${clockOf(m.created_at)}</span></div>${mine ? `<button class="bubble-del" type="button" data-chat-act="delete-msg" data-id="${m.id}" aria-label="Delete this message">${I('x')}</button>` : ''}</div>`;
+    return `${sep}<div class="bubble-row ${mine ? 'mine' : ''}"><div class="bubble-col"><div class="bubble" ${mine ? `data-msg-id="${m.id}"` : ''}>${esc(m.body)}</div><span class="bubble-time">${clockOf(m.created_at)}</span></div></div>`;
   }).join('') : `<div class="empty-note">${I('send')}<h3>Say hello</h3><p class="muted">Messages are text only. Report anything that feels wrong.</p></div>`;
   if (nearBottom || el.scrollTop === 0) el.scrollTop = el.scrollHeight;
 }
@@ -1240,7 +1241,7 @@ async function openChat(id) {
   startChatPolling();
 }
 function closeChat() {
-  chatWith = null; chatMessages = [];
+  chatWith = null; chatMessages = []; chatMenuOpen = false;
   paintShell(); paintInbox(); startChatPolling();
 }
 async function sendChat(text) {
@@ -1262,6 +1263,7 @@ async function chatAction(a, b) {
       await loadThread();
       return;
     }
+    if (a === 'menu') { chatMenuOpen = !chatMenuOpen; const menu = $('#chatMenu'); if (menu) menu.hidden = !chatMenuOpen; return; }
     if (a === 'close') return closeChat();
     if (a === 'delete-msg') {
       const { error } = await sb.from('messages').delete().eq('id', b.dataset.id);
@@ -1412,6 +1414,17 @@ document.addEventListener('click', (e) => {
   if (b.dataset.alertAct) return alertAction(b.dataset.alertAct, b);
   return discoverAction(b.dataset.discoverAct, b);
 });
+let pressTimer = null;
+document.addEventListener('pointerdown', (e) => {
+  const bubble = e.target.closest('.bubble[data-msg-id]');
+  if (!bubble) return;
+  clearTimeout(pressTimer);
+  pressTimer = setTimeout(async () => {
+    if (!confirm('Delete this message?')) return;
+    await chatAction('delete-msg', { dataset: { id: bubble.dataset.msgId } });
+  }, 600);
+});
+['pointerup', 'pointerleave', 'pointercancel', 'pointermove'].forEach((evt) => document.addEventListener(evt, () => clearTimeout(pressTimer)));
 document.addEventListener('input', (e) => {
   if (e.target.id === 'discoverSearch') paintDiscover();
   if (e.target.id === 'chatBody') { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 110) + 'px'; }
