@@ -1,7 +1,7 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
 // Public key for push alerts. Safe to share. The private key stays in Supabase secrets only.
 const VAPID_PUBLIC_KEY = 'BIEDEj6vErurrCZBr2hEc8S_nNnRpZ1ZHDLrEq9WvVg-kZ8yCBAr_aRT5F_9iuUBelAneaFHWHXH2keFGX2rp0c';
 
