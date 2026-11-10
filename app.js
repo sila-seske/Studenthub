@@ -1,7 +1,7 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
 
 (() => {
 const $ = (s) => document.querySelector(s);
@@ -15,11 +15,11 @@ const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sun
 const CATS = ['Food','Transport','Data and airtime','School fees','Books and printing','Other'];
 const GRADES = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
 const WINDOWS = { Morning: [420, 660], Afternoon: [720, 960], Evening: [1020, 1260], Night: [1260, 1380], Flexible: [480, 1320] };
-const TITLES = { profile: 'Profile', messages: 'Messages', discover: 'Discover', tasks: 'Tasks', login: 'Account', notes: 'Study notes', home: ['StudentHub', 'Dashboard'], classes: 'Classes and exams', study: 'Study planner', money: 'Money', gpa: 'GPA calculator', materials: ['Study materials', 'Course materials'], more: 'More', settings: 'Settings', privacy: 'Privacy', terms: 'Terms' };
-const SUBS = { profile: 'Profile and connection.', messages: 'Chats with students you are connected with.', discover: 'Find students who chose to be visible to other students.', tasks: 'Deadlines and to-dos in one list.', login: 'Sign in, your profile and your privacy choices.', notes: 'Course notes, pinned and searchable.', home: ['Your classes, exams and spending in one place.', 'Your teaching week, reminders and materials.'], classes: 'Your weekly timetable, exam dates and reminders.', study: 'Turn your classes and exams into sessions you can keep.', money: 'Track what you spend against your monthly budget.', gpa: 'Enter your courses to calculate your semester GPA.', materials: ['Trusted places to find textbooks and past questions.', 'Share links and notes with your students.'], more: 'Tools and settings.', settings: 'Your name, role, budget and theme.', privacy: 'What StudentHub stores, and which Google services run on this site.', terms: 'The short version.' };
+const TITLES = { alerts: 'Notifications', profile: 'Profile', messages: 'Messages', discover: 'Discover', tasks: 'Tasks', login: 'Account', notes: 'Study notes', home: ['StudentHub', 'Dashboard'], classes: 'Classes and exams', study: 'Study planner', money: 'Money', gpa: 'GPA calculator', materials: ['Study materials', 'Course materials'], more: 'More', settings: 'Settings', privacy: 'Privacy', terms: 'Terms' };
+const SUBS = { alerts: 'Requests, messages, classes, exams and tasks.', profile: 'Profile and connection.', messages: 'Chats with students you are connected with.', discover: 'Find students who chose to be visible to other students.', tasks: 'Deadlines and to-dos in one list.', login: 'Sign in, your profile and your privacy choices.', notes: 'Course notes, pinned and searchable.', home: ['Your classes, exams and spending in one place.', 'Your teaching week, reminders and materials.'], classes: 'Your weekly timetable, exam dates and reminders.', study: 'Turn your classes and exams into sessions you can keep.', money: 'Track what you spend against your monthly budget.', gpa: 'Enter your courses to calculate your semester GPA.', materials: ['Trusted places to find textbooks and past questions.', 'Share links and notes with your students.'], more: 'Tools and settings.', settings: 'Your name, role, budget and theme.', privacy: 'What StudentHub stores, and which Google services run on this site.', terms: 'The short version.' };
 const ROUTES = {
-  student: { views: ['home','classes','study','discover','profile','messages','tasks','money','gpa','materials','more','settings','notes','login','privacy','terms'], nav: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['messages','send','Messages'],['tasks','check','Tasks'],['money','wallet','Money'],['gpa','calc','GPA'],['materials','file','Materials'],['notes','file','Notes'],['settings','gear','Settings']], tab: [['home','home','Home'],['classes','calendar','Classes'],['discover','search','Discover'],['messages','send','Messages'],['study','book','Study']] },
-  lecturer: { views: ['home','materials','login','settings','privacy','terms'], nav: [['home','home','Dashboard'],['materials','upload','Course materials'],['settings','gear','Settings']], tab: [['home','home','Dashboard'],['materials','upload','Materials'],['settings','gear','Settings']] }
+  student: { views: ['home','classes','study','discover','profile','messages','alerts','tasks','money','gpa','materials','more','settings','notes','login','privacy','terms'], nav: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['messages','send','Messages'],['tasks','check','Tasks'],['money','wallet','Money'],['gpa','calc','GPA'],['materials','file','Materials'],['notes','file','Notes'],['settings','gear','Settings']], tab: [['home','home','Home'],['classes','calendar','Classes'],['discover','search','Discover'],['messages','send','Messages'],['study','book','Study']] },
+  lecturer: { views: ['home','materials','login','settings','privacy','terms','alerts'], nav: [['home','home','Dashboard'],['materials','upload','Course materials'],['settings','gear','Settings']], tab: [['home','home','Dashboard'],['materials','upload','Materials'],['settings','gear','Settings']] }
 };
 const DEFAULT_PREFS = { budget: 0, theme: 'system', perDay: 1, lead: 15, remind: false };
 const blank = () => ({ course: '', units: '', grade: 'A' });
@@ -88,6 +88,7 @@ function makePlan() {
 }
 
 function checkReminders() {
+  checkTaskReminders();
   if (!prefs.remind) return;
   const now = Date.now(), lead = prefs.lead * 60000, list = [], today = today0();
   dayOf(role === 'lecturer' ? teach : classes, dayName(today)).forEach((c) => {
@@ -96,7 +97,7 @@ function checkReminders() {
     list.push({ key: c.id + todayIso(), t: at.getTime(), title: c.course, body: 'Starts at ' + t12(c.startTime) + (c.room ? ' in ' + c.room : '') });
   });
   if (role !== 'lecturer') exams.forEach((e) => { if (e.time) list.push({ key: e.id + e.date, t: new Date(e.date + 'T' + e.time).getTime(), title: (e.code || e.title) + ' exam', body: 'Starts at ' + t12(e.time) + (e.venue ? ', ' + e.venue : '') }); });
-  list.forEach((ev) => { const diff = ev.t - now; if (diff > 0 && diff <= lead && !sent.has(ev.key)) { sent.add(ev.key); toast(ev.title + ': ' + ev.body); notify(ev.title, ev.body); } });
+  list.forEach((ev) => { const diff = ev.t - now; if (diff > 0 && diff <= lead && !sent.has(ev.key)) { sent.add(ev.key); toast(ev.title + ': ' + ev.body); notify(ev.title, ev.body); addLocalAlert(ev.title, ev.body, 'class-' + ev.key); } });
 }
 async function toggleRemind() {
   if (prefs.remind) { prefs.remind = false; toast('Reminders turned off.'); }
@@ -279,8 +280,8 @@ const TERMS = `<article class="glass prose"><ul>
 <li>Study materials link to websites we do not control. Their own terms apply.</li>
 <li>StudentHub is provided as is. You use it at your own discretion.</li></ul></article>`;
 
-const RENDER = { messages: renderMessages, profile: renderPersonProfile, home: () => role === 'lecturer' ? renderTeach() : renderToday() + quickAccess(), classes: renderClasses, notes: renderNotes, login: renderLogin, discover: renderDiscover, tasks: renderTasks, study: renderStudy, money: renderMoney, gpa: renderGpa, materials: () => role === 'lecturer' ? renderCourseMats() : renderMaterials(), more: renderMore, settings: renderSettings, privacy: () => PRIVACY, terms: () => TERMS };
-function render() { const el = $('#v-' + current); if (!el) return; el.innerHTML = RENDER[current](); if (current === 'gpa') updateGpa(); if (current === 'notes') { paintFilters(); paintList(); paintEditor(); } paintInstall(); paintAvatar(); if (current === 'messages' && me) refreshChat().catch(handleError); }
+const RENDER = { alerts: renderAlerts, messages: renderMessages, profile: renderPersonProfile, home: () => role === 'lecturer' ? renderTeach() : renderToday() + quickAccess(), classes: renderClasses, notes: renderNotes, login: renderLogin, discover: renderDiscover, tasks: renderTasks, study: renderStudy, money: renderMoney, gpa: renderGpa, materials: () => role === 'lecturer' ? renderCourseMats() : renderMaterials(), more: renderMore, settings: renderSettings, privacy: () => PRIVACY, terms: () => TERMS };
+function render() { const el = $('#v-' + current); if (!el) return; el.innerHTML = RENDER[current](); if (current === 'gpa') updateGpa(); if (current === 'notes') { paintFilters(); paintList(); paintEditor(); } paintInstall(); paintAvatar(); if (current === 'messages' && me) refreshChat().catch(handleError); if (current === 'alerts') { if (me) loadAlerts().catch((err) => console.error(err)); paintAlerts(); } }
 
 function readGpa() {
   gpa = [...document.querySelectorAll('.inline input[name=course]')].map((c) => { const row = c.parentElement; return { course: c.value, units: row.querySelector('[name=units]').value, grade: row.querySelector('[name=grade]').value }; });
@@ -720,6 +721,7 @@ async function setUser(user) {
     if (error) console.error(error);
     myProfile = data || null;
   }
+  if (me) { subscribeAlerts(); loadAlerts().catch((err) => console.error(err)); } else { unsubscribeAlerts(); }
   paintAvatar();
   if (gateOn() && !PUBLIC_VIEWS.includes(current)) { location.hash = '#login'; return; }
   if (current === 'login' || current === 'discover') render();
@@ -932,6 +934,101 @@ function renderAccount() {
       <div class="actions" style="margin-top:14px"><button class="btn quiet" id="btnSignOut" type="button" data-auth-act="signout">Sign out</button><button class="btn danger" id="btnDeleteAccount" type="button" data-auth-act="delete">Delete account</button></div>
       <p class="note-line">Deleting your account removes your profile, connections, messages and server-side data.</p>
     </section></div>`;
+}
+
+// ----- Notifications: requests, accepted requests, messages, classes, exams and tasks -----
+let serverAlerts = [], localAlerts = load('studenthubAlerts', []), alertChannel = null, alertTimer = null;
+const isoOf = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const saveLocalAlerts = () => save('studenthubAlerts', localAlerts.slice(0, 60));
+const iconFor = (kind) => ({ request: 'plus', accepted: 'check', message: 'msg', reminder: 'calendar' }[kind] || 'cap');
+
+function addLocalAlert(title, body, key) {
+  if (localAlerts.some((a) => a.key === key)) return;
+  localAlerts.unshift({ key, kind: 'reminder', title, body, t: Date.now(), read: false });
+  localAlerts = localAlerts.slice(0, 60);
+  saveLocalAlerts(); paintBell();
+}
+function checkTaskReminders() {
+  if (role === 'lecturer') return;
+  const today = isoOf(new Date());
+  const tomorrowDate = new Date(); tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  const tomorrow = isoOf(tomorrowDate);
+  tasks.forEach((t) => {
+    if (t.done || !t.due) return;
+    if (t.due < today) addLocalAlert('Task overdue', t.title, 'task-overdue-' + t.id + '-' + today);
+    else if (t.due === today) addLocalAlert('Task due today', t.title, 'task-today-' + t.id + '-' + today);
+    else if (t.due === tomorrow) addLocalAlert('Task due tomorrow', t.title, 'task-tomorrow-' + t.id + '-' + today);
+  });
+}
+function paintBell() {
+  const badge = $('#bellBadge'), btn = $('#bellBtn');
+  const unread = serverAlerts.filter((a) => !a.read_at).length + localAlerts.filter((a) => !a.read).length;
+  if (badge) { badge.textContent = unread > 9 ? '9+' : String(unread); badge.hidden = unread === 0; }
+  if (btn) btn.setAttribute('aria-label', unread ? 'Notifications, ' + unread + ' new' : 'Notifications');
+}
+async function loadAlerts() {
+  if (!sb || !me) return;
+  const { data, error } = await sb.from('notifications').select('id, kind, title, body, link, created_at, read_at').order('created_at', { ascending: false }).limit(50);
+  if (error) throw error;
+  serverAlerts = data || [];
+  paintBell();
+  if (current === 'alerts') paintAlerts();
+}
+function onNewAlert(n) {
+  if (!n || serverAlerts.some((a) => a.id === n.id)) return;
+  serverAlerts.unshift(n); serverAlerts = serverAlerts.slice(0, 50);
+  paintBell();
+  if (current === 'alerts') paintAlerts();
+  toast(n.title + ': ' + n.body);
+  if (document.hidden) notify(n.title, n.body);
+}
+function subscribeAlerts() {
+  if (!sb || !me || alertChannel) return;
+  try {
+    alertChannel = sb.channel('sh-alerts-' + me.id).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: 'user_id=eq.' + me.id }, (payload) => onNewAlert(payload.new)).subscribe();
+  } catch (err) { console.error(err); }
+  clearInterval(alertTimer);
+  alertTimer = setInterval(() => { loadAlerts().catch((err) => console.error(err)); }, 60000);
+}
+function unsubscribeAlerts() {
+  if (sb && alertChannel) { try { sb.removeChannel(alertChannel); } catch (err) { console.error(err); } }
+  alertChannel = null; clearInterval(alertTimer); alertTimer = null; serverAlerts = [];
+  paintBell();
+}
+function renderAlerts() {
+  const permission = 'Notification' in window ? Notification.permission : 'unsupported';
+  const banner = permission === 'default' ? `<section class="glass" id="alertsPermission"><div class="row"><div><strong>Turn on alerts</strong><small>Get a notification when a request or message arrives, or when a class, exam or task is coming up.</small></div><button class="btn" id="btnAlertsOn" type="button" data-alert-act="permission">Turn on</button></div></section>` : '';
+  return `${banner}<section class="glass" id="alertsSection" style="margin-top:14px"><div class="sec"><h3>Notifications</h3><button class="btn quiet" id="btnMarkAllRead" type="button" data-alert-act="read-all">Mark all read</button></div><div id="alertsList"><p class="muted">Loading.</p></div></section>`;
+}
+function paintAlerts() {
+  const el = $('#alertsList'); if (!el) return;
+  const items = [
+    ...serverAlerts.map((a) => ({ id: a.id, src: 'server', kind: a.kind, title: a.title, body: a.body, link: a.link || '', unread: !a.read_at, t: new Date(a.created_at).getTime() })),
+    ...localAlerts.map((a) => ({ id: a.key, src: 'local', kind: a.kind, title: a.title, body: a.body, link: '', unread: !a.read, t: a.t }))
+  ].sort((x, y) => y.t - x.t).slice(0, 80);
+  el.innerHTML = items.length ? items.map((i) => `<button class="alert-row ${i.unread ? 'unread' : ''}" type="button" data-alert-act="open" data-src="${i.src}" data-id="${esc(i.id)}" data-link="${esc(i.link)}" data-kind="${esc(i.kind)}"><span class="alert-ico ${esc(i.kind)}">${I(iconFor(i.kind))}</span><span class="alert-text"><strong>${esc(i.title)}</strong><small>${esc(i.body)}</small></span><span class="alert-time">${dayLabel(new Date(i.t))}<br>${clockOf(new Date(i.t).toISOString())}</span></button>`).join('')
+    : `<div class="empty-note">${I('calendar')}<h3>No notifications yet</h3><p class="muted">Requests, messages, classes, exams and tasks will appear here.</p></div>`;
+  paintBell();
+}
+async function alertAction(a, b) {
+  try {
+    if (a === 'permission') { if ('Notification' in window) await Notification.requestPermission(); return render(); }
+    if (a === 'read-all') {
+      localAlerts = localAlerts.map((x) => ({ ...x, read: true })); saveLocalAlerts();
+      if (sb && me) { const { error } = await sb.from('notifications').update({ read_at: new Date().toISOString() }).eq('user_id', me.id).is('read_at', null); if (error) throw error; }
+      serverAlerts = serverAlerts.map((x) => ({ ...x, read_at: x.read_at || new Date().toISOString() }));
+      paintAlerts(); return;
+    }
+    if (a === 'open') {
+      const src = b.dataset.src, id = b.dataset.id, link = b.dataset.link, kind = b.dataset.kind;
+      if (src === 'local') { const item = localAlerts.find((x) => x.key === id); if (item) item.read = true; saveLocalAlerts(); paintAlerts(); return; }
+      if (sb && me) { const { error } = await sb.from('notifications').update({ read_at: new Date().toISOString() }).eq('id', id); if (error) throw error; }
+      serverAlerts = serverAlerts.map((x) => (x.id === id ? { ...x, read_at: x.read_at || new Date().toISOString() } : x));
+      if (kind === 'message' && UUID_RE.test(link)) return openChat(link);
+      if ((kind === 'request' || kind === 'accepted') && UUID_RE.test(link)) { viewPerson = link; location.hash = '#profile'; return; }
+      paintAlerts(); return;
+    }
+  } catch (err) { handleError(err); }
 }
 
 // Discover, requests, connections, profiles and messages
@@ -1270,13 +1367,15 @@ function authAction(a, b) {
 }
 // The account button in the top-right corner opens the account page
 document.addEventListener('click', (e) => {
+  if (e.target.closest('#bellBtn')) { location.hash = '#alerts'; return; }
   if (e.target.closest('#avatarBtn')) { location.hash = '#login'; return; }
-  const b = e.target.closest('[data-auth-act],[data-task-act],[data-discover-act],[data-chat-act],[data-profile-act]');
+  const b = e.target.closest('[data-auth-act],[data-task-act],[data-discover-act],[data-chat-act],[data-profile-act],[data-alert-act]');
   if (!b) return;
   if (b.dataset.authAct) return authAction(b.dataset.authAct, b);
   if (b.dataset.taskAct) return taskAction(b.dataset.taskAct, b);
   if (b.dataset.chatAct) return chatAction(b.dataset.chatAct, b);
   if (b.dataset.profileAct) return profileAction(b.dataset.profileAct);
+  if (b.dataset.alertAct) return alertAction(b.dataset.alertAct, b);
   return discoverAction(b.dataset.discoverAct, b);
 });
 document.addEventListener('input', (e) => {

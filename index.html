@@ -38,13 +38,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4786323542886950" crossorigin="anonymous"></script>
 <!-- Google Analytics Measurement ID -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-HGTRD8N6TG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-HGTRD8N6TG');
-</script>
-  <style>
+<style>
 :root{color-scheme:light;--bg:#ECEEF8;--ink:#121629;--muted:#5d6485;--line:rgba(18,22,41,.1);--glass:rgba(255,255,255,.5);--glass-hi:rgba(255,255,255,.92);--accent:#5367f5;--accent-2:#8b5cf6;--bad:#d6336c;--warn:#b7791f;--shadow:0 30px 60px -34px rgba(40,50,120,.45);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#080b17;--ink:#eef0ff;--muted:#9aa2c4;--line:rgba(255,255,255,.12);--glass:rgba(255,255,255,.06);--glass-hi:rgba(255,255,255,.16);--accent:#7d8dff;--accent-2:#b07cff;--bad:#ff7a9c;--warn:#f5b94e;--shadow:0 30px 60px -30px rgba(0,0,0,.8)}}
 :root[data-theme="dark"]{color-scheme:dark;--bg:#080b17;--ink:#eef0ff;--muted:#9aa2c4;--line:rgba(255,255,255,.12);--glass:rgba(255,255,255,.06);--glass-hi:rgba(255,255,255,.16);--accent:#7d8dff;--accent-2:#b07cff;--bad:#ff7a9c;--warn:#f5b94e;--shadow:0 30px 60px -30px rgba(0,0,0,.8)}
@@ -322,6 +316,22 @@ label.opt input{width:auto;margin-top:3px}
   .msg-app[data-open="1"] .inbox { display: none; }
   .msg-app[data-open="0"] .thread-pane { display: none; }
 }
+/* ---- Notifications ---- */
+.top { padding-right: 130px; }
+.bell-btn { position: absolute; top: 0; right: 66px; width: 54px; height: 54px; border: 0; border-radius: 16px; cursor: pointer; display: grid; place-items: center; color: var(--ink); background: var(--glass-hi); box-shadow: inset 0 0 0 1px var(--line); z-index: 3; }
+.bell-btn .ic { width: 22px; height: 22px; flex-basis: 22px; }
+.bell-badge { position: absolute; top: 6px; right: 6px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; display: grid; place-items: center; font: 800 11px Figtree, sans-serif; color: rgb(255, 255, 255); background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 0 2px var(--bg); }
+.bell-badge[hidden] { display: none; }
+.alert-row { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; width: 100%; padding: 12px; margin-bottom: 6px; border: 0; border-radius: 18px; background: none; color: var(--ink); text-align: left; font: inherit; cursor: pointer; }
+.alert-row:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.alert-row.unread { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.alert-ico { width: 44px; height: 44px; border-radius: 16px 16px 16px 6px; display: grid; place-items: center; color: rgb(255, 255, 255); background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+.alert-ico.reminder { background: linear-gradient(135deg, #e0a030, #e0457b); }
+.alert-ico .ic { width: 20px; height: 20px; flex-basis: 20px; color: rgb(255, 255, 255); }
+.alert-text { min-width: 0; display: grid; gap: 2px; }
+.alert-text strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.alert-text small { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.alert-time { color: var(--muted); font-size: 11px; text-align: right; line-height: 1.3; }
 </style>
 <script src="head.js"></script>
 </head>
@@ -392,7 +402,7 @@ label.opt input{width:auto;margin-top:3px}
     <nav class="nav" id="nav" aria-label="Sections"></nav>
   </aside>
   <main class="main">
-    <header class="top"><h1 id="ttl">StudentHub</h1><p id="sub">Class timetable, exam countdown, study planner, expenses and course materials for students and lecturers.</p><button class="avatar-btn" id="avatarBtn" type="button" aria-label="Open your account"></button></header>
+    <header class="top"><h1 id="ttl">StudentHub</h1><p id="sub">Class timetable, exam countdown, study planner, expenses and course materials for students and lecturers.</p><button class="bell-btn" id="bellBtn" type="button" aria-label="Notifications"><svg class="ic" aria-hidden="true"><use href="#i-bell"></use></svg><span class="bell-badge" id="bellBadge" hidden></span></button><button class="avatar-btn" id="avatarBtn" type="button" aria-label="Open your account"></button></header>
     <div id="views"></div>
   </main>
 </div>
