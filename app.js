@@ -1,7 +1,7 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
 // Public key for push alerts. Safe to share. The private key stays in Supabase secrets only.
 const VAPID_PUBLIC_KEY = 'BIEDEj6vErurrCZBr2hEc8S_nNnRpZ1ZHDLrEq9WvVg-kZ8yCBAr_aRT5F_9iuUBelAneaFHWHXH2keFGX2rp0c';
 
@@ -43,7 +43,7 @@ let current = 'home';
 const sent = new Set();
 let toastTimer;
 
-const saveAll = () => { save('studentPrefs', prefs); save('studentClasses', classes); save('lecturerClasses', teach); save('studentExams', exams); save('studentExpenses', expenses); save('studentGpa', gpa); save('lecturerMaterials', materials); };
+const saveAll = () => { scheduleSync(); save('studentPrefs', prefs); save('studentClasses', classes); save('lecturerClasses', teach); save('studentExams', exams); save('studentExpenses', expenses); save('studentGpa', gpa); save('lecturerMaterials', materials); };
 const toMin = (t) => { const [h, m] = String(t).split(':').map(Number); return h * 60 + m; };
 const hm = (m) => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
 const t12 = (t) => { let [h, m] = t.split(':').map(Number); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return h + ':' + String(m).padStart(2, '0') + ' ' + ap; };
@@ -89,7 +89,51 @@ function makePlan() {
   return out;
 }
 
+// ---- Reminders sent from the server (classes, exams, tasks), so they arrive when the app is closed ----
+let syncTimer = null;
+const dayKey = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+function reminderItems() {
+  if (!prefs.remind) return [];
+  const lead = prefs.lead * 60000, now = Date.now(), start = today0();
+  const list = role === 'lecturer' ? teach : classes;
+  const out = [];
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(start); d.setDate(start.getDate() + i);
+    dayOf(list, dayName(d)).forEach((c) => {
+      const [h, m] = c.startTime.split(':').map(Number);
+      const at = new Date(d); at.setHours(h, m, 0, 0);
+      out.push({ ref: 'class-' + c.id + '-' + dayKey(d), title: c.course, body: 'Starts at ' + t12(c.startTime) + (c.room ? ' in ' + c.room : ''), at: at.getTime() - lead });
+    });
+  }
+  if (role !== 'lecturer') {
+    exams.forEach((e) => {
+      if (!e.date || !e.time) return;
+      out.push({ ref: 'exam-' + e.id + '-' + e.date, title: (e.code || e.title) + ' exam', body: 'Starts at ' + t12(e.time) + (e.venue ? ', ' + e.venue : ''), at: new Date(e.date + 'T' + e.time).getTime() - lead });
+    });
+    tasks.forEach((t) => {
+      if (t.done || !t.due) return;
+      out.push({ ref: 'task-today-' + t.id + '-' + t.due, title: 'Task due today', body: t.title || 'A task is due today', at: new Date(t.due + 'T08:00').getTime() });
+      out.push({ ref: 'task-tomorrow-' + t.id + '-' + t.due, title: 'Task due tomorrow', body: t.title || 'A task is due tomorrow', at: new Date(t.due + 'T18:00').getTime() - 864e5 });
+    });
+  }
+  return out
+    .filter((r) => !isNaN(r.at) && r.at > now - 5 * 60000 && r.at < now + 14 * 864e5)
+    .slice(0, 300)
+    .map((r) => ({ ref: r.ref, title: String(r.title).slice(0, 120), body: String(r.body).slice(0, 200), fire_at: new Date(r.at).toISOString() }));
+}
+function scheduleSync() {
+  if (!sb || !me) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncReminders, 2000);
+}
+async function syncReminders() {
+  if (!sb || !me) return;
+  const { error } = await sb.rpc('sync_reminders', { items: reminderItems() });
+  if (error) console.error('Reminder sync failed:', error.message);
+}
+
 function checkReminders() {
+  if (sb && me) return; // signed in: the server sends class, exam and task reminders
   checkTaskReminders();
   if (!prefs.remind) return;
   const now = Date.now(), lead = prefs.lead * 60000, list = [], today = today0();
@@ -663,7 +707,7 @@ const CHART_COLOURS = ['#5367f5', '#22a06b', '#e0a030', '#e0457b', '#8b5cf6', '#
 let sb = null, me = null, myProfile = null, authMode = 'signin';
 let tasks = load('studentTasks', []), taskFilter = 'open';
 let discoverRows = [], connMap = {}, requestRows = [], requestNames = {};
-const saveTasks = () => save('studentTasks', tasks);
+const saveTasks = () => { save('studentTasks', tasks); scheduleSync(); };
 const configured = () => /^https:\/\//.test(SH_CONFIG.url) && SH_CONFIG.anonKey.length > 20 && !/PASTE_/.test(SH_CONFIG.anonKey);
 let recovering = false; // true after the user opens a password-reset link
 let authChecked = false; // true once the first sign-in check has finished
@@ -714,6 +758,7 @@ async function initAccounts() {
 async function setUser(user) {
   me = user || null; myProfile = null; authChecked = true;
   if (me && sb) {
+    scheduleSync();
     const pending = load('studentPendingProfile', null);
     if (pending) {
       const { error } = await sb.from('public_profiles').update(pending).eq('id', me.id);
@@ -785,6 +830,7 @@ async function setNewPassword(f) {
 async function signOut() {
   if (!sb) return;
   await disablePush();
+  await sb.rpc('sync_reminders', { items: [] }).catch(() => {});
   const { error } = await sb.auth.signOut();
   if (error) return handleError(error);
   localStorage.removeItem('studenthubGuest'); toast('Signed out.'); location.hash = '#login';
@@ -1435,6 +1481,7 @@ buildNav();
 if (localStorage.getItem('studenthubOnboardingComplete') !== 'true') { onb.hidden = false; showStep(0); }
 window.addEventListener('hashchange', route);
 setInterval(checkReminders, 30000);
+setInterval(scheduleSync, 3600000); // refresh the 14-day window once an hour
 route();
 checkReminders();
 initAccounts();
