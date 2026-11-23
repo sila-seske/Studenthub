@@ -1,7 +1,7 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
 // Public key for push alerts. Safe to share. The private key stays in Supabase secrets only.
 const VAPID_PUBLIC_KEY = 'BIEDEj6vErurrCZBr2hEc8S_nNnRpZ1ZHDLrEq9WvVg-kZ8yCBAr_aRT5F_9iuUBelAneaFHWHXH2keFGX2rp0c';
 
@@ -17,16 +17,17 @@ const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sun
 const CATS = ['Food','Transport','Data and airtime','School fees','Books and printing','Other'];
 const GRADES = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
 const WINDOWS = { Morning: [420, 660], Afternoon: [720, 960], Evening: [1020, 1260], Night: [1260, 1380], Flexible: [480, 1320] };
-const TITLES = { alerts: 'Notifications', profile: 'Profile', messages: 'Messages', discover: 'Discover', tasks: 'Tasks', login: 'Account', notes: 'Study notes', home: ['StudentHub', 'Dashboard'], classes: 'Classes and exams', study: 'Study planner', money: 'Money', gpa: 'GPA calculator', materials: ['Study materials', 'Course materials'], more: 'More', settings: 'Settings', privacy: 'Privacy', terms: 'Terms' };
-const SUBS = { alerts: 'Requests, messages, classes, exams and tasks.', profile: 'Profile and connection.', messages: 'Chats with students you are connected with.', discover: 'Find students who chose to be visible to other students.', tasks: 'Deadlines and to-dos in one list.', login: 'Sign in, your profile and your privacy choices.', notes: 'Course notes, pinned and searchable.', home: ['Your classes, exams and spending in one place.', 'Your teaching week, reminders and materials.'], classes: 'Your weekly timetable, exam dates and reminders.', study: 'Turn your classes and exams into sessions you can keep.', money: 'Track what you spend against your monthly budget.', gpa: 'Enter your courses to calculate your semester GPA.', materials: ['Trusted places to find textbooks and past questions.', 'Share links and notes with your students.'], more: 'Tools and settings.', settings: 'Your name, role, budget and theme.', privacy: 'What StudentHub stores, and which Google services run on this site.', terms: 'The short version.' };
+const TITLES = { upload: 'Upload material', alerts: 'Notifications', profile: 'Profile', messages: 'Messages', discover: 'Discover', tasks: 'Tasks', login: 'Account', notes: 'Study notes', home: ['StudentHub', 'Dashboard'], classes: 'Classes and exams', study: 'Study planner', money: 'Money', gpa: 'GPA calculator', materials: ['Study materials', 'Course materials'], more: 'More', settings: 'Settings', privacy: 'Privacy', terms: 'Terms' };
+const SUBS = { upload: 'Share course files with your students.', alerts: 'Requests, messages, classes, exams and tasks.', profile: 'Profile and connection.', messages: 'Chats with students you are connected with.', discover: 'Find students who chose to be visible to other students.', tasks: 'Deadlines and to-dos in one list.', login: 'Sign in, your profile and your privacy choices.', notes: 'Course notes, pinned and searchable.', home: ['Your classes, exams and spending in one place.', 'Your teaching week, reminders and materials.'], classes: 'Your weekly timetable, exam dates and reminders.', study: 'Turn your classes and exams into sessions you can keep.', money: 'Track what you spend against your monthly budget.', gpa: 'Enter your courses to calculate your semester GPA.', materials: ['Trusted places to find textbooks and past questions.', 'Share links and notes with your students.'], more: 'Tools and settings.', settings: 'Your name, role, budget and theme.', privacy: 'What StudentHub stores, and which Google services run on this site.', terms: 'The short version.' };
 const ROUTES = {
   student: { views: ['home','classes','study','discover','profile','messages','alerts','tasks','money','gpa','materials','more','settings','notes','login','privacy','terms'], nav: [['home','home','Home'],['classes','calendar','Classes'],['study','book','Study'],['discover','search','Discover'],['messages','send','Messages'],['tasks','check','Tasks'],['money','wallet','Money'],['gpa','calc','GPA'],['materials','file','Materials'],['notes','file','Notes'],['settings','gear','Settings']], tab: [['home','home','Home'],['classes','calendar','Classes'],['discover','search','Discover'],['messages','send','Messages'],['study','book','Study']] },
-  lecturer: { views: ['home','materials','login','settings','privacy','terms','alerts'], nav: [['home','home','Dashboard'],['materials','upload','Course materials'],['settings','gear','Settings']], tab: [['home','home','Dashboard'],['materials','upload','Materials'],['settings','gear','Settings']] }
+  lecturer: { views: ['home','materials','upload','alerts','login','settings','privacy','terms'], nav: [['home','home','Dashboard'],['materials','file','Materials'],['upload','upload','Upload'],['alerts','bell','Alerts'],['settings','gear','Settings']], tab: [['home','home','Dashboard'],['materials','file','Materials'],['upload','upload','Upload'],['alerts','bell','Alerts'],['settings','gear','Settings']] },
 };
 const DEFAULT_PREFS = { budget: 0, theme: 'system', perDay: 1, lead: 15, remind: false };
 const blank = () => ({ course: '', units: '', grade: 'A' });
 
 let role = localStorage.getItem('studenthubRole') || 'student';
+let accountRole = null; // role and lecturer approval from the signed-in account
 let prefs = { ...DEFAULT_PREFS, ...load('studentPrefs', {}) };
 let classes = load('studentClasses', []);
 let teach = load('lecturerClasses', []);
@@ -271,23 +272,26 @@ function renderGpa() {
 
 function renderCourseMats() {
   const courses = [...new Set(teach.map((c) => c.course).filter(Boolean))];
+  setTimeout(loadMyUploads, 0);
   return `<div class="grid2">
-    <section class="glass"><h3 class="sec">Add material</h3>
-      <form class="form" id="matForm">
-        <label>Title<input name="title" required maxlength="80" placeholder="Week 3 lecture notes"></label>
-        <label>Course<input name="course" maxlength="40" list="courseList" placeholder="MTH 101"><datalist id="courseList">${courses.map((c) => `<option value="${esc(c)}">`).join('')}</datalist></label>
-        <label>Link or note<textarea name="value" required rows="4" maxlength="2000" placeholder="Paste a link starting with https:// or write a short note"></textarea></label>
-        <div><button class="btn" type="submit">${I('plus')}Add material</button></div>
+    <section class="glass"><h3 class="sec">Upload material</h3>
+      <form class="form" id="upForm">
+        <label>Title<input name="title" required maxlength="120" placeholder="Week 3 lecture notes"></label>
+        <label>Course<input name="course" required maxlength="40" list="courseList" placeholder="MTH 101"><datalist id="courseList">${courses.map((c) => `<option value="${esc(c)}">`).join('')}</datalist></label>
+        <label>Description (optional)<textarea name="description" rows="3" maxlength="500" placeholder="What this file covers"></textarea></label>
+        <label>File (PDF, Word, PowerPoint, Excel, text or image, up to 25 MB)<input name="file" type="file" required accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.png,.jpg,.jpeg"></label>
+        <div><button class="btn" type="submit">${I('plus')}Upload material</button></div>
       </form></section>
-    <section class="glass"><h3 class="sec">Shared with students</h3>${materials.map((m) => { const link = /^https?:\/\//i.test(m.value); return `<div class="row">${I(link ? 'link' : 'file')}<div><strong>${esc(m.title)}</strong><small>${m.course ? esc(m.course) + ', ' : ''}${fmtDate(m.date)}</small>${link ? `<a class="chip line" style="margin-top:10px" href="${esc(m.value)}" target="_blank" rel="noopener">Open link</a>` : `<p class="muted" style="margin-top:8px;white-space:pre-wrap">${esc(m.value)}</p>`}</div><button class="btn icon" data-act="del-mat" data-id="${m.id}" aria-label="Delete ${esc(m.title)}">${I('trash')}</button></div>`; }).join('') || '<p class="empty">No materials yet. Add your first link or note.</p>'}</section>
+    <section class="glass"><h3 class="sec">Your uploads</h3><div id="myUploads"><small>Loading…</small></div></section>
   </div>`;
 }
 
 function renderMaterials() {
+  setTimeout(() => searchMaterials(''), 0);
   const courses = [...new Set(classes.map((c) => (c.course || '').trim()).filter(Boolean))];
   const q = (c) => 'https://www.google.com/search?q=' + encodeURIComponent(c + ' past questions');
   const explore = [['AbSApp, AbS Tech Connect', 'Books, past questions, handouts and notes.', 'https://www.abstechconnect.com/library'], ['Rugga Library', 'Library resources and academic reading.', 'https://www.google.com/search?q=Rugga%20Library%20official%20website'], ['ExamGuard', 'Exam preparation, practice questions and revision.', 'https://www.google.com/search?q=ExamGuard%20student%20learning%20website'], ['ArewaUniHub', 'Student-contributed notes, summaries and past questions.', 'https://arewaunihub.com/'], ['Acadron', 'Nigerian university past questions and study notes.', 'https://acadron.com.ng/'], ['OpenStax', 'Free, openly licensed textbooks.', 'https://openstax.org/subjects'], ['Open Textbook Library', 'Openly licensed textbooks across many subjects.', 'https://open.umn.edu/opentextbooks'], ['DOAB', 'Open-access scholarly books, peer reviewed.', 'https://www.doabooks.org/']];
-  return `<label style="margin-bottom:24px">Search resources<input id="matSearch" type="search" placeholder="Try textbook, past questions or OpenStax"></label>
+  return `${studentMaterials()}<label style="margin-bottom:24px">Search resources<input id="matSearch" type="search" placeholder="Try textbook, past questions or OpenStax"></label>
   ${courses.length ? `<h2 class="sec">For your courses</h2><section class="glass">${courses.map((c) => `<a class="row" href="${q(c)}" target="_blank" rel="noopener" data-t="${esc((c + ' past questions').toLowerCase())}">${I('search')}<div><strong>${esc(c)}, past questions</strong><small>Search the web for papers and notes for this course.</small></div></a>`).join('')}</section>` : ''}
   <h2 class="sec" style="margin-top:30px">Explore</h2>
   <section class="glass">${explore.map(([n, d, u]) => `<a class="row" href="${u}" target="_blank" rel="noopener" data-t="${esc((n + ' ' + d).toLowerCase())}">${I('book')}<div><strong>${esc(n)}</strong><small>${esc(d)}</small></div></a>`).join('')}</section>`;
@@ -303,9 +307,7 @@ function renderSettings() {
         <label>Theme<select name="theme">${[['system', 'Match my device'], ['light', 'Light'], ['dark', 'Dark']].map(([v, l]) => `<option value="${v}" ${prefs.theme === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
         <div><button class="btn" type="submit">Save changes</button></div>
       </form></section>
-    <section class="glass"><h3 class="sec">Your role</h3>
-      <div class="roles">${roleBtn('student', 'Student', 'Classes, exams, study plans and spending.', 'cap')}${roleBtn('lecturer', 'Lecturer', 'Teaching schedule, reminders and course materials.', 'screen')}</div>
-      <p class="muted" style="margin-top:16px">Switching takes you to the matching dashboard.</p></section>
+    <section class="glass"><h3 class="sec">Account type</h3><p class="muted">${accountTypeLabel()}</p></section>
   </div>
   <section class="glass" style="margin-top:18px"><h3 class="sec">Your data</h3><p class="muted">Your planner data is saved in this browser on this device. Sign-in is optional and only needed for Discover.</p><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px"><a class="btn ghost" href="privacy.html">Privacy</a><a class="btn ghost" href="terms.html">Terms</a><a class="btn ghost" href="about.html">About</a><a class="btn ghost" href="contact.html">Contact</a></div><div style="margin-top:18px"><button class="btn ghost" data-act="wipe" style="color:var(--bad)">Erase all data</button></div></section>`;
 }
@@ -327,6 +329,8 @@ const TERMS = `<article class="glass prose"><ul>
 <li>StudentHub is provided as is. You use it at your own discretion.</li></ul></article>`;
 
 const RENDER = { alerts: renderAlerts, messages: renderMessages, profile: renderPersonProfile, home: () => role === 'lecturer' ? renderTeach() : renderToday() + quickAccess(), classes: renderClasses, notes: renderNotes, login: renderLogin, discover: renderDiscover, tasks: renderTasks, study: renderStudy, money: renderMoney, gpa: renderGpa, materials: () => role === 'lecturer' ? renderCourseMats() : renderMaterials(), more: renderMore, settings: renderSettings, privacy: () => PRIVACY, terms: () => TERMS };
+RENDER.upload = renderCourseMats;
+RENDER.materials = () => role === 'lecturer' ? lecturerMaterialsSearch() : renderMaterials();
 function render() { const el = $('#v-' + current); if (!el) return; el.innerHTML = RENDER[current](); if (current === 'gpa') updateGpa(); if (current === 'notes') { paintFilters(); paintList(); paintEditor(); } paintInstall(); paintAvatar(); if (current === 'messages' && me) refreshChat().catch(handleError); if (current === 'alerts') { if (me) loadAlerts().catch((err) => console.error(err)); paintAlerts(); } }
 
 function readGpa() {
@@ -362,7 +366,7 @@ function filterMats() { const q = $('#matSearch').value.trim().toLowerCase(); $$
 function buildNav() {
   const R = ROUTES[role] || ROUTES.student;
   $('#nav').innerHTML = R.nav.map(([v, ic, l]) => `<a href="#${v}" data-nav="${v}">${I(ic)}<span>${l}</span></a>`).join('');
-  $('#tab').innerHTML = R.tab.map(([v, ic, l]) => v === 'discover'
+  $('#tab').innerHTML = R.tab.map(([v, ic, l]) => (v === 'discover' || v === 'upload')
     ? `<a class="ball-tab" href="#${v}" data-nav="${v}" aria-label="${l}"><span class="ball-gap" aria-hidden="true"></span><span class="ball" aria-hidden="true">${I(ic)}</span><span>${l}</span></a>`
     : `<a href="#${v}" data-nav="${v}">${I(ic)}<span>${l}</span></a>`).join('');
   $('#views').innerHTML = R.views.map((v) => `<section class="view" id="v-${v}" hidden></section>`).join('');
@@ -388,7 +392,23 @@ function route() {
   startChatPolling();
   window.scrollTo(0, 0);
 }
+function accountTypeLabel() {
+  if (!me) return 'You are using StudentHub without an account. Sign in to use your account.';
+  return role === 'lecturer' ? 'Lecturer account: teaching tools and course uploads.' : 'Student account.';
+}
+function applyAccountRole() {
+  if (!me) return;
+  const next = accountRole && accountRole.role === 'lecturer' && accountRole.lecturer_approved === true ? 'lecturer' : 'student';
+  if (next === role) return;
+  role = next; localStorage.setItem('studenthubRole', next);
+  buildNav(); route();
+}
+function lecturerMaterialsSearch() {
+  setTimeout(() => searchMaterials(''), 0);
+  return `<div>${studentMaterials()}</div>`;
+}
 function setRole(r) {
+  if (me) return; // signed-in accounts get their role from the account
   role = r; localStorage.setItem('studenthubRole', r);
   buildNav(); location.hash = '#home'; route();
   toast(r === 'lecturer' ? 'Lecturer dashboard ready.' : 'Student dashboard ready.');
@@ -767,8 +787,11 @@ async function setUser(user) {
     const { data, error } = await sb.from('public_profiles').select('*').eq('id', me.id).maybeSingle();
     if (error) console.error(error);
     myProfile = data || null;
+    const { data: acct } = await sb.from('profiles').select('role, lecturer_approved').eq('id', me.id).maybeSingle();
+    accountRole = acct || null;
+    applyAccountRole();
   }
-  if (me) { subscribeAlerts(); loadAlerts().catch((err) => console.error(err)); if ('Notification' in window && Notification.permission === 'granted') enablePush().catch((err) => console.error(err)); } else { unsubscribeAlerts(); }
+  if (me) { subscribeAlerts(); loadAlerts().catch((err) => console.error(err)); if ('Notification' in window && Notification.permission === 'granted') enablePush().catch((err) => console.error(err)); } else { unsubscribeAlerts(); if (accountRole !== null) { accountRole = null; role = 'student'; localStorage.setItem('studenthubRole', 'student'); buildNav(); route(); } }
   paintAvatar();
   if (gateOn() && !PUBLIC_VIEWS.includes(current)) { location.hash = '#login'; return; }
   if (current === 'login' || current === 'discover') render();
@@ -1486,3 +1509,112 @@ route();
 checkReminders();
 initAccounts();
 })();
+
+
+// ---- Course materials: lecturer uploads, student search and download (files live in Supabase Storage) ----
+const MAT_MAX = 26214400;
+const MAT_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'text/plain', 'image/png', 'image/jpeg'];
+let matTimer = null;
+
+function studentMaterials() {
+  return `<section class="glass"><h3 class="sec">Course materials</h3>
+    <input id="matCourseQuery" type="search" placeholder="Search by course, title or file name">
+    <div id="matResults" style="margin-top:14px"><small>Searching…</small></div></section>`;
+}
+
+async function matCall(body) {
+  const { data, error } = await sb.functions.invoke('materials', { body });
+  if (error) {
+    let msg = 'Something went wrong. Try again.';
+    try { const j = await error.context.json(); if (j && j.error) msg = j.error; } catch (_) {}
+    throw new Error(msg);
+  }
+  if (data && data.error) throw new Error(data.error);
+  return data;
+}
+
+async function loadMyUploads() {
+  const el = $('#myUploads');
+  if (!el || !sb || !me) return;
+  const { data, error } = await sb.from('course_materials')
+    .select('id, title, course, file_name, status').eq('uploader_id', me.id)
+    .neq('status', 'removed').order('created_at', { ascending: false }).limit(50);
+  if (error) { el.innerHTML = '<small>Could not load your uploads.</small>'; return; }
+  el.innerHTML = data && data.length
+    ? data.map((m) => `<div class="row">${I('file')}<div><strong>${esc(m.title)}</strong><small>${esc(m.course)} · ${m.status === 'ready' ? 'Available to students' : 'Still uploading'} · ${esc(m.file_name)}</small></div><button class="btn quiet" type="button" data-mat-rm="${m.id}">Remove</button></div>`).join('')
+    : '<small>No uploads yet.</small>';
+}
+
+async function uploadMaterial(form) {
+  const btn = form.querySelector('button[type="submit"]');
+  const file = form.elements.file.files[0];
+  if (!sb || !me) return toast('Sign in to upload.');
+  if (!file) return toast('Choose a file first.');
+  if (file.size > MAT_MAX) return toast('That file is over 25 MB.');
+  if (!MAT_TYPES.includes(file.type)) return toast('That file type is not allowed.');
+  btn.disabled = true; btn.textContent = 'Uploading…';
+  try {
+    const up = await matCall({
+      action: 'upload',
+      title: form.elements.title.value.trim(),
+      course: form.elements.course.value.trim(),
+      description: form.elements.description.value.trim(),
+      fileName: file.name, mimeType: file.type, sizeBytes: file.size,
+    });
+    const { error } = await sb.storage.from('course-files').uploadToSignedUrl(up.path, up.token, file, { contentType: file.type });
+    if (error) throw new Error('The file did not upload. Check your connection and try again.');
+    await matCall({ action: 'confirm', id: up.id });
+    form.reset();
+    toast('Uploaded. Students can now find it.');
+    loadMyUploads();
+  } catch (err) {
+    toast(err.message);
+  } finally {
+    btn.disabled = false; btn.innerHTML = `${I('plus')}Upload material`;
+  }
+}
+
+async function removeMaterial(id) {
+  if (!confirm('Remove this file? Students will no longer be able to download it.')) return;
+  try { await matCall({ action: 'remove', id }); toast('Removed.'); loadMyUploads(); }
+  catch (err) { toast(err.message); }
+}
+
+async function searchMaterials(q) {
+  const el = $('#matResults');
+  if (!el || !sb) return;
+  if (!me) { el.innerHTML = '<small>Sign in to search lecturer materials.</small>'; return; }
+  el.innerHTML = '<small>Searching…</small>';
+  const { data, error } = await sb.rpc('search_materials', { q: q || null, course_filter: null });
+  if (error) { el.innerHTML = '<small>Search failed. Try again.</small>'; return; }
+  el.innerHTML = data && data.length
+    ? data.map((m) => `<div class="row">${I('file')}<div><strong>${esc(m.title)}</strong><small>${esc(m.course)} · ${esc(m.uploader_name)} · ${esc(m.file_name)}</small></div><button class="btn quiet" type="button" data-mat-dl="${m.id}">Download</button></div>`).join('')
+    : '<small>No materials match that search yet.</small>';
+}
+
+async function downloadMaterial(id) {
+  try {
+    const d = await matCall({ action: 'download', id });
+    window.open(d.url, '_blank', 'noopener');
+  } catch (err) { toast(err.message); }
+}
+
+document.addEventListener('submit', (e) => {
+  if (e.target.id !== 'upForm') return;
+  e.preventDefault();
+  uploadMaterial(e.target);
+});
+document.addEventListener('input', (e) => {
+  if (e.target.id !== 'matCourseQuery') return;
+  clearTimeout(matTimer);
+  matTimer = setTimeout(() => searchMaterials(e.target.value.trim()), 350);
+});
+document.addEventListener('click', (e) => {
+  const dl = e.target.closest && e.target.closest('[data-mat-dl]');
+  if (dl) return downloadMaterial(dl.dataset.matDl);
+  const rm = e.target.closest && e.target.closest('[data-mat-rm]');
+  if (rm) removeMaterial(rm.dataset.matRm);
+});
