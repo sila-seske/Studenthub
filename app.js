@@ -1,7 +1,7 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
 // Public key for push alerts. Safe to share. The private key stays in Supabase secrets only.
 const VAPID_PUBLIC_KEY = 'BIEDEj6vErurrCZBr2hEc8S_nNnRpZ1ZHDLrEq9WvVg-kZ8yCBAr_aRT5F_9iuUBelAneaFHWHXH2keFGX2rp0c';
 
@@ -275,12 +275,13 @@ function renderCourseMats() {
   setTimeout(loadMyUploads, 0);
   return `<div class="grid2">
     <section class="glass"><h3 class="sec">Upload material</h3>
-      <form class="form" id="upForm">
-        <label>Title<input name="title" required maxlength="120" placeholder="Week 3 lecture notes"></label>
-        <label>Course<input name="course" required maxlength="40" list="courseList" placeholder="MTH 101"><datalist id="courseList">${courses.map((c) => `<option value="${esc(c)}">`).join('')}</datalist></label>
+      <form class="form" id="upForm" novalidate>
+        <label>Title<input name="title" maxlength="120" placeholder="Week 3 lecture notes"></label>
+        <label>Course<input name="course" maxlength="40" list="courseList" placeholder="MTH 101"><datalist id="courseList">${courses.map((c) => `<option value="${esc(c)}">`).join('')}</datalist></label>
         <label>Description (optional)<textarea name="description" rows="3" maxlength="500" placeholder="What this file covers"></textarea></label>
-        <label>File (PDF, Word, PowerPoint, Excel, text or image, up to 25 MB)<input name="file" type="file" required accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.png,.jpg,.jpeg"></label>
+        <label>File (PDF, Word, PowerPoint, Excel, text or image, up to 25 MB)<input name="file" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.png,.jpg,.jpeg"></label>
         <div><button class="btn" type="submit">${I('plus')}Upload material</button></div>
+        <p id="upStatus" class="muted" style="margin-top:12px"></p>
       </form></section>
     <section class="glass"><h3 class="sec">Your uploads</h3><div id="myUploads"><small>Loading…</small></div></section>
   </div>`;
@@ -738,12 +739,15 @@ const setAuthMsg = (t) => { const el = $('#authMsg'); if (el) el.textContent = t
 const notice = (text) => `<section class="glass"><p class="muted">${text}</p></section>`;
 
 function friendly(err) {
-  const m = String((err && (err.message || err.code)) || '');
-  if (/rate_limited|rate limit|too many|429/i.test(m)) return 'You are going too fast. Wait a few minutes, then try again.';
+  const m = [err && err.code, err && err.message].filter(Boolean).join(' ');
+  const wait = m.match(/after (\d+) seconds/i);
+  if (/over_email_send_rate_limit|over_request_rate_limit|rate_limited|rate limit|too many|429|security purposes/i.test(m)) {
+    return wait ? `You are going too fast. Wait ${wait[1]} seconds, then try again.` : 'You are going too fast. Wait a few minutes, then try again.';
+  }
   if (/not_connected/.test(m)) return 'You can message a student once they accept your connection request.';
   if (/\bblocked\b/.test(m)) return 'This action is not available between these two accounts.';
   if (/invalid login/i.test(m)) return 'That email and password do not match.';
-  if (/already registered|already exists/i.test(m)) return 'An account with this email already exists. Try signing in.';
+  if (/already registered|already exists/i.test(m)) return 'An account with this email already exists. Sign in, or tap Resend confirmation email.';
   if (/not confirmed/i.test(m)) return 'Confirm your email first. Check your inbox, or resend the email below.';
   if (/password/i.test(m)) return 'Choose a longer password, at least 8 characters.';
   if (/fetch|network|failed to load/i.test(m)) return 'No connection. Check your internet and try again.';
@@ -1548,30 +1552,49 @@ async function loadMyUploads() {
     : '<small>No uploads yet.</small>';
 }
 
+const MAT_EXT = { pdf: 'application/pdf', doc: 'application/msword', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ppt: 'application/vnd.ms-powerpoint', pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  xls: 'application/vnd.ms-excel', xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  txt: 'text/plain', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg' };
+function matType(file) {
+  if (MAT_TYPES.includes(file.type)) return file.type;
+  return MAT_EXT[(file.name.split('.').pop() || '').toLowerCase()] || file.type || '';
+}
+
 async function uploadMaterial(form) {
   const btn = form.querySelector('button[type="submit"]');
+  const status = $('#upStatus');
+  const say = (msg) => { if (status) status.textContent = msg; };
+  const fail = (msg) => { say(msg); toast(msg); };
   const file = form.elements.file.files[0];
-  if (!sb || !me) return toast('Sign in to upload.');
-  if (!file) return toast('Choose a file first.');
-  if (file.size > MAT_MAX) return toast('That file is over 25 MB.');
-  if (!MAT_TYPES.includes(file.type)) return toast('That file type is not allowed.');
+  const title = form.elements.title.value.trim();
+  const course = form.elements.course.value.trim();
+  if (!sb || !me) return fail('Sign in as a lecturer to upload.');
+  if (title.length < 3) return fail('Give the material a title of at least 3 characters.');
+  if (course.length < 2) return fail('Enter the course, for example MTH 101.');
+  if (!file) return fail('Choose a file first.');
+  if (file.size > MAT_MAX) return fail('That file is over 25 MB.');
+  const mime = matType(file);
+  if (!MAT_TYPES.includes(mime)) return fail('That file type is not allowed. Use PDF, Word, PowerPoint, Excel, text or an image.');
   btn.disabled = true; btn.textContent = 'Uploading…';
   try {
+    say('Preparing the upload…');
     const up = await matCall({
-      action: 'upload',
-      title: form.elements.title.value.trim(),
-      course: form.elements.course.value.trim(),
+      action: 'upload', title, course,
       description: form.elements.description.value.trim(),
-      fileName: file.name, mimeType: file.type, sizeBytes: file.size,
+      fileName: file.name, mimeType: mime, sizeBytes: file.size,
     });
-    const { error } = await sb.storage.from('course-files').uploadToSignedUrl(up.path, up.token, file, { contentType: file.type });
-    if (error) throw new Error('The file did not upload. Check your connection and try again.');
+    say('Uploading the file. This can take a minute on a slow connection…');
+    const { error } = await sb.storage.from('course-files').uploadToSignedUrl(up.path, up.token, file, { contentType: mime });
+    if (error) throw new Error('The file did not upload: ' + error.message);
+    say('Finishing up…');
     await matCall({ action: 'confirm', id: up.id });
     form.reset();
+    say('Uploaded. Students can now find it.');
     toast('Uploaded. Students can now find it.');
     loadMyUploads();
   } catch (err) {
-    toast(err.message);
+    fail(err.message || 'The upload failed. Try again.');
   } finally {
     btn.disabled = false; btn.innerHTML = `${I('plus')}Upload material`;
   }
