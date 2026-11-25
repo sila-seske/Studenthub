@@ -1,7 +1,7 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
 // Public key for push alerts. Safe to share. The private key stays in Supabase secrets only.
 const VAPID_PUBLIC_KEY = 'BIEDEj6vErurrCZBr2hEc8S_nNnRpZ1ZHDLrEq9WvVg-kZ8yCBAr_aRT5F_9iuUBelAneaFHWHXH2keFGX2rp0c';
 
@@ -725,6 +725,8 @@ window.addEventListener('pagehide', saveNotes);
 
 // ---------- Accounts, Discover, Tasks and charts ----------
 const CHART_COLOURS = ['#5367f5', '#22a06b', '#e0a030', '#e0457b', '#8b5cf6', '#8a94b0'];
+// Turn a provider on only after it is enabled in Supabase (Authentication > Providers).
+const AUTH_OAUTH = { google: false, apple: false };
 let sb = null, me = null, myProfile = null, authMode = 'signin';
 let tasks = load('studentTasks', []), taskFilter = 'open';
 let discoverRows = [], connMap = {}, requestRows = [], requestNames = {};
@@ -793,6 +795,7 @@ async function setUser(user) {
     myProfile = data || null;
     const { data: acct } = await sb.from('profiles').select('role, lecturer_approved').eq('id', me.id).maybeSingle();
     accountRole = acct || null;
+    localStorage.setItem('shLastName', (myProfile && myProfile.display_name) || '');
     applyAccountRole();
   }
   if (me) { subscribeAlerts(); loadAlerts().catch((err) => console.error(err)); if ('Notification' in window && Notification.permission === 'granted') enablePush().catch((err) => console.error(err)); } else { unsubscribeAlerts(); if (accountRole !== null) { accountRole = null; role = 'student'; localStorage.setItem('studenthubRole', 'student'); buildNav(); route(); } }
@@ -824,10 +827,19 @@ async function authSubmit(f) {
     } else {
       const { error } = await sb.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      localStorage.setItem('shLastMethod', 'email');
+      localStorage.setItem('shLastEmail', email);
       setAuthMsg('');
       location.hash = '#home';
     }
   } catch (err) { console.error(err); setAuthMsg(friendly(err)); }
+}
+async function authSocial(provider) {
+  if (!sb) return setAuthMsg('Accounts are not connected yet.');
+  if (!AUTH_OAUTH[provider]) return setAuthMsg('That sign-in option is not available yet.');
+  localStorage.setItem('shLastMethod', provider);
+  const { error } = await sb.auth.signInWithOAuth({ provider, options: { redirectTo: location.origin + location.pathname } });
+  if (error) setAuthMsg(friendly(error));
 }
 async function resetPassword() {
   if (!sb) return toast('Accounts are not connected yet.');
@@ -964,35 +976,41 @@ function renderLogin() {
   if (recovering) return newPasswordForm();
   if (me) return renderAccount();
   const signup = authMode === 'signup';
-  return `<div class="grid2">
-    <section class="glass" id="loginSection">
-      <div class="seg" role="tablist" aria-label="Account">
-        <button id="tabSignIn" type="button" role="tab" aria-selected="${!signup}" data-auth-act="mode" data-mode="signin">Sign in</button>
-        <button id="tabSignUp" type="button" role="tab" aria-selected="${signup}" data-auth-act="mode" data-mode="signup">Create account</button>
-      </div>
-      ${configured() ? '' : '<p class="note-banner" id="notConnectedBanner" style="margin-top:14px">Accounts are not connected yet. The owner needs to add the Supabase details to turn them on.</p>'}
-      <form class="form" id="authForm" style="margin-top:16px">
+  const last = localStorage.getItem('shLastMethod') || '';
+  const lastEmail = localStorage.getItem('shLastEmail') || '';
+  const firstName = (localStorage.getItem('shLastName') || '').trim().split(' ')[0];
+  const label = { google: 'Google', apple: 'Apple' };
+  const providers = Object.keys(AUTH_OAUTH).filter((id) => AUTH_OAUTH[id]).sort((a, b) => (a === last ? -1 : b === last ? 1 : 0));
+  const title = signup ? 'Create your account'
+    : (last && firstName ? `Welcome back, ${esc(firstName)}` : (last ? 'Welcome back' : 'Sign in to StudentHub'));
+  const sub = signup ? 'Free for students. It takes about a minute.'
+    : (lastEmail ? `Signed in before as ${esc(lastEmail)}` : 'Use your StudentHub email and password.');
+  const social = signup ? '' : providers.map((id) => `<button type="button" class="auth-social${id === 'google' ? ' dark' : ''}" data-auth-act="social" data-provider="${id}"><span>Continue with ${label[id]}</span>${id === last ? '<span class="auth-tag">Last used</span>' : ''}</button>`).join('');
+  return `<section class="auth-stage">
+    <div class="auth-hero" aria-hidden="true"><img src="/study-hero.svg" alt="" width="320" height="260"></div>
+    <div class="auth-body">
+      <p class="auth-brand">StudentHub</p>
+      <h1 class="auth-title">${title}</h1>
+      <p class="auth-sub">${sub}</p>
+      ${configured() ? '' : '<p class="note-banner" id="notConnectedBanner">Accounts are not connected yet. The owner needs to add the Supabase details to turn them on.</p>'}
+      ${social ? `<div class="auth-social-list">${social}</div><div class="auth-divider">or</div>` : ''}
+      <form class="form auth-form" id="authForm">
         ${signup ? `<label>Display name<input id="signupName" name="name" required maxlength="40" autocomplete="name" placeholder="How other students see you"></label>
-        <label>University<input id="signupUniversity" name="university" maxlength="80" placeholder="For example, University of Ilorin"></label>
-        <label>Department<input id="signupDepartment" name="department" maxlength="80" placeholder="For example, Computer Science"></label>` : ''}
-        <label>Email<input id="authEmail" name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
-        <div class="pass-row"><label>Password<input id="authPassword" name="password" type="password" required minlength="8" autocomplete="${signup ? 'new-password' : 'current-password'}" placeholder="At least 8 characters"></label><button class="btn ghost" id="btnShowPass" type="button" data-auth-act="show-pass">Show</button></div>
+        <label>University<input id="signupUniversity" name="university" maxlength="80" placeholder="For example, Federal University Birnin Kebbi"></label>
+        <label>Department<input id="signupDepartment" name="department" maxlength="80" placeholder="For example, Physiology"></label>` : ''}
+        <label>Email<input id="authEmail" name="email" type="email" required autocomplete="email" placeholder="Enter your email" value="${esc(signup ? '' : lastEmail)}"></label>
+        <div class="pass-row"><label>Password<input id="authPassword" name="password" type="password" required minlength="8" autocomplete="${signup ? 'new-password' : 'current-password'}" placeholder="${signup ? 'At least 8 characters' : 'Your password'}"></label><button class="btn ghost" id="btnShowPass" type="button" data-auth-act="show-pass">Show</button></div>
         ${signup ? `<label class="opt"><input id="ageCheck" type="checkbox" name="age" required> I am 16 or older</label>
         <label class="opt"><input id="termsCheck" type="checkbox" name="terms" required> I agree to the <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy policy</a></label>` : ''}
-        <div><button class="btn" id="btnAuthSubmit" type="submit">${signup ? 'Create account' : 'Sign in'}</button></div>
+        <button class="btn auth-submit" id="btnAuthSubmit" type="submit">${signup ? 'Create account' : 'Sign in'}${!signup && last === 'email' ? ' <span class="auth-tag">Last used</span>' : ''}</button>
       </form>
       <p class="note-line" id="authMsg" aria-live="polite"></p>
-      <div class="actions" style="margin-top:10px">
-        <button class="btn quiet" id="btnForgot" type="button" data-auth-act="reset">Forgot password?</button>
-        <button class="btn quiet" id="btnResend" type="button" data-auth-act="resend">Resend confirmation email</button>
-        <button class="btn quiet" id="btnGuest" type="button" data-auth-act="guest">Continue without an account</button>
-      </div>
-    </section>
-    <section class="glass" id="whySection"><h3 class="sec">Why create an account?</h3>
-      <ul><li>Find students who choose to be visible, and send them a connection request.</li><li>Once they accept, message each other in Discover.</li><li>Keep your profile, university and interests in one place.</li></ul>
-      <p class="note-line">We ask only for what these features need. Read our <a href="/privacy.html">privacy policy</a> before you sign up.</p>
-    </section>
-  </div>`;
+      ${signup ? '' : `<div class="auth-links"><button class="btn quiet" id="btnForgot" type="button" data-auth-act="reset">Forgot password?</button><button class="btn quiet" id="btnResend" type="button" data-auth-act="resend">Resend confirmation email</button></div>
+      <p class="auth-legal">By continuing you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy policy</a>.</p>`}
+      <button class="btn quiet auth-switch" type="button" data-auth-act="mode" data-mode="${signup ? 'signin' : 'signup'}">${signup ? 'Already have an account? Sign in' : 'New to StudentHub? Create an account'}</button>
+      <button class="btn quiet auth-switch" id="btnGuest" type="button" data-auth-act="guest">Continue without an account</button>
+    </div>
+  </section>`;
 }
 function renderAccount() {
   const p = myProfile || {};
@@ -1462,6 +1480,7 @@ async function profileAction(a) {
 }
 function authAction(a, b) {
   if (a === 'mode') { authMode = b.dataset.mode; return render(); }
+  if (a === 'social') return authSocial(b.dataset.provider);
   if (a === 'show-pass') {
     const inp = $('#authPassword'); if (!inp) return;
     inp.type = inp.type === 'password' ? 'text' : 'password';
