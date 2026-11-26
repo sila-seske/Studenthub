@@ -383,6 +383,51 @@ label.opt input{width:auto;margin-top:3px}
 .auth-legal a{color:var(--ink)}
 .auth-switch{width:100%}
 @media (min-width:900px){.auth-stage{min-height:calc(100dvh - 130px);max-width:460px}}
+
+/* ---- Illustrations: cut-out students, gentle motion ---- */
+.auth-art{position:relative;height:min(40vh,340px);pointer-events:none}
+.auth-art img{width:min(360px,92%);height:auto;animation:auth-in .9s cubic-bezier(.2,.8,.2,1) both,auth-float 6.5s ease-in-out 1s infinite}
+.auth-art::after{content:"";position:absolute;bottom:4%;left:50%;width:40%;height:12px;margin-left:-20%;border-radius:50%;background:rgba(40,40,90,.22);filter:blur(7px);animation:auth-shadow 6.5s ease-in-out 1s infinite}
+@keyframes auth-in{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes auth-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes auth-shadow{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.88);opacity:.7}}
+@media (prefers-reduced-motion:reduce){.auth-art img,.auth-art::after{animation:none}}
+
+/* ---- StudentHub backdrop behind the students: accent colours, floating feature chips ---- */
+.auth-art .auth-backdrop{position:absolute;inset:4% 2%;z-index:0;pointer-events:none}
+.auth-art img{position:relative;z-index:1}
+.auth-backdrop .blob{position:absolute;left:10%;right:10%;top:12%;bottom:10%;border-radius:46% 54% 48% 52%/52% 44% 56% 48%;background:linear-gradient(135deg,var(--btn),var(--teal));opacity:.2;filter:blur(20px);animation:blob-morph 12s ease-in-out infinite}
+.auth-backdrop .chip{position:absolute;padding:8px 12px;border-radius:14px;border:1px solid var(--line);background:var(--glass-hi);color:var(--ink);font-size:13px;font-weight:600;white-space:nowrap;box-shadow:0 8px 20px -14px rgba(20,20,60,.35);animation:chip-float 6s ease-in-out infinite}
+.auth-backdrop .c1{top:6%;left:0;animation-delay:-1s}
+.auth-backdrop .c2{top:34%;right:-2%;animation-delay:-3s}
+.auth-backdrop .c3{bottom:14%;left:4%;animation-delay:-5s}
+.auth-backdrop .chip::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--teal);margin-right:8px;vertical-align:1px}
+@keyframes blob-morph{0%,100%{border-radius:46% 54% 48% 52%/52% 44% 56% 48%}50%{border-radius:58% 42% 52% 48%/44% 56% 44% 56%}}
+@keyframes chip-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media (prefers-reduced-motion:reduce){.auth-backdrop .blob,.auth-backdrop .chip{animation:none}}
+
+/* ---- Sign in and sign up panel: accent purple, figure sways, welcome screen ---- */
+.auth-art{position:relative;width:min(340px,100%);height:auto;aspect-ratio:3/4;margin:0 auto;border-radius:30px;overflow:hidden;background:linear-gradient(150deg,var(--btn),var(--accent-2));pointer-events:none;animation:auth-in .9s cubic-bezier(.2,.8,.2,1) both}
+.auth-art .auth-shine{position:absolute;inset:0;z-index:1;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.22) 50%,transparent 65%);transform:translateX(-120%);animation:auth-shine 5s ease-in-out infinite}
+.auth-art .auth-figure{position:absolute;left:50%;bottom:0;width:104%;height:auto;z-index:2;transform-origin:50% 100%;filter:drop-shadow(0 18px 24px rgba(20,20,60,.35));animation:auth-rise .9s cubic-bezier(.2,.8,.2,1) both,auth-sway 6.5s ease-in-out 1s infinite}
+.auth-art .auth-backdrop{position:absolute;inset:0;z-index:3;pointer-events:none}
+.auth-art .auth-backdrop .chip{background:var(--glass-hi)}
+@keyframes auth-rise{from{opacity:0;transform:translate(-50%,28px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes auth-sway{0%,100%{transform:translate(-50%,0) rotate(0)}50%{transform:translate(-50%,-8px) rotate(-.6deg)}}
+@keyframes auth-shine{0%{transform:translateX(-120%)}55%,100%{transform:translateX(120%)}}
+.welcome{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:24px;text-align:center;color:#fff;background:linear-gradient(150deg,var(--btn),var(--accent-2));animation:welcome-out .6s ease 3.7s both}
+.welcome>div{display:grid;justify-items:center;gap:10px}
+.welcome .w-fig{width:min(240px,60vw);height:auto;filter:drop-shadow(0 20px 28px rgba(0,0,0,.28));animation:welcome-pop .9s cubic-bezier(.2,.9,.25,1.2) .15s both,welcome-sway 6s ease-in-out 1.1s infinite}
+.welcome h2{margin:6px 0 0;font-size:clamp(28px,8vw,40px);font-weight:700;letter-spacing:-.5px;animation:welcome-up .7s ease .6s both}
+.welcome p{margin:0;font-size:17px;opacity:.92;animation:welcome-up .7s ease 1s both}
+.welcome .w-bar{width:170px;height:4px;border-radius:4px;background:rgba(255,255,255,.25);overflow:hidden;margin-top:18px}
+.welcome .w-bar i{display:block;height:100%;width:0;background:#fff;animation:welcome-bar 2.4s ease .8s forwards}
+@keyframes welcome-pop{from{opacity:0;transform:translateY(40px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes welcome-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes welcome-sway{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(-.6deg)}}
+@keyframes welcome-bar{to{width:100%}}
+@keyframes welcome-out{to{opacity:0;visibility:hidden}}
+@media (prefers-reduced-motion:reduce){.auth-art .auth-figure,.auth-art .auth-shine,.auth-backdrop .chip,.welcome *{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}}
 </style>
 <script src="head.js"></script>
 </head>

@@ -1,7 +1,7 @@
 // StudentHub app.
 // DATABASE SETTINGS: paste your Supabase publishable key into anonKey (it starts with sb_publishable_).
 // Never paste the service_role or secret key here.
-const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'sb_publishable_SbTsbh9fnny2aYfYQzvWOA_1hKbtqKX' };
+const SH_CONFIG = { url: 'https://bsnkqmsomotfqnweoujq.supabase.co', anonKey: 'PASTE_SUPABASE_ANON_KEY' };
 // Public key for push alerts. Safe to share. The private key stays in Supabase secrets only.
 const VAPID_PUBLIC_KEY = 'BIEDEj6vErurrCZBr2hEc8S_nNnRpZ1ZHDLrEq9WvVg-kZ8yCBAr_aRT5F_9iuUBelAneaFHWHXH2keFGX2rp0c';
 
@@ -822,6 +822,7 @@ async function authSubmit(f) {
       const name = (v.name || '').trim();
       const { data, error } = await sb.auth.signUp({ email, password, options: { data: { name } } });
       if (error) throw error;
+      showWelcome();
       save('studentPendingProfile', { display_name: name, university: (v.university || '').trim(), department: (v.department || '').trim() });
       setAuthMsg(data.session ? 'Account created.' : 'Check your email and tap the confirmation link, then sign in.');
     } else {
@@ -833,6 +834,14 @@ async function authSubmit(f) {
       location.hash = '#home';
     }
   } catch (err) { console.error(err); setAuthMsg(friendly(err)); }
+}
+function showWelcome() {
+  const el = document.createElement('div');
+  el.className = 'welcome';
+  el.setAttribute('role', 'status');
+  el.innerHTML = `<div><img class="w-fig" src="/art/signup-thumbsup.webp" alt=""><h2>Welcome to StudentHub</h2><p>Your student life, organized</p><div class="w-bar"><i></i></div></div>`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 4300);
 }
 async function authSocial(provider) {
   if (!sb) return setAuthMsg('Accounts are not connected yet.');
@@ -987,7 +996,7 @@ function renderLogin() {
     : (lastEmail ? `Signed in before as ${esc(lastEmail)}` : 'Use your StudentHub email and password.');
   const social = signup ? '' : providers.map((id) => `<button type="button" class="auth-social${id === 'google' ? ' dark' : ''}" data-auth-act="social" data-provider="${id}"><span>Continue with ${label[id]}</span>${id === last ? '<span class="auth-tag">Last used</span>' : ''}</button>`).join('');
   return `<section class="auth-stage">
-    <div class="auth-hero" aria-hidden="true"><img src="/study-hero.svg" alt="" width="320" height="260"></div>
+    <div class="auth-hero auth-art" aria-hidden="true"><span class="auth-shine"></span><img class="auth-figure" src="${signup ? '/art/signup-thumbsup.webp' : '/art/login-girl.webp'}" alt="" width="600" height="900"><div class="auth-backdrop"><span class="chip c1">${signup ? 'Classes' : 'My schedule'}</span><span class="chip c2">${signup ? 'Exam in 3 days' : 'Exams'}</span><span class="chip c3">${signup ? 'Study reminder' : 'Reminders on'}</span></div></div>
     <div class="auth-body">
       <p class="auth-brand">StudentHub</p>
       <h1 class="auth-title">${title}</h1>
